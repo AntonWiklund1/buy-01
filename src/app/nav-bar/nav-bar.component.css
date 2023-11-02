@@ -121,13 +121,7 @@
     .link{
         display: none;
     }
-    .logOutLink{
-        visibility: hidden;
-    }
-    .logInLink{
-        visibility: hidden;
-    }
-    .navBarHome{
+    .logOutLink, .logInLink ,.navBarHome{
         visibility: hidden;
     }
     .navBarlinks .spanLink{
