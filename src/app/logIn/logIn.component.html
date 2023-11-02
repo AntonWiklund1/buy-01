@@ -3,7 +3,10 @@
     <form action="" class="logInForm">
         <h1>Log in</h1>
         <input type="text" placeholder="Username" class="username" required>
+        <input type="text" placeholder="Email" class="email" [class.visible]="showEmail()">
         <input type="password" placeholder="Password" class="password" required>
-        <button type="submit" class="submit">Log in</button>
+        <button type="submit" class="submit" [class.hide]="hideLogIn()" [class.visible]="showLogIn">Log in</button>
+        <button class="signUp" (click)="goSignUp()">Sign Up</button>
+        <p>Already have a account? <a (click)="goLogIn()">Log in</a></p>
     </form>
 </div>

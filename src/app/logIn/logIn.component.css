@@ -18,7 +18,8 @@
 }
 
 .username,
-.password {
+.password,
+.email {
     padding: 10px;
     margin: 5px 0;
     border: 1px solid var(--fifth-color);
@@ -26,7 +27,9 @@
     box-sizing: border-box;
     width: 100%;
 }
-
+.email{
+    display: none;
+}
 .submit {
     background-color: var(--fifth-color);
     color: white;
@@ -35,6 +38,25 @@
     border-radius: 4px;
     cursor: pointer;
 }
+.signUp{
+    background-color: #eaeaeaa4;
+    color: black;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid var(--fifth-color);
+}
+.signUp:hover{
+    background-color: #eaeaea;
+}
+.visible{
+    display: block;
+}
+.hide{
+    display: none;
+}
+
 @media screen and (max-width: 1168px) {
     .logInForm {
         width: 50%;

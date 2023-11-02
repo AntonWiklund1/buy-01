@@ -19,14 +19,14 @@
                 shopping_bag
             </span>
         </div>
-        <a routerLink="/Media" class="link">media</a>
+        <a routerLink="/Media" class="link">Media</a>
         <div class="media linkDiv">
             <span class="material-symbols-outlined spanLink ">
                 movie
             </span>
         </div>
         <div class="logStatus">
-            <a [class.visible]="!isLoggedIn()" (click)="logIn()" class="logInLink" routerLink="/logIn">Log in</a>
+            <a [class.visible]="!isLoggedIn()" (click)="logIn()" class="logInLink" routerLink="/logIn">Log in/Sign up</a>
             <span class="material-symbols-outlined logSpan" [class.visibleIcon]="!isLoggedIn()" (click)="logIn()">
                 login
             </span>
@@ -36,6 +36,4 @@
             </span>
         </div>
     </div>
-</div>
-<div>
 </div>

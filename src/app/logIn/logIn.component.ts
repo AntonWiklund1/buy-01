@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-logIn',
@@ -6,7 +6,29 @@ import { Component } from '@angular/core';
   styleUrls: ['./logIn.component.css']
 })
 export class LogInComponent {
-
+  constructor() { }
+  signUp: boolean = false;
+  logIn: boolean = true;
+  goSignUp() {
+    this.signUp = true;
+    return this.signUp
+  }
+  showEmail() {
+    return this.signUp
+  }
+  hideLogIn() {
+    return this.signUp
+  }
+  goLogIn() {
+    console.log("show login",this.logIn)
+    this.logIn = true;
+    return this.logIn;
+  }
+  showLogIn() {
+    this.logIn = true;
+    
+    return this.logIn;
+  }
 }
 
 
