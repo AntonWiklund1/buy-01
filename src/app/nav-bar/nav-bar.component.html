@@ -1,7 +1,11 @@
 <div class="navBar">
     <div class="navBarHome">
-        <a routerLink="/">HOME</a>
+        <a routerLink="/" >HOME</a>
+        
     </div>
+        <span class="material-symbols-outlined spanLink homeLinkIcon">
+            home
+        </span>
     <div class="navBarlinks">
         <a routerLink="/Dashboard" class="link">Dashboard</a>
         <div class="dashBoard linkDiv">
@@ -17,17 +21,17 @@
         </div>
         <a routerLink="/Media" class="link">media</a>
         <div class="media linkDiv">
-            <span class="material-symbols-outlined spanLink">
+            <span class="material-symbols-outlined spanLink ">
                 movie
             </span>
         </div>
         <div class="logStatus">
             <a [class.visible]="!isLoggedIn()" (click)="logIn()" class="logInLink" routerLink="/logIn">Log in</a>
-            <span class="material-symbols-outlined logSpan" [class.visibleIcon]="!isLoggedIn()">
+            <span class="material-symbols-outlined logSpan" [class.visibleIcon]="!isLoggedIn()" (click)="logIn()">
                 login
             </span>
             <a [class.visible]="isLoggedIn()" (click)="logOut()" class="logOutLink">Log out</a>
-            <span class="material-symbols-outlined logSpan" [class.visibleIcon]="isLoggedIn()">
+            <span class="material-symbols-outlined logSpan" [class.visibleIcon]="isLoggedIn()" (click)="logOut()">
                 logout
             </span>
         </div>
