@@ -10,7 +10,7 @@ export class NavBarComponent implements  OnInit{
   showNavBar = false;
   ngOnInit(): void {
     this.isLoggedIn();
-    console.log(this.isLoggedIn());
+    console.log("loged in = ",this.isLoggedIn());
   }
   isLoggedIn(){
     return localStorage.getItem('loggedIn') || false;
@@ -20,15 +20,5 @@ export class NavBarComponent implements  OnInit{
   }
   logIn(){
     localStorage.setItem('loggedIn', 'true');
-  }
-
-  toggleNavBar(){
-    console.log(this.showNavBar);
-    this.showNavBar = !this.showNavBar;
-    return this.showNavBar
-  }
-  showNav(){
-    console.log("show",this.showNavBar);
-    return this.showNavBar
   }
 }

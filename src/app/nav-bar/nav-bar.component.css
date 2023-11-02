@@ -96,10 +96,13 @@
     color: var(--second-color);
     border: 1.5px solid var(--second-color);
     border-radius: 4px;
-    visibility: hidden;
+    /* visibility: hidden; */
 }
 .visibleIcon{
     visibility: hidden;
+}
+.visible{
+    display: block;
 }
 /* styling for phone screen */
 @media screen and (max-width: 768px){
@@ -127,11 +130,11 @@
         position: relative;
         top: 5rem;
     }
-    .navBarlinks .logSpan{
-        visibility: visible;
-    }
     .visibleIcon{
         visibility: visible;
+    }
+    .visible{
+        display: none;
     }
 }
 .showNavbar{
