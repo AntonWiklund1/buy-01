@@ -1,9 +1,37 @@
-<div class="navBar">
-    <div class="navBarlogo">
-        <a routerLink="/"><img src="assets/images/logo.png" alt="logo" /></a>
+<div class="navBar" [class.showNavbar]="showNav()">
+    <div class="navBarHome">
+        <a routerLink="/">HOME</a>
     </div>
     <div class="navBarlinks">
-        <a routerLink="/about">About</a>
-        <a routerLink="/contact">Contact</a>
+        <a routerLink="/Dashboard" class="link">Dashboard</a>
+        <div class="dashBoard linkDiv">
+            <span class="material-symbols-outlined spanLink">
+                dashboard
+            </span>
+        </div>
+        <a routerLink="/Products" class="link">Products</a>
+        <div class="products linkDiv">
+            <span class="material-symbols-outlined spanLink">
+                shopping_bag
+            </span>
+        </div>
+        <a routerLink="/Media" class="link">media</a>
+        <div class="media linkDiv">
+            <span class="material-symbols-outlined spanLink">
+                movie
+            </span>
+        </div>
+        <div class="logStatus">
+            <a [class.visible]="!isLoggedIn()" (click)="logIn()" class="logInLink" routerLink="/logIn">Log in</a>
+            <span class="material-symbols-outlined logSpan" [class.visibleIcon]="!isLoggedIn()">
+                login
+            </span>
+            <a [class.visible]="isLoggedIn()" (click)="logOut()" class="logOutLink">Log out</a>
+            <span class="material-symbols-outlined logSpan" [class.visibleIcon]="isLoggedIn()">
+                logout
+            </span>
+        </div>
     </div>
+</div>
+<div>
 </div>

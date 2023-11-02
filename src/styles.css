@@ -3,6 +3,13 @@
     --first-color: #E63946;
     --second-color: #F1FAEE;
     --third-color: #A8DADC;
-    --fourth-color: #457B9D;
+    --fourth-color: #5394bd;
     --fifth-color: #1D3557;
+}
+body{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--second-color);
 }
