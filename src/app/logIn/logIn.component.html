@@ -8,7 +8,7 @@
         <input type="password" placeholder="Password" class="password" required>
         <button type="submit" class="submit" *ngIf="showLogIn()">Log in</button>
         <button class="signUp" (click)="goSignUp()" *ngIf="showSignUp()">Sign Up</button>
-        <p *ngIf="!showLogIn()" (click)="goLogIn()">Already have a account? <a>Log in</a></p>
-        <p *ngIf="!showSignUp()" (click)="goSignUp()">Don't have a account? <a> Sign Up </a></p>
+        <p *ngIf="!showLogIn()">Already have a account? <a (click)="goLogIn()">Log in</a></p>
+        <p *ngIf="!showSignUp()">Don't have a account? <a (click)="goSignUp()"> Sign Up </a></p>
     </form>
 </div>
