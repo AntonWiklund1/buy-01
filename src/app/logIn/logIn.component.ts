@@ -9,10 +9,7 @@ export class LogInComponent {
   constructor() { }
   signUp: boolean = false;
   logIn: boolean = true;
-  goSignUp() {
-    this.signUp = true;
-    return this.signUp
-  }
+  
   showEmail() {
     return this.signUp
   }
@@ -20,14 +17,22 @@ export class LogInComponent {
     return this.signUp
   }
   goLogIn() {
-    console.log("show login",this.logIn)
+    this.signUp = false;
     this.logIn = true;
-    return this.logIn;
+    return this.logIn
   }
   showLogIn() {
-    this.logIn = true;
     
     return this.logIn;
+  }
+  showSignUp(){
+    
+    return this.signUp;
+  }
+  goSignUp() {
+    this.logIn = false;
+    this.signUp = true;
+    return this.signUp
   }
 }
 
