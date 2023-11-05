@@ -52,16 +52,15 @@
   background-color: var(--fifth-color);
 }
 
-.sellerMediaUpload{
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
+.sellerMediaUpload {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
 }
 /* Style the label */
 .sellerMediaUpload label {
   display: block;
   margin-bottom: 5px;
-  
 }
 
 /* Style the file input */
@@ -79,13 +78,12 @@
   border-radius: 5px;
   width: 40%;
 }
-.sellerMediaUpload .uploadButton:hover{
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-
+.sellerMediaUpload .uploadButton:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 /* Style the filename display */
 .sellerMediaUpload .fileName {
-    width: 100%;
+  width: 100%;
 }
 
 @media screen and (max-width: 1168px) {
