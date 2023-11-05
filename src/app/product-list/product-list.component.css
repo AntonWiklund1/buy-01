@@ -1,0 +1,8 @@
+.productsListContainer{
+    margin-left: 15rem;
+}
+@media screen and (max-width: 768px) {
+    .productsListContainer{
+        margin-left: 4rem;
+    }
+}
