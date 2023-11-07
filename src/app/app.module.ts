@@ -5,21 +5,29 @@ import { AppComponent } from './app.component';
 import { LogInComponent } from './logIn/logIn.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { ProductListComponent } from './product-list/product-list.component';
-import { FormsModule } from '@angular/forms'; // Make sure it's imported from '@angular/forms'
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { ProductManagementComponent } from './product-management/product-management.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     LogInComponent,
     NavBarComponent,
-    ProductListComponent
+    ProductListComponent,
+    ProductManagementComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule // Import FormsModule here
+    FormsModule, // Import FormsModule here
+    HttpClientModule
   ],
-  providers: [],
+  providers: [
+
+  ],
+
   bootstrap: [AppComponent]
 })
 export class AppModule { }

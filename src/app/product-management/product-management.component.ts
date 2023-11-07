@@ -3,17 +3,18 @@ import { ProductService } from '../services/product.service';
 
 
 @Component({
-  selector: 'app-product-list',
-  templateUrl: './product-list.component.html',
-  styleUrls: ['./product-list.component.css']
+  selector: 'app-product-management',
+  templateUrl: './product-management.component.html',
+  styleUrls: ['./product-management.component.css']
 })
-export class ProductListComponent {
+export class ProductManagementComponent {
   products: any[] | undefined;
+
 
   constructor(private productService: ProductService) {}
 
   ngOnInit(): void {
-    this.productService.getProducts().subscribe(
+    this.productService.getProductById("Anton").subscribe(
       (data) => {
         this.products = data;
       },
@@ -22,5 +23,4 @@ export class ProductListComponent {
       }
     );
   }
-
 }

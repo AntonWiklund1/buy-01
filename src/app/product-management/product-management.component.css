@@ -1,26 +1,27 @@
-.productsListContainer{
+.productManagmentContainer{
     margin-left: 15rem;
 }
 /* Flex container */
-.productsList {
+.productManagmentList {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start; /* Adjusted to maintain even spacing */
     width: calc(100% - 2rem);
     gap: 1rem;
-
+    margin-top: 1rem;
   }
   
   /* Flex child */
   .productCard {
     background-color: #ffffff;
     flex: 0 0 calc(20% - 1rem); /* Will not grow, will not shrink, with the width adjusted for gap */
-    height: 25rem;
+    height: 30rem;
     border-radius: 5px;
     padding: 1rem; /* Added padding */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Added box shadow */
     box-sizing: border-box; /* Include padding and border in the element's total width and height */
     transition: transform 0.3s; /* Transition for hover effect */
+    position: relative;
   }
   
   .productCard:hover {
@@ -42,6 +43,11 @@
     border-top-right-radius: 5px; /* Rounded top-right corner */
 
   }
+
+  .productsControll{
+    position: absolute;
+    bottom: 1rem;
+  }
   /* Responsive adjustments with fixed size */
   @media (max-width: 1400px) {
     .productCard {
@@ -59,10 +65,10 @@
     .productCard {
       flex: 0 0 calc(50% - 1rem); /* 2 cards in a row */
     }
-    .productsListContainer{
+    .productManagmentContainer{
         margin-left: 4rem;
     }
-    .productsList {
+    .productManagmentList {
         width: calc(100% - 4rem);
     }
 

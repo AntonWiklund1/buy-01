@@ -7,22 +7,17 @@
             home
         </span>
     <div class="navBarlinks">
-        <a routerLink="/Dashboard" class="link">Dashboard</a>
-        <div class="dashBoard linkDiv">
-            <span class="material-symbols-outlined spanLink">
-                dashboard
-            </span>
-        </div>
-        <a routerLink="/productList" class="link">Products</a>
+       
+         <a routerLink="/productList" class="link">Products</a>
         <div class="products linkDiv">
             <span class="material-symbols-outlined spanLink">
                 shopping_bag
             </span>
         </div>
-        <a routerLink="/Media" class="link">Media</a>
+        <a routerLink="/productManagement" class="link" *ngIf="isLoggedIn()">Dashboard</a>
         <div class="media linkDiv">
             <span class="material-symbols-outlined spanLink ">
-                movie
+                Dashboard
             </span>
         </div>
         <div class="logStatus">

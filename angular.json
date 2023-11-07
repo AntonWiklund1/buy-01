@@ -29,7 +29,6 @@
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js"
-
             ]
           },
           "configurations": {
@@ -61,12 +60,23 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "ssl": true,
+            "sslCert": "/Users/anton.wiklund/lets-playThis/lets-play/src/main/resources/localhost.pem",
+            "sslKey": "/Users/anton.wiklund/lets-playThis/lets-play/src/main/resources/localhost-key.pem"
+          },
           "configurations": {
             "production": {
-              "browserTarget": "buy-01:build:production"
+              "browserTarget": "buy-01:build:production",
+              "ssl": true,
+              "sslCert": "/Users/anton.wiklund/lets-playThis/lets-play/src/main/resources/localhost.pem",
+              "sslKey": "/Users/anton.wiklund/lets-playThis/lets-play/src/main/resources/localhost-key.pem"
             },
             "development": {
-              "browserTarget": "buy-01:build:development"
+              "browserTarget": "buy-01:build:development",
+              "ssl": true,
+              "sslCert": "/Users/anton.wiklund/lets-playThis/lets-play/src/main/resources/localhost.pem",
+              "sslKey": "/Users/anton.wiklund/lets-playThis/lets-play/src/main/resources/localhost-key.pem"
             }
           },
           "defaultConfiguration": "development"
@@ -97,5 +107,6 @@
         }
       }
     }
-  }
+  },
+  "defaultProject": "buy-01"
 }

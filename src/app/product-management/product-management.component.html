@@ -1,6 +1,13 @@
-<div class="productsListContainer">
-    <h1>Products</h1>
-    <div class="productsList">
+<div class="productManagmentContainer">
+
+    <h1>Product managment for <span>Anton</span></h1>
+    <div class="addProduct">
+
+        <span class="material-symbols-outlined">
+            add
+        </span>
+    </div>
+    <div class="productManagmentList">
         <div *ngFor="let product of products" class="productCard">
             <div class="productImageDiv">
                 <img src="https://images.unsplash.com/photo-1581539250439-c96689b516dd?q=80&w=2586&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" class="productImage">
@@ -9,6 +16,11 @@
                <h2>{{ product.name }}</h2>
                 <p>{{ product.description }}</p>
                 <p>{{product.price}}€</p> 
+            </div>
+            <div class="productsControll">
+                <span class="material-symbols-outlined">
+                    edit
+                </span>
             </div>
         </div>
     </div>
