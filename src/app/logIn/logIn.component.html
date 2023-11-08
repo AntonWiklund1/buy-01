@@ -3,13 +3,13 @@
         <h1 *ngIf="showLogIn()">Log in</h1>
         <h1 *ngIf="showSignUp()">Sign up</h1>
 
-        <input type="text" placeholder="Username" class="username" name="username" required>
+        <input type="text" placeholder="Username" class="username" name="username" [(ngModel)]="username" required>
         
-        <input type="text" placeholder="Email" class="email" name="email" *ngIf="showEmail()">
+        <input type="text" placeholder="Email" class="email" name="email" [(ngModel)]="email" *ngIf="showEmail()">
         
-        <input type="password" placeholder="Password" class="password" name="password" required>
+        <input type="password" placeholder="Password" id="password" class="password" name="password" [(ngModel)]="password" required>
         
-        <input type="password" placeholder="Confirm Password" class="password" name="confirmPassword"
+        <input type="password" placeholder="Confirm Password" class="password" id="confirmPassword" name="confirmPassword"
             *ngIf="showSignUp()">
 
         <!-- checkbox to check when you want to sign up as a seller -->
@@ -27,7 +27,7 @@
         </div>
 
         <button type="submit" class="submit" *ngIf="showLogIn()">Log in</button>
-        <button class="signUp" (click)="goSignUp()" *ngIf="showSignUp()">Sign Up</button>
+        <button class="signUp" (click)="validateForm()" *ngIf="showSignUp()">Sign Up</button>
 
         <p *ngIf="!showLogIn()">Already have an account? <a (click)="goLogIn()">Log in</a></p>
         <p *ngIf="!showSignUp()">Don't have an account? <a (click)="goSignUp()"> Sign Up </a></p>
