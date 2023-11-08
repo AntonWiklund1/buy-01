@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = 'https://localhost:8443/api/users';
+  private apiCreateUserUrl = 'https://localhost:8443/api/users';
 
   constructor(private http: HttpClient) {}
 
@@ -17,9 +17,11 @@ export class UserService {
       'Authorization': `Bearer ${token}`
     });
     console.log("createUser", user, token) ;
-    return this.http.post(this.apiUrl, user, { headers: headers });
+    return this.http.post(this.apiCreateUserUrl, user, { headers: headers });
   }
 
+  //login
+  
   
   
   
