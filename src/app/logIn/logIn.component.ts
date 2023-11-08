@@ -88,6 +88,8 @@ export class LogInComponent {
           this.userService.createUser(newUser, jwtToken).subscribe({
             next: (response) => {
               console.log("User created", response);
+              localStorage.setItem('loggedIn', 'true');
+              localStorage.setItem('username', this.username);
               // Handle response upon successful user creation
               // Navigate to the desired route upon success
               this.router.navigate(['/']);

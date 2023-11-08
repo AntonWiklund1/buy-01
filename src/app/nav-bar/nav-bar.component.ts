@@ -18,7 +18,5 @@ export class NavBarComponent implements  OnInit{
   logOut(){
     localStorage.removeItem('loggedIn');
   }
-  logIn(){
-    localStorage.setItem('loggedIn', 'true');
-  }
+ 
 }

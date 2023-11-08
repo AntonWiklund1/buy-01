@@ -21,8 +21,8 @@
             </span>
         </div>
         <div class="logStatus">
-            <a [class.visible]="!isLoggedIn()" (click)="logIn()" class="logInLink" routerLink="/logIn">Log in/Sign up</a>
-            <span class="material-symbols-outlined logSpan" [class.visibleIcon]="!isLoggedIn()" (click)="logIn()">
+            <a [class.visible]="!isLoggedIn()"  class="logInLink" routerLink="/logIn">Log in/Sign up</a>
+            <span class="material-symbols-outlined logSpan" [class.visibleIcon]="!isLoggedIn()">
                 login
             </span>
             <a [class.visible]="isLoggedIn()" (click)="logOut()" class="logOutLink">Log out</a>
