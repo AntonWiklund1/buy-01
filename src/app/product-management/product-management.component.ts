@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { ProductService } from '../services/product.service';
 import { FormsModule } from '@angular/forms';
+import { Renderer2, ElementRef } from '@angular/core';
+
 
 
 @Component({
@@ -11,9 +13,10 @@ import { FormsModule } from '@angular/forms';
 export class ProductManagementComponent {
   products: any[] | undefined;
   username: string = localStorage.getItem('username') || '';
+  showProducts: boolean = false;
 
-
-  constructor(private productService: ProductService) {}
+  constructor(private productService: ProductService,
+    private renderer: Renderer2, private el: ElementRef) {}
 
   ngOnInit(): void {
     console.log(this.username);
@@ -25,5 +28,23 @@ export class ProductManagementComponent {
         console.error(error);
       }
     );
+  }
+
+  addproduct() {
+    const bakground = this.el.nativeElement.querySelector('.bakground');
+    this.renderer.addClass(bakground, 'darkBackground');
+    
+    this.showProducts = !this.showProducts;
+  }
+
+  showProduct(){
+    return this.showProducts;
+  }
+
+
+  closeModal() {
+    const bakground = this.el.nativeElement.querySelector('.bakground');
+    this.renderer.removeClass(bakground, 'darkBackground');
+    this.showProducts = false;
   }
 }
