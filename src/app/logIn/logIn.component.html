@@ -26,7 +26,7 @@
             <span class="fileName">{{ selectedFileName }}</span>
         </div>
 
-        <button type="submit" class="submit" *ngIf="showLogIn()">Log in</button>
+        <button class="submit" (click)="LogIn()" *ngIf="showLogIn()">Log in</button>
         <button class="signUp" (click)="validateForm()" *ngIf="showSignUp()">Sign Up</button>
 
         <p *ngIf="!showLogIn()">Already have an account? <a (click)="goLogIn()">Log in</a></p>
