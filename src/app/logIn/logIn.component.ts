@@ -117,11 +117,14 @@ export class LogInComponent {
       password: this.password
     };
     this.userService.logIn(user).subscribe({
-
       next: (response) => {
         console.log("User logged in", response);
         localStorage.setItem('loggedIn', 'true');
         localStorage.setItem('username', this.username);
+
+        const bearer = response;
+        localStorage.setItem('bearer', bearer);
+        
         alert("You are logged in");
         // Handle response upon successful user creation
         // Navigate to the desired route upon success
@@ -133,10 +136,8 @@ export class LogInComponent {
         console.error("Error logging in", userError);
       }
     });
+    
   }
-
-
-
 
   // File upload
   selectedFileName: string = '';

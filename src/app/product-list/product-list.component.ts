@@ -21,6 +21,8 @@ export class ProductListComponent {
         console.error(error);
       }
     );
+
+    console.log("bearer:",localStorage.getItem('bearer'));
   }
 
 }
