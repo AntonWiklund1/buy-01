@@ -103,21 +103,30 @@
 }
 
 .formClass input {
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid var(--fifth-color);
+  border-radius: 4px;
+  box-sizing: border-box;
   width: 100%;
-  height: 2rem;
-  border-radius: 5px;
-  border: 1px solid #000000;
-  padding: 0.5rem;
 }
 .formClass button{
   background-color: var(--fifth-color);
-  color: #fff;
-  padding: 8px 12px;
-  cursor: pointer;
+  color: white;
+  padding: 10px 15px;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
+  cursor: pointer;
   width: 100%;
-  padding: 0.5rem;
+}
+.description{
+  width: 100%; /* Set the width for the textarea */
+  height: 5rem;
+  padding: 10px; /* Add padding if needed */
+  margin: 5px 0;
+  border: 1px solid var(--fifth-color);
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 
 .formClass button:hover{

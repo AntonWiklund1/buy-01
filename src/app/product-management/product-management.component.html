@@ -33,10 +33,10 @@
         </span>
         <h1>Add a product</h1>
         <form action="" class="formClass">
-            <input type="text" placeholder="name" id="name">
-            <input type="text" placeholder="description" id="description">
-            <input type="text" placeholder="price" id="price">
-            <button type="submit">add</button>
+            <input type="text" placeholder="name" id="name" class="name">
+            <textarea name="description" class="description" placeholder="description" id="description"></textarea>
+            <input type="text" placeholder="price" id="price" class="price">
+            <button type="submit" (click)="createProduct()">add</button>
         </form>
     </div>
 </div>
