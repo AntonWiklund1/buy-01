@@ -9,7 +9,7 @@ export class ProductService {
   private apiUrlGetAllproducts = 'https://localhost:8443/api/products'; // replace with your Spring Boot API endpoint
   private apiUrlGetProductById = 'https://localhost:8443/api/products/user/'; // replace with your Spring Boot API endpoint
   private apiUrlAddProduct = 'https://localhost:8443/api/products'; // replace with your Spring Boot API endpoint
-
+  private apiUrlEditProduct = 'https://localhost:8443/api/products'; // replace with your Spring Boot API endpoint
   private id: string | undefined;
 
   constructor(private http: HttpClient) {}
@@ -29,5 +29,13 @@ export class ProductService {
       'Authorization': `Bearer ${token}` 
     });
     return this.http.post<any>(this.apiUrlAddProduct, product, { headers });
+  }
+
+  editProduct(id:string ,product: any, token: string): Observable<any> {
+    const headers = new HttpHeaders({ 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}` 
+    });
+    return this.http.put<any>(`${this.apiUrlEditProduct}/${id}`, product, { headers });
   }
 }
