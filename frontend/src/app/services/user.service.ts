@@ -39,7 +39,7 @@ export class UserService {
     return this.http.post(this.apiLogInUrl, user, { headers: headers, responseType: 'text' });
   }
   
-
+  
 
   
   

@@ -14,7 +14,7 @@
 /* Flex child */
 .productCard {
   background-color: #ffffff;
-  flex: 0 0 calc(20% - 1rem); /* Will not grow, will not shrink, with the width adjusted for gap */
+  flex: 0 0 calc(15% - 1rem); /* Will not grow, will not shrink, with the width adjusted for gap */
   height: 30rem;
   border-radius: 5px;
   padding: 1rem; /* Added padding */
@@ -134,6 +134,31 @@
 }
 .productId{
   display: none;
+}
+.deleteProduct{
+  position: relative;
+  left: -0.5rem;
+  top: 0.6rem;
+}
+.deleteProductHeading{
+  position: relative;
+  top: 10px;
+}
+.yesDelete{
+  background-color: red;
+  color: white;
+  width: 50%;
+  height: 2rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.noDelete{
+  width: 50%;
+  height: 2rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 /* Responsive adjustments with fixed size */
 @media (max-width: 1400px) {

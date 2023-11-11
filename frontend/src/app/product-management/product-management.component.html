@@ -10,52 +10,65 @@
     <div class="productManagmentList">
         <div *ngFor="let product of products" class="productCard">
             <div class="productImageDiv">
-                <img src="https://images.unsplash.com/photo-1581539250439-c96689b516dd?q=80&w=2586&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" class="productImage">
+                <img src="https://images.unsplash.com/photo-1581539250439-c96689b516dd?q=80&w=2586&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    alt="" class="productImage">
             </div>
             <div class="productInfoDiv">
-               <h2>{{ product.name }}</h2>
+                <h2>{{ product.name }}</h2>
                 <p>{{ product.description }}</p>
                 <p>{{product.price}}€</p>
                 <p class="productId">{{ product.id }}</p>
             </div>
             <div class="productsControll">
-                <span class="material-symbols-outlined" (click)="editProduct(product.id)">
+                <span class="material-symbols-outlined" (click)="editProduct(product.id)" *ngIf="!showDelete()">
                     edit
                 </span>
+                <span class="material-symbols-outlined" *ngIf="!showDelete()" (click)="confirmDelete()">
+                    delete
+                </span>
+                <div class="deleteProduct" *ngIf="showDelete()" >
+                    <h4 class="deleteProductHeading">Do you want to delete  {{ product.name }}?</h4>
+                    <button (click)="deleteProduct(product.id)" class="yesDelete">YES</button>
+                    <button (click)="confirmDelete()" class="noDelete">NO</button>
+                </div>
+                <span class="material-symbols-outlined">
+                    image
+                    </span>
             </div>
         </div>
     </div>
 </div>
 
-
-<div class="addProductContainer" *ngIf="showProduct()">    
+<div class="addProductContainer" *ngIf="showProduct()">
     <div class="addProductModal">
-        <span class="material-symbols-outlined closeModal" (click)="closeModal()" >
+        <span class="material-symbols-outlined closeModal" (click)="closeModal()">
             close
         </span>
         <h1>Add a product</h1>
         <form action="" class="formClass">
             <input type="text" placeholder="name" id="name" class="name">
             <textarea name="description" class="description" placeholder="description" id="description"></textarea>
-            <input type="text" placeholder="price" id="price" class="price">
+            <input type="number" placeholder="price" id="price" class="price">
             <button type="submit" (click)="createProduct()">add</button>
         </form>
     </div>
 </div>
 
-<div class="editProductContainer" *ngIf="showEditProduct()">    
+<div class="editProductContainer" *ngIf="showEditProduct()">
     <div class="editProductModal">
-        <span class="material-symbols-outlined closeModal" (click)="closeModal()" >
+        <span class="material-symbols-outlined closeModal" (click)="closeModal()">
             close
         </span>
         <h1>Edit a product</h1>
         <div *ngFor="let editProduct of editProducts">
             <form action="" class="formClass">
-              <input type="text" [(ngModel)]="editProduct.name" name="name" class="name" id="editProductName">
-              <textarea [(ngModel)]="editProduct.description" name="description" class="description" id="editProductDescription"></textarea>
-              <input type="text" [(ngModel)]="editProduct.price" name="price" class="price" id="editProductPrice">
+                <input type="text" [(ngModel)]="editProduct.name" name="name" class="name" id="editProductName">
+                <textarea [(ngModel)]="editProduct.description" name="description" class="description"
+                    id="editProductDescription"></textarea>
+                <input type="number" [(ngModel)]="editProduct.price" name="price" class="price" id="editProductPrice">
 
-              <button type="submit" (click)="updateProduct(editProduct.id,editProduct.name,editProduct.description,editProduct.price)">edit</button>
-        </form>
+                <button type="submit"
+                    (click)="updateProduct(editProduct.id,editProduct.name,editProduct.description,editProduct.price)">edit</button>
+            </form>
+        </div>
     </div>
-</div>

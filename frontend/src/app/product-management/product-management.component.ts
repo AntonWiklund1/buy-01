@@ -16,7 +16,7 @@ export class ProductManagementComponent {
   showProducts: boolean = false;
   showEditProducts: boolean = false;
 
-
+  confirmDeleteProduct: boolean = false;
 
   constructor(
     private productService: ProductService,
@@ -130,4 +130,27 @@ export class ProductManagementComponent {
       }
     );
   }
+  confirmDelete(){
+    this.confirmDeleteProduct = !this.confirmDeleteProduct;
+  }
+  showDelete(){
+    return this.confirmDeleteProduct;
+  }
+  deleteProduct(id: string){
+    console.log('deleteProduct');
+    const bearer = localStorage.getItem('bearer');
+
+    this.productService.deleteProduct(id, bearer || '').subscribe(
+      (data) => {
+        this.confirmDeleteProduct = false;
+        console.log(data);
+        this.ngOnInit();
+      },
+      (error) => {
+
+        console.error(error);
+      }
+    );
+  }
+  
 }
