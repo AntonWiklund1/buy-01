@@ -11,8 +11,12 @@ import { Router } from '@angular/router';
 })
 export class ProductManagementComponent {
   products: any[] | undefined;
+  editProducts: any[] | undefined;
   username: string = localStorage.getItem('username') || '';
   showProducts: boolean = false;
+  showEditProducts: boolean = false;
+
+
 
   constructor(
     private productService: ProductService,
@@ -23,7 +27,7 @@ export class ProductManagementComponent {
 
   ngOnInit(): void {
     console.log(this.username);
-    this.productService.getProductById(this.username).subscribe(
+    this.productService.getProductsByUserId(this.username).subscribe(
       (data) => {
         this.products = data;
       },
@@ -73,5 +77,57 @@ export class ProductManagementComponent {
     const bakground = this.el.nativeElement.querySelector('.bakground');
     this.renderer.removeClass(bakground, 'darkBackground');
     this.showProducts = false;
+    this.showEditProducts = false;
+  }
+  showEditProduct() {
+    return this.showEditProducts;
+  }
+
+
+  editProduct(id: string) {
+    console.log('editProduct');
+    console.log(id);
+    const bakground = this.el.nativeElement.querySelector('.bakground');
+    this.renderer.addClass(bakground, 'darkBackground');
+    this.showEditProducts = !this.showEditProducts;
+
+
+    const bearer = localStorage.getItem('bearer');
+
+    this.productService.getProductById(id).subscribe(
+      (data) => {
+        this.editProducts = Array.isArray(data) ? data : [data];
+
+        console.log(data);
+      },
+      (error) => {
+        console.log(id);
+        console.error(error);
+      }
+    );
+
+  }
+  updateProduct(id: string, name: string, description: string, price: string){
+    console.log('updateProduct');
+    const newProduct = {
+      name: name,
+      description: description,
+      price: price,
+      userid: localStorage.getItem('username'),
+    };
+
+    const bearer = localStorage.getItem('bearer');
+
+    console.log("newProduct",id, newProduct, bearer);
+    this.productService.editProduct(id,newProduct, bearer || '').subscribe(
+      (data) => {
+        console.log(data);
+        this.ngOnInit();
+      },
+      (error) => {
+
+        console.error(error);
+      }
+    );
   }
 }

@@ -15,18 +15,20 @@
             <div class="productInfoDiv">
                <h2>{{ product.name }}</h2>
                 <p>{{ product.description }}</p>
-                <p>{{product.price}}€</p> 
+                <p>{{product.price}}€</p>
+                <p class="productId">{{ product.id }}</p>
             </div>
             <div class="productsControll">
-                <span class="material-symbols-outlined">
+                <span class="material-symbols-outlined" (click)="editProduct(product.id)">
                     edit
                 </span>
             </div>
         </div>
     </div>
 </div>
-<div class="addProductContainer" *ngIf="showProduct()">
-    
+
+
+<div class="addProductContainer" *ngIf="showProduct()">    
     <div class="addProductModal">
         <span class="material-symbols-outlined closeModal" (click)="closeModal()" >
             close
@@ -37,6 +39,23 @@
             <textarea name="description" class="description" placeholder="description" id="description"></textarea>
             <input type="text" placeholder="price" id="price" class="price">
             <button type="submit" (click)="createProduct()">add</button>
+        </form>
+    </div>
+</div>
+
+<div class="editProductContainer" *ngIf="showEditProduct()">    
+    <div class="editProductModal">
+        <span class="material-symbols-outlined closeModal" (click)="closeModal()" >
+            close
+        </span>
+        <h1>Edit a product</h1>
+        <div *ngFor="let editProduct of editProducts">
+            <form action="" class="formClass">
+              <input type="text" [(ngModel)]="editProduct.name" name="name" class="name" id="editProductName">
+              <textarea [(ngModel)]="editProduct.description" name="description" class="description" id="editProductDescription"></textarea>
+              <input type="text" [(ngModel)]="editProduct.price" name="price" class="price" id="editProductPrice">
+
+              <button type="submit" (click)="updateProduct(editProduct.id,editProduct.name,editProduct.description,editProduct.price)">edit</button>
         </form>
     </div>
 </div>

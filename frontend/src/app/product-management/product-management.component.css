@@ -22,7 +22,7 @@
   box-sizing: border-box; /* Include padding and border in the element's total width and height */
   transition: transform 0.3s; /* Transition for hover effect */
   position: relative;
-  z-index: -2;
+
 }
 
 .productCard:hover {
@@ -48,7 +48,7 @@
   bottom: 1rem;
 }
 
-.addProductContainer {
+.addProductContainer, .editProductContainer {
   position: fixed;
   top: 0;
   left: 7rem;
@@ -75,13 +75,13 @@
   display: block;
 
 }
-.addProductModal {
+.addProductModal, .editProductModal {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 50vh;
+  height: 55vh;
   width: 50vw;
   background-color: #ffffff;
   z-index: 3;
@@ -98,7 +98,7 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  width: 50%;
+  width: 20vw;
   gap: 1rem;
 }
 
@@ -132,7 +132,9 @@
 .formClass button:hover{
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
-
+.productId{
+  display: none;
+}
 /* Responsive adjustments with fixed size */
 @media (max-width: 1400px) {
   .productCard {
