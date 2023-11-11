@@ -15,7 +15,7 @@ export class ProductManagementComponent {
   username: string = localStorage.getItem('username') || '';
   showProducts: boolean = false;
   showEditProducts: boolean = false;
-
+  showMediaUploads: boolean = false;
   confirmDeleteProduct: boolean = false;
 
   constructor(
@@ -78,6 +78,7 @@ export class ProductManagementComponent {
     this.renderer.removeClass(bakground, 'darkBackground');
     this.showProducts = false;
     this.showEditProducts = false;
+    this.showMediaUploads = false;
   }
   showEditProduct() {
     return this.showEditProducts;
@@ -152,5 +153,15 @@ export class ProductManagementComponent {
       }
     );
   }
-  
+  uploadMedia(){
+
+    const bakground = this.el.nativeElement.querySelector('.bakground');
+    this.renderer.addClass(bakground, 'darkBackground');
+    this.showMediaUploads = !this.showMediaUploads;
+
+  }
+
+  showMediaUpload(){
+    return this.showMediaUploads;
+  }
 }

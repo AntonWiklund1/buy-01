@@ -15,6 +15,7 @@
 .productCard {
   background-color: #ffffff;
   flex: 0 0 calc(15% - 1rem); /* Will not grow, will not shrink, with the width adjusted for gap */
+  min-width: 15rem;
   height: 30rem;
   border-radius: 5px;
   padding: 1rem; /* Added padding */
@@ -46,9 +47,16 @@
 .productsControll {
   position: absolute;
   bottom: 1rem;
+  display: flex;
+  flex-direction: row;
+  gap: 0.4rem;
+}
+.productsControll span {
+  cursor: pointer;
+
 }
 
-.addProductContainer, .editProductContainer {
+.addProductContainer, .editProductContainer, .mediaUploadContainer {
   position: fixed;
   top: 0;
   left: 7rem;
@@ -75,7 +83,7 @@
   display: block;
 
 }
-.addProductModal, .editProductModal {
+.addProductModal, .editProductModal, .mediaUploadModal {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -163,7 +171,7 @@
 /* Responsive adjustments with fixed size */
 @media (max-width: 1400px) {
   .productCard {
-    flex: 0 0 calc(25% - 1rem); /* 4 cards in a row */
+    flex: 0 0 calc(20% - 1rem); /* 4 cards in a row */
   }
 }
 
