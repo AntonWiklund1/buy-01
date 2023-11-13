@@ -3,14 +3,15 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 12rem;
+    width: 10rem;
     height: 100vh; 
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     
     justify-content: space-between;
-    padding-left: 2rem;    
+    padding-left: 2rem;
+    padding-right: 2rem;
 }
 .navBarHome{
     flex-wrap: wrap;
@@ -34,7 +35,7 @@
     justify-content: space-between;
     gap: 2rem;
     position: relative;
-    bottom: 40vh;
+    bottom: 30vh;
 }
 .navBarlinks .link:hover{
     color: var(--first-color);
@@ -50,6 +51,32 @@
 }
 .linkDiv{
     display: none;
+}
+.profile{
+    position: relative;
+    bottom: -30vh;
+    left: -1rem;
+    border: 1.5px solid var(--second-color);
+    border-radius: 4px;
+    width:min-content;
+    padding: 0.5rem;
+    text-align: center;
+
+    cursor: pointer;
+    transform: scale(0.75);
+}
+.profile span{
+    font-size: 4rem;
+    color: var(--second-color);
+    position: relative;
+}
+.profile:hover span,
+.profile:hover a,
+.profile:hover{
+    color: var(--first-color); /* Change color when .profile is hovered */
+}
+.profile:hover{
+    border: 1px solid var(--first-color);
 }
 .logStatus a{
     font-size: 1.5rem;
@@ -112,6 +139,7 @@
     position: relative;
     top: -30vh;
 }
+
 /* styling for phone screen */
 @media screen and (max-width: 768px){
     .navBar{
@@ -140,6 +168,14 @@
     }
     .homeLinkIcon{
         display: block;
+    }
+    .profile span{
+        font-size: 2rem;
+    }
+    .profile{
+        position: relative;
+        left: -2rem;
+        border: 2px solid var(--second-color);
     }
 
 }

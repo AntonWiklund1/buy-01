@@ -1,14 +1,14 @@
 <div class="navBar">
     <div class="navBarHome">
-        <a routerLink="/" >HOME</a>
-        
+        <a routerLink="/">HOME</a>
+
     </div>
-        <span class="material-symbols-outlined spanLink homeLinkIcon">
-            home
-        </span>
+    <span class="material-symbols-outlined spanLink homeLinkIcon">
+        home
+    </span>
     <div class="navBarlinks">
-       
-         <a routerLink="/productList" class="link">Products</a>
+
+        <a routerLink="/productList" class="link">Products</a>
         <div class="products linkDiv">
             <span class="material-symbols-outlined spanLink">
                 shopping_bag
@@ -20,8 +20,14 @@
                 Dashboard
             </span>
         </div>
+        <div class="profile" routerLink="/profileManagment">
+            <span class="material-symbols-outlined ">
+                person
+            </span>
+            <a  class="link" *ngIf="isLoggedIn()">{{username}}</a>
+        </div>
         <div class="logStatus">
-            <a [class.visible]="!isLoggedIn()"  class="logInLink" routerLink="/logIn">Log in/Sign up</a>
+            <a [class.visible]="!isLoggedIn()" class="logInLink" routerLink="/logIn">Log in/Sign up</a>
             <span class="material-symbols-outlined logSpan" [class.visibleIcon]="!isLoggedIn()">
                 login
             </span>
