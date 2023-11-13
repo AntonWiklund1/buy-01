@@ -22,6 +22,8 @@ export class LogInComponent {
   logIn: boolean = true;
   isSeller: boolean = false;
 
+  errorMessage: string = '';
+  
   showEmail() {
     return this.signUp;
   }
@@ -56,7 +58,7 @@ export class LogInComponent {
     if (password.length == 0 && confirmPassword.length == 0) {
       return false;
     } else if (password != confirmPassword) {
-      alert('Passwords do not match.');
+      this.errorMessage = 'Passwords do not match';
       return false;
     }
 
@@ -95,7 +97,7 @@ export class LogInComponent {
               this.router.navigate(['/']);
             },
             error: (userError) => {
-              // Handle any errors here, such as showing an error message to the user
+              this.errorMessage = userError.error;
               console.error("Error creating user", userError);
             }
           });
