@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../services/user.service'; // Adjust the path as necessary
 import { AuthService } from '../services/auth.service';
+
+
 @Component({
   selector: 'app-logIn',
   templateUrl: './logIn.component.html',
@@ -17,13 +19,14 @@ export class LogInComponent {
     private userService: UserService,
     private authService: AuthService
   ) {}
-
+    
   signUp: boolean = false;
   logIn: boolean = true;
   isSeller: boolean = false;
 
   errorMessage: string = '';
-  
+
+  userRole: string = '';
   showEmail() {
     return this.signUp;
   }
@@ -69,42 +72,46 @@ export class LogInComponent {
     // Check if the password validation is successful
     if (this.validatePassword()) {
       // Use the authService to get the JWT token
-
+      console.log("isSeller",this.isSeller)
       var role = 'admin';
       var jwtPassword = 'password';
-    
+
       this.authService.getJwtToken(role, jwtPassword).subscribe({
-        next: (jwtToken) => { // jwtToken is now just a string, not an object
-          console.log("JWT Token:", jwtToken);
+        next: (jwtToken) => {
+          // jwtToken is now just a string, not an object
+          console.log('JWT Token:', jwtToken);
+          localStorage.setItem('bearer', jwtToken);
+          role = this.isSeller ? 'ROLE_ADMIN' : 'ROLE_USER'
           // Assuming you want to use the JWT token immediately to create a user
           const newUser = {
             id: this.username,
             name: this.username,
             password: this.password,
             email: this.email,
-            role: this.isSeller ? 'ROLE_ADMIN' : 'ROLE_USER',
+            role: role,
           };
-  
+          console.log("role is:",role);
           // Call the userService to create a new user
           // Make sure to include the JWT token in your request if needed
           this.userService.createUser(newUser, jwtToken).subscribe({
             next: (response) => {
-              console.log("User created", response);
+              console.log('User created', response);
               localStorage.setItem('loggedIn', 'true');
               localStorage.setItem('username', this.username);
+              this.getRole();
               // Handle response upon successful user creation
               // Navigate to the desired route upon success
               this.router.navigate(['/']);
             },
             error: (userError) => {
               this.errorMessage = userError.error;
-              console.error("Error creating user", userError);
-            }
+              console.error('Error creating user', userError);
+            },
           });
         },
         error: (error) => {
-          console.error("Error obtaining JWT token", error);
-        }
+          console.error('Error obtaining JWT token', error);
+        },
       });
 
       return true;
@@ -113,33 +120,51 @@ export class LogInComponent {
     }
   }
   //log in
-  LogIn(){
+  LogIn() {
+    interface responseGet {
+      id: string;
+      username: string;
+      role: string;
+    }
     const user = {
       username: this.username,
-      password: this.password
+      password: this.password,
     };
     this.userService.logIn(user).subscribe({
       next: (response) => {
-        console.log("User logged in", response);
+        console.log('User logged in', response);
         localStorage.setItem('loggedIn', 'true');
         localStorage.setItem('username', this.username);
 
         const bearer = response;
         localStorage.setItem('bearer', bearer);
-        
-        alert("You are logged in");
-        // Handle response upon successful user creation
-        // Navigate to the desired route upon success
+        this.getRole();
         this.router.navigate(['/']);
       },
       error: (userError) => {
         // Handle any errors here, such as showing an error message to the user
         console.log(this.username, this.password);
-        console.error("Error logging in", userError);
-      }
+        console.error('Error logging in', userError);
+      },
     });
-    
   }
+
+  getRole() {
+    const token = localStorage.getItem('bearer') || '';
+    const username = localStorage.getItem('username') || '';
+
+    this.userService.getUser(username, token).subscribe({
+      next: (userProfile) => {
+        this.userRole = Object.values(userProfile)[2];
+        localStorage.setItem('role', this.userRole);
+      },
+      error: (userError) => {
+        console.error(userError);
+        this.errorMessage = userError.error.message;
+      },
+    });
+  }
+
 
   // File upload
   selectedFileName: string = '';

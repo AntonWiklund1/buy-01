@@ -22,12 +22,12 @@ export class UserService {
   }
 
   //get user by id
-  getUser(id: any, token: string) {
+  getUser(id: any, token: string)  {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     });
-    console.log("got user", id, token) ;
+
     return this.http.get(`${this.apiGetUserUrl}/${id}`, { headers: headers });
   }
   
