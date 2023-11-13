@@ -20,7 +20,6 @@ export class NavBarComponent implements  OnInit{
     localStorage.removeItem('bearer');
   }
   isAdmin(){
-    console.log("role = ",localStorage.getItem('role'));
     return localStorage.getItem('role') === 'ROLE_ADMIN';
   }
 }

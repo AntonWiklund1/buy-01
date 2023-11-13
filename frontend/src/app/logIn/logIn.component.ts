@@ -90,7 +90,7 @@ export class LogInComponent {
             email: this.email,
             role: role,
           };
-          console.log("role is:",role);
+
           // Call the userService to create a new user
           // Make sure to include the JWT token in your request if needed
           this.userService.createUser(newUser, jwtToken).subscribe({
@@ -142,6 +142,7 @@ export class LogInComponent {
         this.router.navigate(['/']);
       },
       error: (userError) => {
+        this.errorMessage = "Username or password is incorrect"
         // Handle any errors here, such as showing an error message to the user
         console.log(this.username, this.password);
         console.error('Error logging in', userError);
