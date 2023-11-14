@@ -5,8 +5,6 @@
   height: 100vh;
   flex-direction: column;
 }
-.profileControls {
-}
 .deleteProfileButtonConfirm {
   background-color: red;
   color: white;
@@ -32,9 +30,45 @@
     cursor: pointer;
 }
 .editProfileFields{
-    margin-top: 3rem;
-    width: 30%;
+
+    width: 20%;
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
+}
+.editProfileFields input{
+    padding: 0.3rem;
+}
+.editProfileFields button{
+    background-color: var(--fifth-color);
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.editProfileFields button:hover{
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+.editProfileFields select{
+    padding: 0.3rem;
+}
+.editProfilePicture{
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+.editProfilePicture button{
+    background-color: var(--fifth-color);
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: auto;
+}
+.editProfilePicture h3{
+    position: relative;
+    top: 1rem;
 }

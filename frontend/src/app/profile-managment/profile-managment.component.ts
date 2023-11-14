@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { Router } from '@angular/router';
+import { LogInComponent } from '../logIn/logIn.component';
 
 @Component({
   selector: 'app-profile-managment',
@@ -55,7 +56,7 @@ export class ProfileManagmentComponent {
     console.log("editProfile");
 
     const newProfile = {
-      username: (<HTMLInputElement>document.getElementById('newName')).value,
+      name: (<HTMLInputElement>document.getElementById('newName')).value,
       email: (<HTMLInputElement>document.getElementById('newEmail')).value,
       password: (<HTMLInputElement>document.getElementById('newPassword')).value,
       role: (<HTMLInputElement>document.getElementById('newRole')).value,
@@ -72,5 +73,8 @@ export class ProfileManagmentComponent {
         console.error(error);
       }
     );
+  }
+  editProfilePicture(){
+    console.log("editProfilePicture");
   }
 }

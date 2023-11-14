@@ -53,6 +53,6 @@ export class UserService {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     });
-    return this.http.put(`${this.apiGetUserUrl}/${id}`, newUser, { headers: headers });
+    return this.http.put(`${this.apiGetUserUrl}/${id}`, newUser, { headers: headers, responseType: 'text' });
   }
 }

@@ -6,12 +6,12 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ProductService {
-  private apiUrlGetAllproducts = 'https://localhost:8443/api/products'; // replace with your Spring Boot API endpoint
-  private apiUrlGetProductByUerId = 'https://localhost:8443/api/products/user/'; // replace with your Spring Boot API endpoint
-  private apiUrlAddProduct = 'https://localhost:8443/api/products'; // replace with your Spring Boot API endpoint
-  private apiUrlEditProduct = 'https://localhost:8443/api/products'; // replace with your Spring Boot API endpoint
-  private apiUrlGetProductById = 'https://localhost:8443/api/products'; // replace with your Spring Boot API endpoint
-  private apiUrlDeleteProduct = 'https://localhost:8443/api/products'; // replace with your Spring Boot API endpoint
+  private apiUrlGetAllproducts = 'https://localhost:8443/api/products'; 
+  private apiUrlGetProductByUerId = 'https://localhost:8443/api/products/user/'; 
+  private apiUrlAddProduct = 'https://localhost:8443/api/products'; 
+  private apiUrlEditProduct = 'https://localhost:8443/api/products'; 
+  private apiUrlGetProductById = 'https://localhost:8443/api/products'; 
+  private apiUrlDeleteProduct = 'https://localhost:8443/api/products'; 
   private id: string | undefined;
 
   constructor(private http: HttpClient) {}
