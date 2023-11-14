@@ -1,3 +1,40 @@
-.profileManagmentContainer{
-    margin-left: 15rem;
+.profileManagmentContainer {
+  margin-left: 15rem;
+  display: flex;
+  width: calc(100vw - 15rem);
+  height: 100vh;
+  flex-direction: column;
+}
+.profileControls {
+}
+.deleteProfileButtonConfirm {
+  background-color: red;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.deleteProfileButton{
+    background-color: rgb(255, 114, 114);
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.deleteProfileButtonDont{
+    background-color: green;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.editProfileFields{
+    margin-top: 3rem;
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
 }

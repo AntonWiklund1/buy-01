@@ -38,12 +38,21 @@ export class UserService {
     });
     return this.http.post(this.apiLogInUrl, user, { headers: headers, responseType: 'text' });
   }
-  
-  
+  //delete user
+  deleteProfile(id: any, token: string)  {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
 
-  
-  
-  
-  
-  
+    return this.http.delete(`${this.apiGetUserUrl}/${id}`, { headers: headers, responseType: 'text'  });
+  }
+  //update user
+  updateProfile(id:string, newUser: any, token: string)  {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.put(`${this.apiGetUserUrl}/${id}`, newUser, { headers: headers });
+  }
 }

@@ -1,3 +1,24 @@
 <div class="profileManagmentContainer">
-    <h1>Manage your profile</h1>
+    <h1>Manage your profile: {{username}}</h1>
+    <p>Only make changes if you know what you are doing</p>
+    <div class="profileControls">
+        <div class="deleteProfileDiv">
+            <button (click)="checkDelete()" *ngIf="!showDelete()" class="deleteProfileButton">Delete profile</button>
+            <button (click)="deleteProfile()" *ngIf="showDelete()" class="deleteProfileButtonConfirm">Confirm delete</button>
+            <button (click)="checkDelete() " *ngIf="showDelete()" class="deleteProfileButtonDont">Don't delete</button>
+        </div>
+        <form action="" class="editProfileFields">
+            <h3>Edit profile</h3>
+            <input type="text" class="newName" id="newName" placeholder="New name">
+            <input type="text" class="newEmail" id="newEmail" placeholder="New email">
+            <input type="password" class="newPassword" id="newPassword" placeholder="New password">
+            <!-- dropdown -->
+            <select name="newRole" id="newRole">
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+            </select>
+
+            <button (click)="editProfile()">Submit changes</button>
+        </form>
+    </div>
 </div>
