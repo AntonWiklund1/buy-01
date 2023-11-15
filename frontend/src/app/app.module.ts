@@ -8,7 +8,7 @@ import { ProductListComponent } from './product-list/product-list.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ProductManagementComponent } from './product-management/product-management.component';
-import { ProfileManagmentComponent } from './profile-managment/profile-managment.component';
+import { ProfileManagementComponent } from './profile-management/profile-managment.component';
 
 
 @NgModule({
@@ -18,7 +18,7 @@ import { ProfileManagmentComponent } from './profile-managment/profile-managment
     NavBarComponent,
     ProductListComponent,
     ProductManagementComponent,
-    ProfileManagmentComponent
+    ProfileManagementComponent
   ],
   imports: [
     BrowserModule,

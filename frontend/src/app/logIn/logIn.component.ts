@@ -145,7 +145,7 @@ export class LogInComponent {
         localStorage.setItem('userId', userId);
         this.getRole();
 
-        this.router.navigate(['/']);
+        this.router.navigate(['/productList']);
       },
       error: (userError) => {
         this.errorMessage = "Username or password is incorrect"

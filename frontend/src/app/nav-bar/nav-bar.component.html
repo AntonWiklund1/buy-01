@@ -24,7 +24,7 @@
             <span class="material-symbols-outlined ">
                 person
             </span>
-            <a  class="link" *ngIf="isLoggedIn()">{{username}}</a>
+            <a class="link" *ngIf="isLoggedIn()">{{username}}</a>
         </div>
         <div class="logStatus">
             <a [class.visible]="!isLoggedIn()" class="logInLink" routerLink="/logIn">Log in/Sign up</a>

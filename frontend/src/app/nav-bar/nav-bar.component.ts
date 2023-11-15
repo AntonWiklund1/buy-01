@@ -17,6 +17,7 @@ export class NavBarComponent implements  OnInit{
     this.isLoggedIn();
     this.checkLogInStatus();
     console.log("loged in = ",this.isLoggedIn());
+    this.username = localStorage.getItem('username');
   }
   isLoggedIn(){
     return localStorage.getItem('loggedIn') || false;

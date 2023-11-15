@@ -13,6 +13,7 @@ export class ProductManagementComponent {
   products: any[] | undefined;
   editProducts: any[] | undefined;
   username: string = localStorage.getItem('username') || '';
+  userId: string = localStorage.getItem('userId') || '';
   showProducts: boolean = false;
   showEditProducts: boolean = false;
   showMediaUploads: boolean = false;
@@ -27,7 +28,7 @@ export class ProductManagementComponent {
 
   ngOnInit(): void {
     console.log(this.username);
-    this.productService.getProductsByUserId(this.username).subscribe(
+    this.productService.getProductsByUserId(this.userId).subscribe(
       (data) => {
         this.products = data;
       },
@@ -50,13 +51,15 @@ export class ProductManagementComponent {
     console.log('createProduct');
 
     const newProduct = {
+      id : (<HTMLInputElement>document.getElementById('name')).value,
       name: (<HTMLInputElement>document.getElementById('name')).value,
       description: (<HTMLInputElement>document.getElementById('description')).value,
       price: (<HTMLInputElement>document.getElementById('price')).value,
-      userid: localStorage.getItem('username'),
+      userid: localStorage.getItem('userId'),
     };
 
     const bearer = localStorage.getItem('bearer');
+    console.log('bearer', bearer);
     this.productService.addProduct(newProduct, bearer || '').subscribe(
       (data) => {
         console.log(data);
@@ -114,7 +117,7 @@ export class ProductManagementComponent {
       name: name,
       description: description,
       price: price,
-      userid: localStorage.getItem('username'),
+      userid: localStorage.getItem('userId'),
     };
 
     const bearer = localStorage.getItem('bearer');
