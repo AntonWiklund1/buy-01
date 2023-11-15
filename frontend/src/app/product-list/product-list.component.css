@@ -8,7 +8,6 @@
     justify-content: flex-start; /* Adjusted to maintain even spacing */
     width: calc(100% - 2rem);
     gap: 1rem;
-
   }
   
   /* Flex child */
@@ -59,9 +58,10 @@
   @media (max-width: 768px) {
     .productCard {
       flex: 0 0 calc(50% - 1rem); /* 2 cards in a row */
+
     }
     .productsListContainer{
-        margin-left: 4rem;
+        margin-left: 6rem;
     }
     .productsList {
         width: calc(100% - 4rem);

@@ -72,3 +72,19 @@
     position: relative;
     top: 1rem;
 }
+@media screen and (max-width: 768px) {
+    .profileManagmentContainer {
+        margin-left: 6rem;
+        width: calc(100vw - 6rem);
+    }
+    .profileManagmentContainer h1 {
+        font-size: 1.4rem;
+    }
+    .editProfileFields{
+        width: 90%;
+    }
+    .editProfilePicture{
+        width: 90%;
+    }
+    
+}

@@ -3,32 +3,32 @@
         <a routerLink="/">HOME</a>
 
     </div>
-    <span class="material-symbols-outlined spanLink homeLinkIcon">
+    <span class="material-symbols-outlined spanLink homeLinkIcon" routerLink="/">
         home
     </span>
     <div class="navBarlinks">
 
         <a routerLink="/productList" class="link">Products</a>
         <div class="products linkDiv">
-            <span class="material-symbols-outlined spanLink">
+            <span class="material-symbols-outlined spanLink" routerLink="/productList">
                 shopping_bag
             </span>
         </div>
         <a routerLink="/productManagement" class="link" *ngIf="isAdmin()">Dashboard</a>
         <div class="media linkDiv">
-            <span class="material-symbols-outlined spanLink ">
+            <span class="material-symbols-outlined spanLink "routerLink="/productManagement">
                 Dashboard
             </span>
         </div>
         <div class="profile" routerLink="/profileManagment">
-            <span class="material-symbols-outlined ">
+            <span class="material-symbols-outlined " routerLink="/profileManagment">
                 person
             </span>
             <a class="link" *ngIf="isLoggedIn()">{{username}}</a>
         </div>
         <div class="logStatus">
             <a [class.visible]="!isLoggedIn()" class="logInLink" routerLink="/logIn">Log in/Sign up</a>
-            <span class="material-symbols-outlined logSpan" [class.visibleIcon]="!isLoggedIn()">
+            <span class="material-symbols-outlined logSpan" [class.visibleIcon]="!isLoggedIn()" routerLink="/logIn">
                 login
             </span>
             <a [class.visible]="isLoggedIn()" (click)="logOut()" class="logOutLink">Log out</a>

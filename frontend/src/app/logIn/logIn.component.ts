@@ -74,7 +74,7 @@ export class LogInComponent {
       // Use the authService to get the JWT token
       console.log("isSeller",this.isSeller)
       var role = 'admin';
-      var jwtPassword = 'password';
+      var jwtPassword = 'admin';
 
       this.authService.getJwtToken(role, jwtPassword).subscribe({
         next: (jwtToken) => {
@@ -144,8 +144,8 @@ export class LogInComponent {
         localStorage.setItem('bearer', bearer);
         localStorage.setItem('userId', userId);
         this.getRole();
+        this.router.navigate(['/']);
 
-        this.router.navigate(['/productList']);
       },
       error: (userError) => {
         this.errorMessage = "Username or password is incorrect"

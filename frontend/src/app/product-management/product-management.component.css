@@ -186,7 +186,7 @@
     flex: 0 0 calc(50% - 1rem); /* 2 cards in a row */
   }
   .productManagmentContainer {
-    margin-left: 4rem;
+    margin-left: 6rem;
   }
   .productManagmentList {
     width: calc(100% - 4rem);

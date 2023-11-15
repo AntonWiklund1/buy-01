@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ProductManagementComponent } from './product-management/product-management.component';
 import { ProfileManagementComponent } from './profile-management/profile-managment.component';
+import { HomeComponent } from './home/home.component';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { ProfileManagementComponent } from './profile-management/profile-managme
     NavBarComponent,
     ProductListComponent,
     ProductManagementComponent,
-    ProfileManagementComponent
+    ProfileManagementComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

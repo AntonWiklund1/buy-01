@@ -10,7 +10,7 @@ export class AppComponent implements OnInit {
   title = 'Buy';
 
   showNavBar: boolean = true;
-
+  showWelcome: boolean = true;
   constructor(private router: Router) {}
 
   ngOnInit() {
@@ -18,6 +18,10 @@ export class AppComponent implements OnInit {
       if (event instanceof NavigationEnd) {
         // Exclude the login component from showing the navbar
         this.showNavBar = !event.url.includes('/logIn');
+      }
+      if(event instanceof NavigationEnd) {
+        // Exclude the signup component from showing the navbar
+        this.showWelcome = event.url === '/'
       }
     });
   }

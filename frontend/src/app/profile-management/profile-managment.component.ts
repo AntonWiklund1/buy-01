@@ -87,6 +87,7 @@ export class ProfileManagementComponent implements OnInit {
             const userId = Object.values(response)[0];
             localStorage.setItem('bearer', bearer);
             localStorage.setItem('userId', userId);
+            this.router.navigate(['/profileManagement']);
           },
           (error) => {
             console.error('Log in error:', error);
