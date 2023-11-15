@@ -1,6 +1,7 @@
 package AntonW.crudApi.controller;
 
 import AntonW.crudApi.models.AuthRequest;
+import AntonW.crudApi.models.AuthResponse;
 import AntonW.crudApi.models.User;
 import AntonW.crudApi.repositories.UserRepository;
 import AntonW.crudApi.service.JWTService;
@@ -41,8 +42,12 @@ public class AuthController {
             Optional<User> user = userRepository.findByName(authRequest.getUsername());
             if (user.isPresent()) {
                 if (passwordEncoder.matches(authRequest.getPassword(), user.get().getPassword())) {
+                    String userId = user.get().getId();
                     String token = jwtService.generateToken(user.get().getName());
-                    return new ResponseEntity<>(token, HttpStatus.OK);
+                    AuthResponse authResponse = new AuthResponse(userId, token);
+                    return new ResponseEntity<>(authResponse, HttpStatus.OK);
+
+
                 } else {
                     return new ResponseEntity<>("Wrong password", HttpStatus.UNAUTHORIZED);
                 }

@@ -14,8 +14,7 @@ export class AuthService {
     //get jwt token
     getJwtToken(username: string, password: string) {
         console.log("getJwtToken", username, password)  ;
-        return this.http.post(this.authUrl, { username, password }, { responseType: 'text' });
-
+        return this.http.post(this.authUrl, { username, password });
       }
       
 }

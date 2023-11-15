@@ -80,7 +80,8 @@ export class LogInComponent {
         next: (jwtToken) => {
           // jwtToken is now just a string, not an object
           console.log('JWT Token:', jwtToken);
-          localStorage.setItem('bearer', jwtToken);
+          const bearer = Object.values(jwtToken)[1];
+          localStorage.setItem('bearer', bearer);
           role = this.isSeller ? 'ROLE_ADMIN' : 'ROLE_USER'
           // Assuming you want to use the JWT token immediately to create a user
           const newUser = {
@@ -93,12 +94,14 @@ export class LogInComponent {
 
           // Call the userService to create a new user
           // Make sure to include the JWT token in your request if needed
-          this.userService.createUser(newUser, jwtToken).subscribe({
+          this.userService.createUser(newUser, localStorage.getItem('bearer') || '').subscribe({
             next: (response) => {
               console.log('User created', response);
               localStorage.setItem('loggedIn', 'true');
               localStorage.setItem('username', this.username);
+              localStorage.setItem('userId', this.username);
               this.getRole();
+
               // Handle response upon successful user creation
               // Navigate to the desired route upon success
               this.router.navigate(['/']);
@@ -136,9 +139,12 @@ export class LogInComponent {
         localStorage.setItem('loggedIn', 'true');
         localStorage.setItem('username', this.username);
 
-        const bearer = response;
+        const bearer = Object.values(response)[1];
+        const userId = Object.values(response)[0];
         localStorage.setItem('bearer', bearer);
+        localStorage.setItem('userId', userId);
         this.getRole();
+
         this.router.navigate(['/']);
       },
       error: (userError) => {
@@ -152,9 +158,8 @@ export class LogInComponent {
 
   getRole() {
     const token = localStorage.getItem('bearer') || '';
-    const username = localStorage.getItem('username') || '';
 
-    this.userService.getUser(username, token).subscribe({
+    this.userService.getUser(localStorage.getItem('userId'), token).subscribe({
       next: (userProfile) => {
         this.userRole = Object.values(userProfile)[2];
         localStorage.setItem('role', this.userRole);
@@ -165,7 +170,6 @@ export class LogInComponent {
       },
     });
   }
-
 
   // File upload
   selectedFileName: string = '';

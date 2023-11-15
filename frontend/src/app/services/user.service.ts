@@ -36,7 +36,7 @@ export class UserService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
-    return this.http.post(this.apiLogInUrl, user, { headers: headers, responseType: 'text' });
+    return this.http.post(this.apiLogInUrl, user, { headers: headers});
   }
   //delete user
   deleteProfile(id: any, token: string)  {

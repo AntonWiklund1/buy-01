@@ -24,6 +24,8 @@ export class NavBarComponent implements  OnInit{
   logOut(){
     localStorage.removeItem('loggedIn');
     localStorage.removeItem('bearer');
+    localStorage.removeItem('username');
+    localStorage.removeItem('userId');
     this.checkLogInStatus();
   }
   isAdmin(){

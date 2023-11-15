@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { Router } from '@angular/router';
-import { LogInComponent } from '../logIn/logIn.component';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-profile-managment',
@@ -9,9 +9,9 @@ import { LogInComponent } from '../logIn/logIn.component';
   styleUrls: ['./profile-managment.component.css'],
 })
 export class ProfileManagmentComponent {
-  username: string = localStorage.getItem('username') || '';
+  username: any = localStorage.getItem('username') || '';
   confirmDeleteProduct: boolean = false;
-
+  userId: any = localStorage.getItem('userId') || '';
   constructor(
     private UserService: UserService,
     private router: Router
@@ -19,26 +19,31 @@ export class ProfileManagmentComponent {
 
   ngOnInit(): void {
     console.log(this.username);
-    this.getUser();
+    console.log("userid",this.userId);
+    this.userId = localStorage.getItem('userId');
+    // this.getUser();
   }
 
-  getUser() {
-    this.UserService.getUser(this.username,localStorage.getItem('bearer') || '').subscribe(
-      (data) => {
-        console.log(data);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  }
+  // getUser() {
+  //   this.UserService.getUser(localStorage.getItem('userId'),localStorage.getItem('bearer') || '').subscribe(
+  //     (data) => {
+  //       console.log("username:",this.username);
+  //       console.log(data);
+  //     },
+  //     (error) => {
+  //       console.log("get users parameters:",localStorage.getItem('userId'),"and",localStorage.getItem('bearer'))
+  //       console.error(error);
+  //     }
+  //   );
+  // }
   deleteProfile(){
     console.log("deleteProfile");
-    this.UserService.deleteProfile(this.username,localStorage.getItem('bearer') || '').subscribe(
+    this.UserService.deleteProfile(localStorage.getItem('userId'),localStorage.getItem('bearer') || '').subscribe(
       (data) => {
         console.log(data);
         localStorage.removeItem('username');
         localStorage.removeItem('bearer');
+        localStorage.removeItem('userId');
         this.router.navigate(['/logIn']);
       },
       (error) => {
@@ -65,9 +70,11 @@ export class ProfileManagmentComponent {
     console.log(newProfile);
 
 
-    this.UserService.updateProfile(this.username, newProfile, localStorage.getItem('bearer') || '').subscribe(
+    this.UserService.updateProfile(localStorage.getItem("userId") || '', newProfile, localStorage.getItem('bearer') || '').subscribe(
       (data) => {
         console.log(data);
+        localStorage.setItem('username', newProfile.name);
+
       },
       (error) => {
         console.error(error);
