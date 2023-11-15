@@ -74,7 +74,7 @@ export class ProfileManagementComponent implements OnInit {
     const bearerToken = localStorage.getItem('bearer') || '';
 
     console.log('Bearer token:', bearerToken);
-    this.userService.updateProfile(userId, newProfile, bearerToken).subscribe(
+    this.userService.updateProfile(userId, newProfile, localStorage.getItem('bearer') || '').subscribe(
       () => {
         const logInNewProfile = {
           username: newProfile.name,
