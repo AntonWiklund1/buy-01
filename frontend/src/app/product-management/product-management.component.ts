@@ -3,6 +3,7 @@ import { ProductService } from '../services/product.service';
 import { FormsModule } from '@angular/forms';
 import { Renderer2, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
+import {MediaService} from '../services/media.service';
 
 @Component({
   selector: 'app-product-management',
@@ -18,9 +19,11 @@ export class ProductManagementComponent {
   showEditProducts: boolean = false;
   showMediaUploads: boolean = false;
   confirmDeleteProduct: boolean = false;
+  uploadignMediaToProduct: string = '';
 
   constructor(
     private productService: ProductService,
+    private MediaService: MediaService,
     private renderer: Renderer2,
     private el: ElementRef,
     private router: Router
@@ -37,6 +40,7 @@ export class ProductManagementComponent {
       }
     );
     this.closeModal();
+    localStorage.removeItem('productId');
   }
 
   addproduct() {
@@ -156,13 +160,38 @@ export class ProductManagementComponent {
       }
     );
   }
-  uploadMedia(){
+  showUploadMedia(productId: string){
 
     const bakground = this.el.nativeElement.querySelector('.bakground');
     this.renderer.addClass(bakground, 'darkBackground');
     this.showMediaUploads = !this.showMediaUploads;
 
+    localStorage.setItem('productId', productId);
+    this.uploadignMediaToProduct = productId;
   }
+
+  uploadMedia(){
+    const fileInput = document.getElementById('file') as HTMLInputElement;
+    if (fileInput && fileInput.files && fileInput.files.length > 0) {
+      const file = fileInput.files[0]; // Access the first file in the files list
+      const productId = localStorage.getItem('productId') || '';
+      this.MediaService.uploadMedia(file, productId).subscribe(
+        (data) => {
+          console.log(data);
+          this.closeModal();
+          // Handle the response, like closing the modal or showing a success message.
+        },
+        (error) => {
+          console.error('Upload error:', error);
+          // Handle the upload error, perhaps by showing an error message to the user.
+        }
+      );
+    } else {
+      console.error('No file selected.');
+      // Inform the user that no file was selected if that's the case.
+    }
+  }
+  
 
   showMediaUpload(){
     return this.showMediaUploads;

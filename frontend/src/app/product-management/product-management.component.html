@@ -31,7 +31,7 @@
                     <button (click)="deleteProduct(product.id)" class="yesDelete">YES</button>
                     <button (click)="confirmDelete()" class="noDelete">NO</button>
                 </div>
-                <span class="material-symbols-outlined" (click)="uploadMedia()" *ngIf="!showDelete()">
+                <span class="material-symbols-outlined" (click)="showUploadMedia(product.id)" *ngIf="!showDelete()">
                     image
                 </span>
             </div>
@@ -73,15 +73,16 @@
         </div>
     </div>
 </div>
+
 <div class="mediaUploadContainer" *ngIf="showMediaUpload()">
     <div class="mediaUploadModal">
         <span class="material-symbols-outlined closeModal" (click)="closeModal()">
             close
         </span>
-        <h1>Upload a media</h1>
-        <form action="" class="formClass">
+        <h1>Upload a media to {{uploadignMediaToProduct}}</h1>
+        <form (submit)="uploadMedia(); $event.preventDefault()" class="formClass">
             <input type="file" name="file" id="file" class="file">
             <button type="submit">upload</button>
-        </form>
+          </form>
     </div>
 </div>

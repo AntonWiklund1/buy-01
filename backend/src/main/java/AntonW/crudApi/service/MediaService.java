@@ -62,5 +62,21 @@ public class MediaService {
         mediaRepository.deleteByProductId(productId);
     }
 
-    // Additional methods
+    //download media by product id
+    public Path downloadMediaByProductId(String productId) throws FileNotFoundException, MalformedURLException {
+        List<Media> mediaFiles = mediaRepository.findByProductId(productId);
+
+        for (Media media : mediaFiles) {
+            Path fileToDownloadPath = null;
+            try {
+                fileToDownloadPath = rootLocation.resolve(media.getImagePath().replace("media/", ""));
+                log.info("Downloading file: " + fileToDownloadPath);
+                return fileToDownloadPath;
+            } catch (Exception e) {
+                log.error("Failed to download file: " + fileToDownloadPath, e);
+            }
+
+        }
+        throw new FileNotFoundException("File not found");
+    }
 }
