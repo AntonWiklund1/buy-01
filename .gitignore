@@ -4,3 +4,4 @@
 
 # Ignore media directory
 backend/media/
+backend/target

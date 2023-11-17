@@ -16,12 +16,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-
 @Service
 public class MediaService {
     private static final Logger log = LoggerFactory.getLogger(MediaService.class);
-
 
     @Autowired
     private MediaRepository mediaRepository;
@@ -47,21 +44,23 @@ public class MediaService {
 
     // delete media by product id
     public void deleteMediaByProductId(String productId) {
+
         List<Media> mediaFiles = mediaRepository.findByProductId(productId);
 
         for (Media media : mediaFiles) {
             Path fileToDeletePath = null;
             try {
-                fileToDeletePath = rootLocation.resolve(media.getImagePath());
+                fileToDeletePath = rootLocation.resolve(media.getImagePath().replace("media/", ""));
+                log.info("Deleting file: " + fileToDeletePath);
                 Files.deleteIfExists(fileToDeletePath);
             } catch (IOException e) {
                 log.error("Failed to delete file: " + fileToDeletePath, e);
             }
+
         }
 
         mediaRepository.deleteByProductId(productId);
     }
-
 
     // Additional methods
 }
