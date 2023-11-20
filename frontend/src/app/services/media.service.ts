@@ -6,6 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class MediaService {
     private apiUploadUrl = 'https://localhost:8443/media/upload';
+    private apiGetMediaUrl = 'https://localhost:8443/media/product/';
   
     constructor(private http: HttpClient) {}
   
@@ -17,6 +18,11 @@ export class MediaService {
   
       // No need to set the Content-Type header, HttpClient will set it automatically
       return this.http.post(this.apiUploadUrl, formData);
+    }
+
+    //get media
+    getMedia(productId: string) {
+      return this.http.get(this.apiGetMediaUrl + productId);
     }
   }
   

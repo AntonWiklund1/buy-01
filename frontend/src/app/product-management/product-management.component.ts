@@ -3,7 +3,7 @@ import { ProductService } from '../services/product.service';
 import { FormsModule } from '@angular/forms';
 import { Renderer2, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
-import {MediaService} from '../services/media.service';
+import { MediaService } from '../services/media.service';
 
 @Component({
   selector: 'app-product-management',
@@ -20,6 +20,8 @@ export class ProductManagementComponent {
   showMediaUploads: boolean = false;
   confirmDeleteProduct: boolean = false;
   uploadignMediaToProduct: string = '';
+  imagepath: string = '';
+  productMediaUrls: Map<string, string> = new Map(); // Map to store media URLs
 
   constructor(
     private productService: ProductService,
@@ -39,8 +41,54 @@ export class ProductManagementComponent {
         console.error(error);
       }
     );
+    this.loadProducts();
     this.closeModal();
     localStorage.removeItem('productId');
+  }
+
+  loadProducts(): void {
+    this.productService.getProductsByUserId(this.userId).subscribe(
+      (products) => {
+        this.products = products;
+        this.preloadMediaForProducts(products);
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  }
+
+  preloadMediaForProducts(products: any[]): void {
+    const backendUrl = 'https://localhost:8443/'; // Adjust this URL to where your backend serves media files
+    products.forEach(product => {
+      this.MediaService.getMedia(product.id).subscribe(
+        (mediaDataArray) => {
+          if (Array.isArray(mediaDataArray) && mediaDataArray.length > 0) {
+            const mediaObject = mediaDataArray[0];
+            if (mediaObject && mediaObject.imagePath) {
+              const imagePath = `${backendUrl}${mediaObject.imagePath}`;
+              this.productMediaUrls.set(product.id, imagePath);
+            } else {
+              console.error(`Media URL not found for product ${product.id}`);
+              this.productMediaUrls.set(product.id, 'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png');
+            }
+          } else {
+            console.error(`Media data is not an array for product ${product.id}`);
+            this.productMediaUrls.set(product.id, 'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png');
+          }
+        },
+        (error) => {
+          console.error(error);
+          this.productMediaUrls.set(product.id, 'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png');
+        }
+      );
+    });
+  }
+  
+    
+
+  getMediaUrl(productId: string): string | undefined {
+    return this.productMediaUrls.get(productId);
   }
 
   addproduct() {
@@ -55,9 +103,10 @@ export class ProductManagementComponent {
     console.log('createProduct');
 
     const newProduct = {
-      id : (<HTMLInputElement>document.getElementById('name')).value,
+      id: (<HTMLInputElement>document.getElementById('name')).value,
       name: (<HTMLInputElement>document.getElementById('name')).value,
-      description: (<HTMLInputElement>document.getElementById('description')).value,
+      description: (<HTMLInputElement>document.getElementById('description'))
+        .value,
       price: (<HTMLInputElement>document.getElementById('price')).value,
       userid: localStorage.getItem('userId'),
     };
@@ -91,14 +140,12 @@ export class ProductManagementComponent {
     return this.showEditProducts;
   }
 
-
   editProduct(id: string) {
     console.log('editProduct');
     console.log(id);
     const bakground = this.el.nativeElement.querySelector('.bakground');
     this.renderer.addClass(bakground, 'darkBackground');
     this.showEditProducts = !this.showEditProducts;
-
 
     const bearer = localStorage.getItem('bearer');
 
@@ -113,9 +160,8 @@ export class ProductManagementComponent {
         console.error(error);
       }
     );
-
   }
-  updateProduct(id: string, name: string, description: string, price: string){
+  updateProduct(id: string, name: string, description: string, price: string) {
     console.log('updateProduct');
     const newProduct = {
       name: name,
@@ -126,25 +172,24 @@ export class ProductManagementComponent {
 
     const bearer = localStorage.getItem('bearer');
 
-    console.log("newProduct",id, newProduct, bearer);
-    this.productService.editProduct(id,newProduct, bearer || '').subscribe(
+    console.log('newProduct', id, newProduct, bearer);
+    this.productService.editProduct(id, newProduct, bearer || '').subscribe(
       (data) => {
         console.log(data);
         this.ngOnInit();
       },
       (error) => {
-
         console.error(error);
       }
     );
   }
-  confirmDelete(){
+  confirmDelete() {
     this.confirmDeleteProduct = !this.confirmDeleteProduct;
   }
-  showDelete(){
+  showDelete() {
     return this.confirmDeleteProduct;
   }
-  deleteProduct(id: string){
+  deleteProduct(id: string) {
     console.log('deleteProduct');
     const bearer = localStorage.getItem('bearer');
 
@@ -155,13 +200,11 @@ export class ProductManagementComponent {
         this.ngOnInit();
       },
       (error) => {
-
         console.error(error);
       }
     );
   }
-  showUploadMedia(productId: string){
-
+  showUploadMedia(productId: string) {
     const bakground = this.el.nativeElement.querySelector('.bakground');
     this.renderer.addClass(bakground, 'darkBackground');
     this.showMediaUploads = !this.showMediaUploads;
@@ -170,7 +213,7 @@ export class ProductManagementComponent {
     this.uploadignMediaToProduct = productId;
   }
 
-  uploadMedia(){
+  uploadMedia() {
     const fileInput = document.getElementById('file') as HTMLInputElement;
     if (fileInput && fileInput.files && fileInput.files.length > 0) {
       const file = fileInput.files[0]; // Access the first file in the files list
@@ -191,9 +234,8 @@ export class ProductManagementComponent {
       // Inform the user that no file was selected if that's the case.
     }
   }
-  
 
-  showMediaUpload(){
+  showMediaUpload() {
     return this.showMediaUploads;
   }
 }
