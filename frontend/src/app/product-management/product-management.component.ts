@@ -23,6 +23,7 @@ export class ProductManagementComponent {
   imagepath: string = '';
   productMediaUrls: Map<string, string> = new Map(); // Map to store media URLs
 
+
   constructor(
     private productService: ProductService,
     private MediaService: MediaService,
@@ -127,15 +128,21 @@ export class ProductManagementComponent {
               // Handle the response, like closing the modal or showing a success message.
             },
             (error) => {
+              this.closeModal();
+              this.router.navigate(['/productManagement']);
               console.error('Upload error media error for new product:', error);
               // Handle the upload error, perhaps by showing an error message to the user.
             }
           );
-        
-            this.router.navigate(['/productManagement']);
+            
+        }else{
+          this.closeModal();
+          this.router.navigate(['/productManagement']);
         }
       },
       (error) => {
+
+        this.closeModal();
         console.log(newProduct);
         console.error("error for new product",error);
       }

@@ -39,6 +39,7 @@
     </div>
 </div>
 
+<!-- add product -->
 <div class="addProductContainer" *ngIf="showProduct()">
     <div class="addProductModal">
         <span class="material-symbols-outlined closeModal" (click)="closeModal()">
@@ -52,9 +53,11 @@
             <input type="file" id="fileAdd" class="fileAdd">
             <button type="submit" (click)="createProduct();">add</button>
         </form>
+        
     </div>
 </div>
 
+<!-- edit product -->
 <div class="editProductContainer" *ngIf="showEditProduct()">
     <div class="editProductModal">
         <span class="material-symbols-outlined closeModal" (click)="closeModal()">
@@ -75,6 +78,7 @@
     </div>
 </div>
 
+<!-- upload media -->
 <div class="mediaUploadContainer" *ngIf="showMediaUpload()">
     <div class="mediaUploadModal">
         <span class="material-symbols-outlined closeModal" (click)="closeModal()">
@@ -87,3 +91,4 @@
           </form>
     </div>
 </div>
+
