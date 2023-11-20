@@ -115,12 +115,29 @@ export class ProductManagementComponent {
     console.log('bearer', bearer);
     this.productService.addProduct(newProduct, bearer || '').subscribe(
       (data) => {
-        console.log(data);
-        this.ngOnInit();
+        const newFileInput = document.getElementById('fileAdd') as HTMLInputElement;
+
+        if (newFileInput && newFileInput.files && newFileInput.files.length > 0) {
+          const newFile = newFileInput.files[0];
+          console.log(data);
+          this.MediaService.uploadMedia(newFile,data.id).subscribe(
+            (data) => {
+              console.log(data);
+              this.closeModal();
+              // Handle the response, like closing the modal or showing a success message.
+            },
+            (error) => {
+              console.error('Upload error media error for new product:', error);
+              // Handle the upload error, perhaps by showing an error message to the user.
+            }
+          );
+        
+            this.router.navigate(['/productManagement']);
+        }
       },
       (error) => {
         console.log(newProduct);
-        console.error(error);
+        console.error("error for new product",error);
       }
     );
   }
@@ -234,6 +251,8 @@ export class ProductManagementComponent {
       // Inform the user that no file was selected if that's the case.
     }
   }
+  
+
 
   showMediaUpload() {
     return this.showMediaUploads;
