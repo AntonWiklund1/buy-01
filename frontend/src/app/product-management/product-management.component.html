@@ -17,7 +17,6 @@
                 <h2>{{ product.name }}</h2>
                 <!-- Check if the description is longer than 50 characters -->
                 <p *ngIf="product.description.length > 50">
-                    s
                     <span *ngIf="product.isReadMore">{{ product.description | slice:0:50 }}...</span>
                     <span *ngIf="!product.isReadMore">{{ product.description }}</span>
                     <a (click)="toggleDescription(product)">{{ product.isReadMore ? 'Read More' : 'Read Less' }}</a>

@@ -13,7 +13,6 @@ import javax.validation.constraints.NotNull;
 
 @Document(collection = "products")
 public class Product {
-    s
     @Id
     private String id;
 
