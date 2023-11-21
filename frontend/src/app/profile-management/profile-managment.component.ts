@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
+import { MediaService } from '../services/media.service';
 
 interface Profile {
   name: string;
@@ -19,7 +20,11 @@ export class ProfileManagementComponent implements OnInit {
   userId: string;
   confirmDeleteProfile: boolean = false;
 
-  constructor(private userService: UserService, private router: Router) {
+  constructor(
+    private userService: UserService,
+    private router: Router,
+    private mediaService: MediaService
+  ) {
     this.username = localStorage.getItem('username') || '';
     this.userId = localStorage.getItem('userId') || '';
   }
@@ -74,31 +79,33 @@ export class ProfileManagementComponent implements OnInit {
     const bearerToken = localStorage.getItem('bearer') || '';
 
     console.log('Bearer token:', bearerToken);
-    this.userService.updateProfile(userId, newProfile, localStorage.getItem('bearer') || '').subscribe(
-      () => {
-        const logInNewProfile = {
-          username: newProfile.name,
-          password: newProfile.password,
-        };
-        this.userService.logIn(logInNewProfile).subscribe(
-          (response) => {
-            console.log('User logged in', response);
-            const bearer = Object.values(response)[1];
-            const userId = Object.values(response)[0];
-            localStorage.setItem('bearer', bearer);
-            localStorage.setItem('userId', userId);
-            this.router.navigate(['/profileManagement']);
-          },
-          (error) => {
-            console.error('Log in error:', error);
-          },
-          )
-        console.log('Profile updated successfully');
-        this.username = newProfile.name;
-        localStorage.setItem('username', newProfile.name);
-      },
-      (error) => console.error('Update profile error:', error)
-    );
+    this.userService
+      .updateProfile(userId, newProfile, localStorage.getItem('bearer') || '')
+      .subscribe(
+        () => {
+          const logInNewProfile = {
+            username: newProfile.name,
+            password: newProfile.password,
+          };
+          this.userService.logIn(logInNewProfile).subscribe(
+            (response) => {
+              console.log('User logged in', response);
+              const bearer = Object.values(response)[1];
+              const userId = Object.values(response)[0];
+              localStorage.setItem('bearer', bearer);
+              localStorage.setItem('userId', userId);
+              this.router.navigate(['/profileManagement']);
+            },
+            (error) => {
+              console.error('Log in error:', error);
+            }
+          );
+          console.log('Profile updated successfully');
+          this.username = newProfile.name;
+          localStorage.setItem('username', newProfile.name);
+        },
+        (error) => console.error('Update profile error:', error)
+      );
   }
 
   private getInputValue(elementId: string): string {
@@ -107,6 +114,24 @@ export class ProfileManagementComponent implements OnInit {
 
   editProfilePicture(): void {
     console.log('Editing Profile Picture');
-    // Add logic to edit profile picture
+
+    const userId = localStorage.getItem('userId') || '';
+    const bearerToken = localStorage.getItem('bearer') || '';
+
+    const fileInput = document.getElementById('newProfilePicture') as HTMLInputElement;
+
+    if (fileInput && fileInput.files && fileInput.files.length > 0) {
+      const file = fileInput.files[0]; // Access the first file in the files list
+      this.mediaService.uploadAvatar(file, userId, bearerToken).subscribe(
+        () => {
+          console.log('Profile picture updated successfully');
+          this.router.navigate(['/profileManagment']);
+        },
+        (error) => {
+          console.log(file, userId)
+          console.error('Update profile picture error:', error)
+        }
+      );
+    }
   }
 }

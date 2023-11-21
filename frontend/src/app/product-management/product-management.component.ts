@@ -259,8 +259,6 @@ export class ProductManagementComponent {
     }
   }
   
-
-
   showMediaUpload() {
     return this.showMediaUploads;
   }

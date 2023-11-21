@@ -42,7 +42,7 @@ public class UserService {
 
     // Conversion Method
     public UserDTO convertToUserDTO(User user) {
-        return new UserDTO(user.getId(), user.getName(), user.getRole());
+        return new UserDTO(user.getId(), user.getName(), user.getRole(), user.getAvatarImagePath());
     }
 
     // Create User

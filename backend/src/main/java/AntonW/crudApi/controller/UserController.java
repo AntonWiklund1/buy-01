@@ -12,7 +12,6 @@ import javax.validation.Valid;
 import javax.validation.ConstraintViolationException;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import java.io.IOException;
 import java.util.List;
 
@@ -101,5 +100,26 @@ public class UserController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/{id}/avatar")
+@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+public ResponseEntity<?> getUserAvatar(@PathVariable String id) {
+    try {
+        UserDTO userDTO = userService.getUserById(id); // This method returns a UserDTO
+        if (userDTO != null) {
+            String avatarPath = userDTO.getAvatarImagePath();
+            if (avatarPath != null && !avatarPath.isEmpty()) {
+                return ResponseEntity.ok().body(avatarPath);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Avatar not set for user with ID: " + id);
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found with ID: " + id);
+        }
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("An error occurred while retrieving the avatar path");
+    }
+}
 
 }
