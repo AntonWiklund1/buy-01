@@ -47,18 +47,25 @@ export class ProductManagementComponent {
     this.closeModal();
     localStorage.removeItem('productId');
   }
+  toggleDescription(product: any) {
+    product.isReadMore = !product.isReadMore;
+  }
 
   loadProducts(): void {
-    this.productService.getProductsByUserId(this.userId).subscribe(
-      (products) => {
-        this.products = products;
-        this.preloadMediaForProducts(products);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  }
+  this.productService.getProductsByUserId(this.userId).subscribe(
+    (products) => {
+      this.products = products.map((product: any) => ({
+        ...product,
+        isReadMore: true // Add this line for each product
+      }));
+      this.preloadMediaForProducts(products);
+    },
+    (error) => {
+      console.error(error);
+    }
+  );
+}
+
 
   preloadMediaForProducts(products: any[]): void {
     const backendUrl = 'https://localhost:8443/'; // Adjust this URL to where your backend serves media files

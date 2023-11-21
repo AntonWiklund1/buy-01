@@ -21,9 +21,7 @@
             </span>
         </div>
         <div class="profile" routerLink="/profileManagment">
-            <span class="material-symbols-outlined " routerLink="/profileManagment">
-                person
-            </span>
+            <img [src]="avatarUrl" alt="" class=""> 
             <a class="link" *ngIf="isLoggedIn()">{{username}}</a>
         </div>
         <div class="logStatus">

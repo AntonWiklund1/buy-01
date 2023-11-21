@@ -55,28 +55,22 @@
 .profile{
     position: relative;
     bottom: -30vh;
-    left: -1rem;
-    border: 1.5px solid var(--second-color);
     border-radius: 4px;
     width:min-content;
-    padding: 0.5rem;
     text-align: center;
-
     cursor: pointer;
-    transform: scale(0.75);
+
 }
-.profile span{
-    font-size: 4rem;
-    color: var(--second-color);
-    position: relative;
+.profile img{
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 0.5rem;
 }
-.profile:hover span,
-.profile:hover a,
+
 .profile:hover{
-    color: var(--first-color); /* Change color when .profile is hovered */
-}
-.profile:hover{
-    border: 1px solid var(--first-color);
+    transform: scale(1.04);
 }
 .logStatus a{
     font-size: 1.5rem;
