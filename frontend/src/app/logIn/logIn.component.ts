@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../services/user.service'; // Adjust the path as necessary
 import { AuthService } from '../services/auth.service';
-
+import { MediaService } from '../services/media.service';
 
 @Component({
   selector: 'app-logIn',
@@ -17,9 +17,10 @@ export class LogInComponent {
   constructor(
     private router: Router,
     private userService: UserService,
-    private authService: AuthService
+    private authService: AuthService,
+    private mediaService: MediaService
   ) {}
-    
+
   signUp: boolean = false;
   logIn: boolean = true;
   isSeller: boolean = false;
@@ -72,7 +73,7 @@ export class LogInComponent {
     // Check if the password validation is successful
     if (this.validatePassword()) {
       // Use the authService to get the JWT token
-      console.log("isSeller",this.isSeller)
+      console.log('isSeller', this.isSeller);
       var role = 'admin';
       var jwtPassword = 'admin';
 
@@ -82,7 +83,7 @@ export class LogInComponent {
           console.log('JWT Token:', jwtToken);
           const bearer = Object.values(jwtToken)[1];
           localStorage.setItem('bearer', bearer);
-          role = this.isSeller ? 'ROLE_ADMIN' : 'ROLE_USER'
+          role = this.isSeller ? 'ROLE_ADMIN' : 'ROLE_USER';
           // Assuming you want to use the JWT token immediately to create a user
           const newUser = {
             id: this.username,
@@ -94,29 +95,45 @@ export class LogInComponent {
 
           // Call the userService to create a new user
           // Make sure to include the JWT token in your request if needed
-          this.userService.createUser(newUser, localStorage.getItem('bearer') || '').subscribe({
-            next: (response) => {
-              console.log('User created', response);
-              localStorage.setItem('loggedIn', 'true');
-              localStorage.setItem('username', this.username);
-              localStorage.setItem('userId', this.username);
-              this.getRole();
+          this.userService
+            .createUser(newUser, localStorage.getItem('bearer') || '')
+            .subscribe({
+              next: (response) => {
+                console.log('User created', response);
+                localStorage.setItem('loggedIn', 'true');
+                localStorage.setItem('username', this.username);
+                localStorage.setItem('userId', this.username);
+                this.getRole();
 
-              // Handle response upon successful user creation
-              // Navigate to the desired route upon success
-              this.router.navigate(['/']);
-            },
-            error: (userError) => {
-              this.errorMessage = userError.error;
-              console.error('Error creating user', userError);
-            },
-          });
+                const fileInput = document.getElementById('mediaUpload') as HTMLInputElement;
+                if ( fileInput && fileInput.files && fileInput.files.length > 0 ) {
+                  const file = fileInput.files[0]; // Access the first file in the files list
+                  const userId = localStorage.getItem('userId') || '';
+                  const bearerToken = localStorage.getItem('bearer') || '';
+
+                  this.mediaService.uploadAvatar(file, userId, bearerToken).subscribe(
+                      () => {
+                        console.log('Profile picture updated successfully');
+                      },
+                      (error) => {
+                        console.error('Update profile picture error:', error);
+                      }
+                    );
+                }
+                // Handle response upon successful user creation
+                // Navigate to the desired route upon success
+                this.router.navigate(['/']);
+              },
+              error: (userError) => {
+                this.errorMessage = userError.error;
+                console.error('Error creating user', userError);
+              },
+            });
         },
         error: (error) => {
           console.error('Error obtaining JWT token', error);
         },
       });
-
       return true;
     } else {
       return false;
@@ -145,10 +162,9 @@ export class LogInComponent {
         localStorage.setItem('userId', userId);
         this.getRole();
         this.router.navigate(['/']);
-
       },
       error: (userError) => {
-        this.errorMessage = "Username or password is incorrect"
+        this.errorMessage = 'Username or password is incorrect';
         // Handle any errors here, such as showing an error message to the user
         console.log(this.username, this.password);
         console.error('Error logging in', userError);
