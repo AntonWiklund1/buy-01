@@ -49,6 +49,7 @@ export class ProductManagementComponent {
   }
   toggleDescription(product: any) {
     product.isReadMore = !product.isReadMore;
+    product.isExpanded = !product.isExpanded; // Toggle the expanded state
   }
 
   loadProducts(): void {
