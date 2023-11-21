@@ -86,7 +86,7 @@
         </span>
         <h1>Upload a media to {{uploadignMediaToProduct}}</h1>
         <form (submit)="uploadMedia(); $event.preventDefault()" class="formClass">
-            <p>{{toBigFileError}}</p>
+            <p>{{errorMessage}}</p>
             <input type="file" name="file" id="file" class="file">
             <button type="submit">upload</button>
           </form>
