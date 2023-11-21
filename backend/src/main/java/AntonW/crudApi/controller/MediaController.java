@@ -30,6 +30,21 @@ public class MediaController {
     @PostMapping("/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,
             @RequestParam("productId") String productId) {
+        // Validate file size
+        final long MAX_SIZE = 2 * 1024 * 1024; // 2 MB
+        if (file.getSize() > MAX_SIZE) {
+            return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
+                    .body("File size should not exceed 2 MB");
+        }
+
+        // Validate MIME type to only allow image uploads
+        String mimeType = file.getContentType();
+        if (mimeType == null || !mimeType.startsWith("image")) {
+            return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+                    .body("Only image files are allowed");
+        }
+
+        // Proceed with storing the file if the checks pass
         try {
             Media savedMedia = mediaService.storeFile(file, productId);
             return new ResponseEntity<>(savedMedia, HttpStatus.CREATED);
