@@ -10,7 +10,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.ConstraintViolationException;
+import org.springframework.web.multipart.MultipartFile;
 
+
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -84,4 +87,19 @@ public class UserController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+
+    @PostMapping("/{id}/avatar")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> uploadAvatar(@PathVariable String id, @RequestParam("avatar") MultipartFile avatarFile) {
+        try {
+            userService.uploadUserAvatar(id, avatarFile);
+            return new ResponseEntity<>("Avatar uploaded successfully", HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>("Could not upload the file: " + avatarFile.getOriginalFilename(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (UserCollectionException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

@@ -36,10 +36,16 @@ public class User {
     @NotNull(message = "User role cannot be null")
     @Field
     private String role;
+    
+    @Field
+    private String avatarImagePath; // New field for avatar image path
 
     public String uuidGenerator() {
         return UUID.randomUUID().toString();
     }
+
+
+
 
     // Getters and Setters
     // ...
@@ -83,5 +89,12 @@ public class User {
     public void setId(String id) {
         this.id = id;
     }
-
+    public String getAvatarImagePath() {
+        return avatarImagePath;
+    }
+    
+    public void setAvatarImagePath(String avatarImagePath) {
+        this.avatarImagePath = avatarImagePath;
+    }
+    
 }

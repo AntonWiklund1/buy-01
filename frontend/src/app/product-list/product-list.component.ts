@@ -51,11 +51,11 @@ export class ProductListComponent {
               const imagePath = `${backendUrl}${mediaObject.imagePath}`;
               this.productMediaUrls.set(product.id, imagePath);
             } else {
-              console.error(`Media URL not found for product ${product.id}`);
+              
               this.productMediaUrls.set(product.id, 'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png');
             }
           } else {
-            console.error(`Media data is not an array for product ${product.id}`);
+
             this.productMediaUrls.set(product.id, 'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png');
           }
         },

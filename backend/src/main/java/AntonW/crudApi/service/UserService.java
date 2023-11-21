@@ -8,14 +8,22 @@ import AntonW.crudApi.repositories.ProductRepository;
 import AntonW.crudApi.config.ValidateUser;
 import AntonW.crudApi.exceptions.UserCollectionException;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import javax.validation.ConstraintViolationException;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class UserService {
@@ -99,9 +107,23 @@ public class UserService {
 
         }
     }
+
     public boolean checkUserCredentials(String username, String password) {
         Optional<User> userOptional = userRepository.findByName(username);
         return userOptional.isPresent() && passwordEncoder.matches(password, userOptional.get().getPassword());
     }
 
+    public void uploadUserAvatar(String id, MultipartFile avatarFile) throws IOException, UserCollectionException {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (!userOptional.isPresent()) {
+            throw new UserCollectionException(UserCollectionException.NotFoundException(id));
+        }
+
+        User user = userOptional.get();
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(avatarFile.getOriginalFilename()));
+        Path filePath = Paths.get("media/avatars/" + fileName);
+        Files.copy(avatarFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+        user.setAvatarImagePath(filePath.toString());
+        userRepository.save(user);
+    }
 }
