@@ -94,6 +94,9 @@
   background-color: #ffffff;
   z-index: 3;
 }
+.addProduct{
+  cursor: pointer;
+}
 .closeModal {
   position: absolute;
   top: 0;
