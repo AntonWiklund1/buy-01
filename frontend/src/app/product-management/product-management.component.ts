@@ -117,6 +117,7 @@ export class ProductManagementComponent {
       description: (<HTMLInputElement>document.getElementById('description'))
         .value,
       price: (<HTMLInputElement>document.getElementById('price')).value,
+      quantity: (<HTMLInputElement>document.getElementById('quantity')).value,
       userid: localStorage.getItem('userId'),
     };
 
@@ -193,12 +194,13 @@ export class ProductManagementComponent {
       }
     );
   }
-  updateProduct(id: string, name: string, description: string, price: string) {
+  updateProduct(id: string, name: string, description: string, price: string, quantity: string) {
     console.log('updateProduct');
     const newProduct = {
       name: name,
       description: description,
       price: price,
+      quantity: quantity,
       userid: localStorage.getItem('userId'),
     };
 

@@ -59,6 +59,7 @@
             <input type="text" placeholder="name" id="name" class="name">
             <textarea name="description" class="description" placeholder="description" id="description"></textarea>
             <input type="number" placeholder="price" id="price" class="price">
+            <input type="number" placeholder="quantity" id="quantity" class="quantity">
             <input type="file" id="fileAdd" class="fileAdd">
             <button type="submit" (click)="createProduct();">add</button>
         </form>
@@ -79,7 +80,7 @@
                 <textarea [(ngModel)]="editProduct.description" name="description" class="description"
                     id="editProductDescription"></textarea>
                 <input type="number" [(ngModel)]="editProduct.price" name="price" class="price" id="editProductPrice">
-
+                <input type="number" [(ngModel)]="editProduct.quantity" id="quantity" class="quantity" id="editProductQuantity">
                 <button type="submit"
                     (click)="updateProduct(editProduct.id,editProduct.name,editProduct.description,editProduct.price)">edit</button>
             </form>
