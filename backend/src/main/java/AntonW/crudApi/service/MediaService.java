@@ -13,6 +13,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,12 +28,20 @@ public class MediaService {
     private final Path rootLocation = Paths.get("media");
 
     public Media storeFile(MultipartFile file, String productId) throws IOException {
-        // Store the file on the server
-        Files.copy(file.getInputStream(), this.rootLocation.resolve(file.getOriginalFilename()));
+        // Generate a unique file name using UUID
+        String originalFileName = file.getOriginalFilename();
+        String fileExtension = "";
+        if (originalFileName != null && originalFileName.contains(".")) {
+            fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+        }
+        String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
+
+        // Store the file on the server with the new unique file name
+        Files.copy(file.getInputStream(), this.rootLocation.resolve(uniqueFileName));
 
         // Create a new media object and save it to the database
         Media media = new Media();
-        media.setImagePath(this.rootLocation.resolve(file.getOriginalFilename()).toString());
+        media.setImagePath(this.rootLocation.resolve(uniqueFileName).toString());
         media.setProductId(productId);
 
         return mediaRepository.save(media);
@@ -62,7 +72,7 @@ public class MediaService {
         mediaRepository.deleteByProductId(productId);
     }
 
-    //download media by product id
+    // download media by product id
     public Path downloadMediaByProductId(String productId) throws FileNotFoundException, MalformedURLException {
         List<Media> mediaFiles = mediaRepository.findByProductId(productId);
 
