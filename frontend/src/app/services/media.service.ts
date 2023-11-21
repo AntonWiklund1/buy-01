@@ -8,6 +8,7 @@ export class MediaService {
     private apiUploadUrl = 'https://localhost:8443/media/upload';
     private apiGetMediaUrl = 'https://localhost:8443/media/product/';
     private apiUploadAvatarUrl = 'https://localhost:8443/api/users';
+    private apiGetAvatarUrl = 'https://localhost:8443/api/users';
   
     constructor(private http: HttpClient) {}
   
@@ -37,6 +38,16 @@ export class MediaService {
 
       // No need to set the Content-Type header, HttpClient will set it automatically
       return this.http.post(`${this.apiUploadAvatarUrl}/${userId}` +  '/avatar', formData ,{ headers: headers, responseType: 'text'});
+    }
+
+    //get avatar
+    getAvatar(userId: string, token: string) {
+
+      const headers = new HttpHeaders({ 
+        'Authorization': `Bearer ${token}` 
+      });
+
+      return this.http.get(`${this.apiGetAvatarUrl}/${userId}` + '/avatar' ,{ headers: headers, responseType: 'text'});
     }
   }
   

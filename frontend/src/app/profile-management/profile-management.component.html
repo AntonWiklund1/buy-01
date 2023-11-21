@@ -23,7 +23,7 @@
         <form action="" class="editProfilePicture">
             <h3>Edit profile picture</h3>
             <label for="profilePic">Current profile picture:</label>
-            <img src="https://images.unsplash.com/photo-1534308143481-c55f00be8bd7?q=80&w=4460&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" class="profilePic">
+            <img [src]="avatarUrl" alt="" class="profilePic">
             <input type="file" class="newProfilePicture" id="newProfilePicture">
             <button (click)="editProfilePicture()">Submit changes</button>
         </form>

@@ -76,5 +76,16 @@ public class MediaController {
         }
         return ResponseEntity.ok().body(file);
     }
+
+    //serve files form /media/avatars
+    @GetMapping("/avatars/{filename:.+}")
+    @ResponseBody
+    public ResponseEntity<Resource> serveAvatar(@PathVariable String filename) {
+        Resource file = new FileSystemResource(Paths.get(mediaPath, "avatars", filename));
+        if (!file.exists() || !file.isReadable()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().body(file);
+    }
     
 }

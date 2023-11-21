@@ -19,6 +19,7 @@ export class ProfileManagementComponent implements OnInit {
   username: string;
   userId: string;
   confirmDeleteProfile: boolean = false;
+  avatarUrl: string = 'assets/images/default-avatar.png';
 
   constructor(
     private userService: UserService,
@@ -32,9 +33,27 @@ export class ProfileManagementComponent implements OnInit {
   ngOnInit(): void {
     console.log('Username:', this.username);
     console.log('UserID:', this.userId);
+    this.loadUserAvatar();
+
     // If the userID is already retrieved in the constructor, no need to get it again here
   }
-
+  loadUserAvatar(): void {
+    const userId = localStorage.getItem('userId') || '';
+    const bearerToken = localStorage.getItem('bearer') || '';
+  
+    this.mediaService.getAvatar(userId, bearerToken).subscribe(
+      (response) => {
+        console.log('User avatar retrieved successfully', response);
+        this.avatarUrl = `https://localhost:8443/${response}`; // Assuming the backend is hosted on localhost:8443
+      },
+      (error) => {
+        console.error('Get user avatar error:', error);
+        this.avatarUrl = 'assets/images/default-avatar.png'; // Fallback avatar
+      }
+    );
+  }
+  
+  
   deleteProfile(): void {
     console.log('Deleting Profile');
     const userId = this.userId;
