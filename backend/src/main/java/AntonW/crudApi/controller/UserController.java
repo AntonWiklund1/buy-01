@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/api/users") // The base URL for this controller
 public class UserController {
@@ -90,6 +91,21 @@ public class UserController {
     @PostMapping("/{id}/avatar")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> uploadAvatar(@PathVariable String id, @RequestParam("avatar") MultipartFile avatarFile) {
+        // Validate file size
+        final long MAX_SIZE = 2 * 1024 * 1024; // 2 MB
+        if (avatarFile.getSize() > MAX_SIZE) {
+            return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
+                    .body("File size should not exceed 2 MB");
+        }
+
+        // Validate MIME type to only allow image uploads
+        String mimeType = avatarFile.getContentType();
+        if (mimeType == null || !mimeType.startsWith("image")) {
+            return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+                    .body("Only image files are allowed");
+        }
+
+        // If file size and MIME type are valid, proceed with upload
         try {
             userService.uploadUserAvatar(id, avatarFile);
             return new ResponseEntity<>("Avatar uploaded successfully", HttpStatus.OK);
