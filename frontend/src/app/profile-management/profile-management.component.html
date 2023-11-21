@@ -22,6 +22,7 @@
         </form>
         <form action="" class="editProfilePicture">
             <h3>Edit profile picture</h3>
+            <p *ngIf="confirmedProfilePicChange">You updated the profile picture</p>
             <label for="profilePic">Current profile picture:</label>
             <img [src]="avatarUrl" alt="" class="profilePic">
             <input type="file" class="newProfilePicture" id="newProfilePicture">

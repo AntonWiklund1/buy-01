@@ -20,6 +20,7 @@ export class ProfileManagementComponent implements OnInit {
   userId: string;
   confirmDeleteProfile: boolean = false;
   avatarUrl: string = 'assets/images/default-avatar.png';
+  confirmedProfilePicChange: boolean = false;
 
   constructor(
     private userService: UserService,
@@ -144,7 +145,8 @@ export class ProfileManagementComponent implements OnInit {
       this.mediaService.uploadAvatar(file, userId, bearerToken).subscribe(
         () => {
           console.log('Profile picture updated successfully');
-          this.router.navigate(['/profileManagment']);
+          this.confirmedProfilePicChange = true;
+          this.loadUserAvatar();
         },
         (error) => {
           console.log(file, userId)
