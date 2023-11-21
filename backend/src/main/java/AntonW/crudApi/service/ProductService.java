@@ -57,6 +57,7 @@ public class ProductService {
             if (productOptional.get().getName().equals(product.getName()) &&
                     productOptional.get().getDescription().equals(product.getDescription()) &&
                     productOptional.get().getPrice().equals(product.getPrice()) &&
+                    productOptional.get().getQuantity() == (product.getQuantity()) &&
                     productOptional.get().getUserid().equals(product.getUserid())) {
                 throw new ProductCollectionException(ProductCollectionException.NoChangesMadeException());
             } else if (userOptional.isEmpty()) {
@@ -66,6 +67,7 @@ public class ProductService {
             productUpdate.setName(product.getName());
             productUpdate.setDescription(product.getDescription());
             productUpdate.setPrice(product.getPrice());
+            productUpdate.setQuantity(product.getQuantity());
             productUpdate.setUserId(product.getUserid());
             productRepository.save(productUpdate);
         } else {

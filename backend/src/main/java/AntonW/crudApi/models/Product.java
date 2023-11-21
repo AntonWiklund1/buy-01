@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -28,6 +29,11 @@ public class Product {
     @DecimalMin(value = "0.0", message = "Product price must be greater than or equal to 0")
     @Field
     private Double price;
+
+    @NotNull(message = "Product price cannot be null")
+    @Min(value = 0, message = "Product quantity must be greater than or equal to 0")
+    @Field
+    private int quantity;
 
     @NotBlank(message = "Product userId cannot be empty")
     @Field
@@ -65,6 +71,10 @@ public class Product {
         return price;
     }
 
+    public int getQuantity(){
+        return quantity;
+    }
+
     public String getUserid() {
         return userId;
     }
@@ -87,6 +97,10 @@ public class Product {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
 }
