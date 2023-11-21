@@ -18,5 +18,6 @@ mkcert -key-file $KEY_FILE -cert-file $CERT_FILE $CERT_NAME
 
 # Convert PEM to PKCS12 format
 openssl pkcs12 -export -out $PKCS12_FILE -inkey $KEY_FILE -in $CERT_FILE -password pass:$PASSWORD
-
+# test
 echo "SSL certificate generated in $CERT_DIR"
+
