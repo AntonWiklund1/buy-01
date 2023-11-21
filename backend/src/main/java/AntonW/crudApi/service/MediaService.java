@@ -28,6 +28,8 @@ public class MediaService {
     private final Path rootLocation = Paths.get("media");
 
     public Media storeFile(MultipartFile file, String productId) throws IOException {
+
+        deleteMediaByProductId(productId);
         // Generate a unique file name using UUID
         String originalFileName = file.getOriginalFilename();
         String fileExtension = "";
@@ -54,21 +56,23 @@ public class MediaService {
 
     // delete media by product id
     public void deleteMediaByProductId(String productId) {
-
+        // Find all media entries for the product ID
         List<Media> mediaFiles = mediaRepository.findByProductId(productId);
-
+    
+        // Loop through the media files and delete each one
         for (Media media : mediaFiles) {
-            Path fileToDeletePath = null;
+            Path fileToDeletePath = rootLocation.resolve(media.getImagePath().replace("media/", ""));
             try {
-                fileToDeletePath = rootLocation.resolve(media.getImagePath().replace("media/", ""));
-                log.info("Deleting file: " + fileToDeletePath);
                 Files.deleteIfExists(fileToDeletePath);
+                // Log the deletion
+                log.info("Deleted file: " + fileToDeletePath);
             } catch (IOException e) {
+                // Log any errors
                 log.error("Failed to delete file: " + fileToDeletePath, e);
             }
-
         }
-
+    
+        // Now delete the records from the database
         mediaRepository.deleteByProductId(productId);
     }
 

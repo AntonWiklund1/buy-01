@@ -22,7 +22,7 @@ export class ProductManagementComponent {
   uploadignMediaToProduct: string = '';
   imagepath: string = '';
   productMediaUrls: Map<string, string> = new Map(); // Map to store media URLs
-  toBigFileError: string = "";
+  errorMessage: string = '';
 
 
   constructor(
@@ -239,37 +239,39 @@ export class ProductManagementComponent {
   }
 
   uploadMedia() {
-    const MAX_SIZE = 2 * 1024 * 1024; // 2 MB in bytes
     const fileInput = document.getElementById('file') as HTMLInputElement;
-  
     if (fileInput && fileInput.files && fileInput.files.length > 0) {
-      const file = fileInput.files[0]; // Access the first file in the files list
-  
-      if (file.size <= MAX_SIZE) {
-        // If the file size is less than or equal to 2 MB, proceed with upload
-        const productId = localStorage.getItem('productId') || '';
-        this.MediaService.uploadMedia(file, productId).subscribe(
-          (data) => {
-            console.log(data);
-            this.closeModal();
-
-          },
-          (error) => {
-            console.error('Upload error:', error);
-            // Handle the upload error, perhaps by showing an error message to the user.
+      const file = fileInput.files[0];
+      const productId = localStorage.getItem('productId') || '';
+      this.MediaService.uploadMedia(file, productId).subscribe(
+        (data) => {
+          console.log(data);
+          this.closeModal();
+          this.ngOnInit();
+          // Reset error message if upload is successful
+          this.errorMessage = '';
+          // Handle the response, like closing the modal or showing a success message.
+        },
+        (error) => {
+          console.error('Upload error:', error);
+          // Check if the error status is 413 Payload Too Large
+          if (error.status === 413) {
+            this.errorMessage = 'The file is too large to upload.';
+          } else if (error.status === 415) {
+            this.errorMessage = 'The file type is not supported.';
           }
-        );
-      } else {
-        console.error('File is too large.');
-        this.toBigFileError = "File is too large.";
-      }
+          // Handle the upload error, perhaps by showing an error message to the user.
+        }
+      );
     } else {
       console.error('No file selected.');
+      this.errorMessage = 'No file selected. Please choose a file to upload.';
       // Inform the user that no file was selected if that's the case.
     }
   }
   
   
+
   showMediaUpload() {
     return this.showMediaUploads;
   }
