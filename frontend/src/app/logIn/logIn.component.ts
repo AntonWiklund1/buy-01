@@ -116,7 +116,13 @@ export class LogInComponent {
                         console.log('Profile picture updated successfully');
                       },
                       (error) => {
-                        console.error('Update profile picture error:', error);
+                        console.log(file, userId)
+                        if (error.status === 413) {
+                          this.errorMessage = 'The file is too large to upload.';
+                        } else if (error.status === 415) {
+                          this.errorMessage = 'The file type is not supported.';
+                        }
+                        console.error('Update profile picture error:', error)
                       }
                     );
                 }

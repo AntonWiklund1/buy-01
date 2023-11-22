@@ -21,6 +21,7 @@ export class ProfileManagementComponent implements OnInit {
   confirmDeleteProfile: boolean = false;
   avatarUrl: string = 'assets/images/default-avatar.png';
   confirmedProfilePicChange: boolean = false;
+  errorMessage: string = '';
 
   constructor(
     private userService: UserService,
@@ -147,9 +148,15 @@ export class ProfileManagementComponent implements OnInit {
           console.log('Profile picture updated successfully');
           this.confirmedProfilePicChange = true;
           this.loadUserAvatar();
+          this.errorMessage = '';
         },
         (error) => {
           console.log(file, userId)
+          if (error.status === 413) {
+            this.errorMessage = 'The file is too large to upload.';
+          } else if (error.status === 415) {
+            this.errorMessage = 'The file type is not supported.';
+          }
           console.error('Update profile picture error:', error)
         }
       );

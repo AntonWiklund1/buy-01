@@ -22,6 +22,7 @@
                 <p *ngIf="confirmedProfilePicChange">You updated the profile picture</p>
                 <label for="profilePic">Current profile picture:</label>
                 <img [src]="avatarUrl" alt="" class="profilePic">
+                <p *ngIf="errorMessage != ''">{{errorMessage}}</p>
                 <input type="file" class="newProfilePicture" id="newProfilePicture">
                 <button (click)="editProfilePicture()">Submit changes</button>
             </form>  
