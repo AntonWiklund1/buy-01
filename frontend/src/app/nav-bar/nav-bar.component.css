@@ -3,7 +3,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 10rem;
+    width: 8rem;
     height: 100vh; 
     display: flex;
     flex-direction: column;
@@ -47,6 +47,15 @@
     color: var(--second-color);
     text-decoration: none;
     cursor: pointer;
+
+}
+.profileName{
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--second-color);
+    text-decoration: none;
+    cursor: pointer;
+    position: relative;
 
 }
 .linkDiv{
@@ -168,8 +177,11 @@
     }
     .profile{
         position: relative;
-        left: -2rem;
-        border: 2px solid var(--second-color);
+        left: -1.5rem;
+    }
+    .profile img{
+        width: 3rem;
+        height: 3rem;
     }
 
 }

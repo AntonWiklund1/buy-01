@@ -22,7 +22,7 @@
         </div>
         <div class="profile" routerLink="/profileManagment">
             <img [src]="avatarUrl" alt="" class=""> 
-            <a class="link" *ngIf="isLoggedIn()">{{username}}</a>
+            <a class="profileName" *ngIf="isLoggedIn()">{{username}}</a>
         </div>
         <div class="logStatus">
             <a [class.visible]="!isLoggedIn()" class="logInLink" routerLink="/logIn">Log in/Sign up</a>
