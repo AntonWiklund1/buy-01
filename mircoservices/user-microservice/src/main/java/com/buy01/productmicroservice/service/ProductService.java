@@ -22,6 +22,9 @@ public class ProductService {
                 .name(productRequest.getName())
                 .description(productRequest.getDescription())
                 .price(productRequest.getPrice())
+                .quantity(productRequest.getQuantity())
+                .userId(productRequest.getUserId())
+
                 .build();
 
         productRepository.save(product);
@@ -40,6 +43,8 @@ public class ProductService {
                 .name(product.getName())
                 .description(product.getDescription())
                 .price(product.getPrice())
+                .quantity(product.getQuantity())
+                .userId(product.getUserId())
                 .build();
     }
 }
