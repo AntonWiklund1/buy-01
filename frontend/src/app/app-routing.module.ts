@@ -12,6 +12,7 @@ const routes: Routes = [
   { path: 'productList', component: ProductListComponent},
   { path: 'productManagement', component: ProductManagementComponent},
   { path: 'profileManagment', component: ProfileManagementComponent},
+
   { path: '**', redirectTo: '/', pathMatch: 'full' },
 ];
 

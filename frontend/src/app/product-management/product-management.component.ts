@@ -4,6 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { Renderer2, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { MediaService } from '../services/media.service';
+import * as AuthSelectors from '../state/auth/auth.selector';
+import { Observable, take } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { AuthState } from '../state/auth/auth.reducer';
 
 @Component({
   selector: 'app-product-management',
@@ -13,8 +17,9 @@ import { MediaService } from '../services/media.service';
 export class ProductManagementComponent {
   products: any[] | undefined;
   editProducts: any[] | undefined;
-  username: string = localStorage.getItem('username') || '';
-  userId: string = localStorage.getItem('userId') || '';
+  username$: Observable<string | null>;
+  userId$: Observable<string | null>;
+  token$: Observable<string | null>;
   showProducts: boolean = false;
   showEditProducts: boolean = false;
   showMediaUploads: boolean = false;
@@ -23,54 +28,79 @@ export class ProductManagementComponent {
   imagepath: string = '';
   productMediaUrls: Map<string, string> = new Map(); // Map to store media URLs
   errorMessage: string = '';
-
+  userId: string | null | undefined;
+  token: string | null | undefined;
 
   constructor(
+    private store: Store<{ auth: AuthState }>,
     private productService: ProductService,
     private MediaService: MediaService,
     private renderer: Renderer2,
     private el: ElementRef,
     private router: Router
-  ) {}
+  ) {
+    this.username$ = this.store.select(AuthSelectors.selectUsername);
+    this.userId$ = this.store.select(AuthSelectors.selectUserId);
+    this.token$ = this.store.select(AuthSelectors.selectToken);
+  }
 
   ngOnInit(): void {
-    console.log(this.username);
-    this.productService.getProductsByUserId(this.userId).subscribe(
-      (data) => {
-        this.products = data;
-      },
-      (error) => {
-        console.error(error);
+    console.log('token', this.token$);
+    this.userId$.pipe(take(1)).subscribe((userId) => {
+      if (userId) {
+        this.productService.getProductsByUserId(userId).subscribe(
+          (data) => {
+            this.products = data;
+          },
+          (error) => {
+            console.error(error);
+          }
+        );
+        // If you need to load products, you should call it here within the subscription
+        // after you get the userId.
+        this.loadProducts(userId); // Assuming loadProducts needs the userId
+      } else {
+        // Handle the case where there is no userId (e.g., user is not logged in)
       }
-    );
-    this.loadProducts();
+    });
+    this.userId$.pipe(take(1)).subscribe((id) => {
+      this.userId = id;
+    });
+  
+    // Subscribe to the token$ observable to get the latest token
+    this.token$.pipe(take(1)).subscribe((token) => {
+      this.token = token;
+    });
+  
+    // closeModal and localStorage.removeItem should be used with caution;
+    // Ensure they are called in the right context
     this.closeModal();
     localStorage.removeItem('productId');
   }
+  
   toggleDescription(product: any) {
     product.isReadMore = !product.isReadMore;
     product.isExpanded = !product.isExpanded; // Toggle the expanded state
   }
 
-  loadProducts(): void {
-  this.productService.getProductsByUserId(this.userId).subscribe(
-    (products) => {
-      this.products = products.map((product: any) => ({
-        ...product,
-        isReadMore: true // Add this line for each product
-      }));
-      this.preloadMediaForProducts(products);
-    },
-    (error) => {
-      console.error(error);
-    }
-  );
-}
-
+  loadProducts(userId: string): void {
+    this.productService.getProductsByUserId(userId).subscribe(
+      (products) => {
+        this.products = products.map((product: any) => ({
+          ...product,
+          isReadMore: true, // Add this line for each product
+        }));
+        this.preloadMediaForProducts(products);
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  }
 
   preloadMediaForProducts(products: any[]): void {
     const backendUrl = 'https://localhost:8443/'; // Adjust this URL to where your backend serves media files
-    products.forEach(product => {
+    products.forEach((product) => {
       this.MediaService.getMedia(product.id).subscribe(
         (mediaDataArray) => {
           if (Array.isArray(mediaDataArray) && mediaDataArray.length > 0) {
@@ -79,23 +109,28 @@ export class ProductManagementComponent {
               const imagePath = `${backendUrl}${mediaObject.imagePath}`;
               this.productMediaUrls.set(product.id, imagePath);
             } else {
-
-              this.productMediaUrls.set(product.id, 'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png');
+              this.productMediaUrls.set(
+                product.id,
+                'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png'
+              );
             }
           } else {
-
-            this.productMediaUrls.set(product.id, 'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png');
+            this.productMediaUrls.set(
+              product.id,
+              'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png'
+            );
           }
         },
         (error) => {
           console.error(error);
-          this.productMediaUrls.set(product.id, 'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png');
+          this.productMediaUrls.set(
+            product.id,
+            'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png'
+          );
         }
       );
     });
   }
-  
-    
 
   getMediaUrl(productId: string): string | undefined {
     return this.productMediaUrls.get(productId);
@@ -119,19 +154,24 @@ export class ProductManagementComponent {
         .value,
       price: (<HTMLInputElement>document.getElementById('price')).value,
       quantity: (<HTMLInputElement>document.getElementById('quantity')).value,
-      userid: localStorage.getItem('userId'),
+      userid: this.userId,
     };
 
-    const bearer = localStorage.getItem('bearer');
-    console.log('bearer', bearer);
-    this.productService.addProduct(newProduct, bearer || '').subscribe(
+    
+    this.productService.addProduct(newProduct, this.token || '').subscribe(
       (data) => {
-        const newFileInput = document.getElementById('fileAdd') as HTMLInputElement;
+        const newFileInput = document.getElementById(
+          'fileAdd'
+        ) as HTMLInputElement;
 
-        if (newFileInput && newFileInput.files && newFileInput.files.length > 0) {
+        if (
+          newFileInput &&
+          newFileInput.files &&
+          newFileInput.files.length > 0
+        ) {
           const newFile = newFileInput.files[0];
           console.log(data);
-          this.MediaService.uploadMedia(newFile,data.id).subscribe(
+          this.MediaService.uploadMedia(newFile, data.id).subscribe(
             (data) => {
               console.log(data);
               this.closeModal();
@@ -144,17 +184,15 @@ export class ProductManagementComponent {
               // Handle the upload error, perhaps by showing an error message to the user.
             }
           );
-            
-        }else{
+        } else {
           this.closeModal();
           this.router.navigate(['/productManagement']);
         }
       },
       (error) => {
-
         this.closeModal();
         console.log(newProduct);
-        console.error("error for new product",error);
+        console.error('error for new product', error);
       }
     );
   }
@@ -181,7 +219,7 @@ export class ProductManagementComponent {
     this.renderer.addClass(bakground, 'darkBackground');
     this.showEditProducts = !this.showEditProducts;
 
-    const bearer = localStorage.getItem('bearer');
+    
 
     this.productService.getProductById(id).subscribe(
       (data) => {
@@ -195,20 +233,26 @@ export class ProductManagementComponent {
       }
     );
   }
-  updateProduct(id: string, name: string, description: string, price: string, quantity: string) {
+  updateProduct(
+    id: string,
+    name: string,
+    description: string,
+    price: string,
+    quantity: string
+  ) {
     console.log('updateProduct');
     const newProduct = {
       name: name,
       description: description,
       price: price,
       quantity: quantity,
-      userid: localStorage.getItem('userId'),
+      userid: this.userId,
     };
 
-    const bearer = localStorage.getItem('bearer');
 
-    console.log('newProduct', id, newProduct, bearer);
-    this.productService.editProduct(id, newProduct, bearer || '').subscribe(
+
+    console.log('newProduct', id, newProduct, this.token);
+    this.productService.editProduct(id, newProduct, this.token || '').subscribe(
       (data) => {
         console.log(data);
         this.ngOnInit();
@@ -226,9 +270,9 @@ export class ProductManagementComponent {
   }
   deleteProduct(id: string) {
     console.log('deleteProduct');
-    const bearer = localStorage.getItem('bearer');
 
-    this.productService.deleteProduct(id, bearer || '').subscribe(
+
+    this.productService.deleteProduct(id, this.token || '').subscribe(
       (data) => {
         this.confirmDeleteProduct = false;
         console.log(data);
@@ -279,8 +323,6 @@ export class ProductManagementComponent {
       // Inform the user that no file was selected if that's the case.
     }
   }
-  
-  
 
   showMediaUpload() {
     return this.showMediaUploads;

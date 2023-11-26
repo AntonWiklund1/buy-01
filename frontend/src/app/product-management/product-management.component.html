@@ -1,7 +1,11 @@
 <div class="bakground"></div>
 <div class="productManagmentContainer">
 
-    <h1>Product managment for {{username}} </h1>
+    
+    <div *ngIf="username$ | async as username">
+        <h1>Product managment for  {{ username }}</h1>
+      </div>
+      
     <div class="addProduct">
         <span class="material-symbols-outlined" (click)="addproduct()">
             add
@@ -11,7 +15,6 @@
         <div *ngFor="let product of products" class="productCard" [ngClass]="{'expanded': product.isExpanded}">
             <div class="productImageDiv" >
                 <img [src]="getMediaUrl(product.id)" alt="" class="productImage">
-
             </div>
             <div class="productInfoDiv">
                 <h2>{{ product.name }}</h2>

@@ -10,6 +10,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { ProductManagementComponent } from './product-management/product-management.component';
 import { ProfileManagementComponent } from './profile-management/profile-managment.component';
 import { HomeComponent } from './home/home.component';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { authReducer } from './state/auth/auth.reducer';
+import { environment } from '../environments/environment';
 
 
 @NgModule({
@@ -20,18 +25,26 @@ import { HomeComponent } from './home/home.component';
     ProductListComponent,
     ProductManagementComponent,
     ProfileManagementComponent,
-    HomeComponent
+    HomeComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule, // Import FormsModule here
-    HttpClientModule
-  ],
-  providers: [
+    HttpClientModule,
+    StoreModule.forRoot({ auth: authReducer }),
+    EffectsModule.forRoot([]),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25, // Retains last 25 states
+    }),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25, // Retains the last 25 states
+      logOnly: environment.production, // Restrict extension to log-only mode
+    }),
 
   ],
+  providers: [],
 
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

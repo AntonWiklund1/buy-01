@@ -2,6 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { MediaService } from '../services/media.service';
+import { Store } from '@ngrx/store';
+import { AuthState } from '../state/auth/auth.reducer';
+import * as AuthSelectors from '../state/auth/auth.selector';
+import { Observable, take } from 'rxjs';
+
 
 interface Profile {
   name: string;
@@ -16,58 +21,83 @@ interface Profile {
   styleUrls: ['./profile-management.component.css'],
 })
 export class ProfileManagementComponent implements OnInit {
-  username: string;
-  userId: string;
+  username$: Observable<string | null>;
+  userId$: Observable<string | null>;
+  token$: Observable<string | null>;
+
   confirmDeleteProfile: boolean = false;
   avatarUrl: string = 'assets/images/default-avatar.png';
   confirmedProfilePicChange: boolean = false;
   errorMessage: string = '';
-
+  userId: string | null | undefined;
+  token: string | null | undefined;
+  username: string | null | undefined;
   constructor(
+    private store: Store<{ auth: AuthState }>,
     private userService: UserService,
     private router: Router,
     private mediaService: MediaService
   ) {
-    this.username = localStorage.getItem('username') || '';
-    this.userId = localStorage.getItem('userId') || '';
+    this.username$ = this.store.select(AuthSelectors.selectUsername);
+    this.userId$ = this.store.select(AuthSelectors.selectUserId);
+    this.token$ = this.store.select(AuthSelectors.selectToken);
+
   }
 
   ngOnInit(): void {
-    console.log('Username:', this.username);
-    console.log('UserID:', this.userId);
-    this.loadUserAvatar();
+    this.userId$.subscribe((userId) => {
+      if (userId) {
+        this.loadUserAvatar(userId);
+      }
+
+      this.userId$.pipe(take(1)).subscribe((id) => {
+        this.userId = id;
+      });
+    
+      // Subscribe to the token$ observable to get the latest token
+      this.token$.pipe(take(1)).subscribe((token) => {
+        this.token = token;
+      });
+
+      this.username$.pipe(take(1)).subscribe((username) => {
+        this.username = username;
+      });
+    });
+
 
     // If the userID is already retrieved in the constructor, no need to get it again here
   }
-  loadUserAvatar(): void {
-    const userId = localStorage.getItem('userId') || '';
-    const bearerToken = localStorage.getItem('bearer') || '';
-  
-    this.mediaService.getAvatar(userId, bearerToken).subscribe(
-      (response) => {
-        console.log('User avatar retrieved successfully', response);
-        this.avatarUrl = `https://localhost:8443/${response}`; // Assuming the backend is hosted on localhost:8443
-      },
-      (error) => {
-        console.error('Get user avatar error:', error);
-        this.avatarUrl = 'assets/images/default-avatar.png'; // Fallback avatar
+  loadUserAvatar(userId: string): void {
+    this.token$.subscribe((token) => {
+      if (token && userId) {
+        this.mediaService.getAvatar(userId, token).subscribe(
+          (response) => {
+            console.log('User avatar retrieved successfully', response);
+            this.avatarUrl = `https://localhost:8443/${response}`; // Assuming the backend is hosted on localhost:8443
+          },
+          (error) => {
+            console.error('Get user avatar error:', error);
+            this.avatarUrl = 'assets/images/default-avatar.png'; // Fallback avatar
+          }
+        );
       }
-    );
+    });
   }
+
   
   
   deleteProfile(): void {
     console.log('Deleting Profile');
-    const userId = this.userId;
-    const bearerToken = localStorage.getItem('bearer') || '';
 
-    this.userService.deleteProfile(userId, bearerToken).subscribe(
+    const bearerToken = this.token || '';
+
+    this.userService.deleteProfile(this.userId, bearerToken).subscribe(
       () => {
         console.log('Profile deleted successfully');
         localStorage.clear(); // If you're removing all items, use clear
         this.router.navigate(['/logIn']);
       },
-      (error) => console.error('Delete profile error:', error)
+      (error:any) => console.error('Delete profile error:', error)
     );
   }
 
@@ -96,36 +126,19 @@ export class ProfileManagementComponent implements OnInit {
 
     console.log('New profile data:', newProfile);
 
-    const userId = localStorage.getItem('userId') || '';
-    const bearerToken = localStorage.getItem('bearer') || '';
+    const userId = this.userId || '';
+    const bearerToken = this.token || '';
 
     console.log('Bearer token:', bearerToken);
     this.userService
-      .updateProfile(userId, newProfile, localStorage.getItem('bearer') || '')
+      .updateProfile(userId, newProfile, bearerToken)
       .subscribe(
         () => {
-          const logInNewProfile = {
-            username: newProfile.name,
-            password: newProfile.password,
-          };
-          this.userService.logIn(logInNewProfile).subscribe(
-            (response) => {
-              console.log('User logged in', response);
-              const bearer = Object.values(response)[1];
-              const userId = Object.values(response)[0];
-              localStorage.setItem('bearer', bearer);
-              localStorage.setItem('userId', userId);
-              this.router.navigate(['/profileManagement']);
-            },
-            (error) => {
-              console.error('Log in error:', error);
-            }
-          );
           console.log('Profile updated successfully');
           this.username = newProfile.name;
-          localStorage.setItem('username', newProfile.name);
+          
         },
-        (error) => console.error('Update profile error:', error)
+        (error:any) => console.error('Update profile error:', error)
       );
   }
 
@@ -136,8 +149,8 @@ export class ProfileManagementComponent implements OnInit {
   editProfilePicture(): void {
     console.log('Editing Profile Picture');
 
-    const userId = localStorage.getItem('userId') || '';
-    const bearerToken = localStorage.getItem('bearer') || '';
+    const userId = this.userId || '';
+    const bearerToken = this.token || '';
 
     const fileInput = document.getElementById('newProfilePicture') as HTMLInputElement;
 
@@ -147,7 +160,7 @@ export class ProfileManagementComponent implements OnInit {
         () => {
           console.log('Profile picture updated successfully');
           this.confirmedProfilePicChange = true;
-          this.loadUserAvatar();
+          this.loadUserAvatar(userId);
           this.errorMessage = '';
         },
         (error) => {

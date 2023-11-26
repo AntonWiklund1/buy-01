@@ -1,9 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserService } from '../services/user.service'; // Adjust the path as necessary
+import { Store } from '@ngrx/store';
+import { UserService } from '../services/user.service';
 import { AuthService } from '../services/auth.service';
 import { MediaService } from '../services/media.service';
+import {
+  login,
+  loginSuccess,
+  loginFailure,
+  logout,
+} from '../state/auth/auth.actions';
+import { AuthState } from '../state/auth/auth.reducer';
+import { selectAuthState } from '../state/auth/auth.selector';
 
 @Component({
   selector: 'app-logIn',
@@ -11,23 +19,25 @@ import { MediaService } from '../services/media.service';
   styleUrls: ['./logIn.component.css'],
 })
 export class LogInComponent {
-  username: any;
-  email: any;
-  password: any;
+  username: string = '';
+  email: string = '';
+  password: string = '';
+  errorMessage: string = '';
+  userRole: string = '';
+  signUp: boolean = false;
+  logIn: boolean = true;
+  isSeller: boolean = false;
+  token: any;
+  userId: any;
+
   constructor(
     private router: Router,
     private userService: UserService,
     private authService: AuthService,
-    private mediaService: MediaService
+    private mediaService: MediaService,
+    private store: Store<{ auth: AuthState }>
   ) {}
 
-  signUp: boolean = false;
-  logIn: boolean = true;
-  isSeller: boolean = false;
-
-  errorMessage: string = '';
-
-  userRole: string = '';
   showEmail() {
     return this.signUp;
   }
@@ -78,10 +88,10 @@ export class LogInComponent {
       var jwtPassword = 'admin';
 
       this.authService.getJwtToken(role, jwtPassword).subscribe({
-        next: (jwtToken) => {
+        next: (jwtToken: any) => {
           // jwtToken is now just a string, not an object
           console.log('JWT Token:', jwtToken);
-          const bearer = Object.values(jwtToken)[1];
+          const bearer = Object.values(jwtToken)[1] as string;
           localStorage.setItem('bearer', bearer);
           role = this.isSeller ? 'ROLE_ADMIN' : 'ROLE_USER';
           // Assuming you want to use the JWT token immediately to create a user
@@ -98,45 +108,54 @@ export class LogInComponent {
           this.userService
             .createUser(newUser, localStorage.getItem('bearer') || '')
             .subscribe({
-              next: (response) => {
+              next: (response: any) => {
                 console.log('User created', response);
                 localStorage.setItem('loggedIn', 'true');
                 localStorage.setItem('username', this.username);
                 localStorage.setItem('userId', this.username);
-                this.getRole();
 
-                const fileInput = document.getElementById('mediaUpload') as HTMLInputElement;
-                if ( fileInput && fileInput.files && fileInput.files.length > 0 ) {
+
+                const fileInput = document.getElementById(
+                  'mediaUpload'
+                ) as HTMLInputElement;
+                if (
+                  fileInput &&
+                  fileInput.files &&
+                  fileInput.files.length > 0
+                ) {
                   const file = fileInput.files[0]; // Access the first file in the files list
                   const userId = localStorage.getItem('userId') || '';
                   const bearerToken = localStorage.getItem('bearer') || '';
 
-                  this.mediaService.uploadAvatar(file, userId, bearerToken).subscribe(
+                  this.mediaService
+                    .uploadAvatar(file, userId, bearerToken)
+                    .subscribe(
                       () => {
                         console.log('Profile picture updated successfully');
                       },
-                      (error) => {
-                        console.log(file, userId)
+                      (error: { status: number }) => {
+                        console.log(file, userId);
                         if (error.status === 413) {
-                          this.errorMessage = 'The file is too large to upload.';
+                          this.errorMessage =
+                            'The file is too large to upload.';
                         } else if (error.status === 415) {
                           this.errorMessage = 'The file type is not supported.';
                         }
-                        console.error('Update profile picture error:', error)
+                        console.error('Update profile picture error:', error);
                       }
                     );
                 }
                 // Handle response upon successful user creation
                 // Navigate to the desired route upon success
-                this.router.navigate(['/']);
+                this.router.navigate(['/productList']);
               },
-              error: (userError) => {
+              error: (userError: { error: string }) => {
                 this.errorMessage = userError.error;
                 console.error('Error creating user', userError);
               },
             });
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Error obtaining JWT token', error);
         },
       });
@@ -147,51 +166,56 @@ export class LogInComponent {
   }
   //log in
   LogIn() {
-    interface responseGet {
-      id: string;
-      username: string;
-      role: string;
-    }
     const user = {
       username: this.username,
       password: this.password,
     };
+  
+    // Dispatch a login action
+    this.store.dispatch(login(user));
+  
     this.userService.logIn(user).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         console.log('User logged in', response);
-        localStorage.setItem('loggedIn', 'true');
-        localStorage.setItem('username', this.username);
-
-        const bearer = Object.values(response)[1];
-        const userId = Object.values(response)[0];
-        localStorage.setItem('bearer', bearer);
-        localStorage.setItem('userId', userId);
-        this.getRole();
-        this.router.navigate(['/']);
+        this.token = response.token;
+        this.userId = response.userId;
+        
+        // Call getRole and pass a callback function for navigation
+        this.getRole(response.userId, response.token, () => {
+          this.router.navigate(['/productList']); // Navigate after role is set
+        });
+        
       },
-      error: (userError) => {
+      error: (error: any) => {
+        // Dispatch a loginFailure action
+        this.store.dispatch(loginFailure({ error: error.message }));
         this.errorMessage = 'Username or password is incorrect';
-        // Handle any errors here, such as showing an error message to the user
-        console.log(this.username, this.password);
-        console.error('Error logging in', userError);
       },
     });
   }
-
-  getRole() {
-    const token = localStorage.getItem('bearer') || '';
-
-    this.userService.getUser(localStorage.getItem('userId'), token).subscribe({
-      next: (userProfile) => {
-        this.userRole = Object.values(userProfile)[2];
-        localStorage.setItem('role', this.userRole);
+  
+  getRole(userId: string, token: string, onRoleRetrieved: () => void) {
+    this.userService.getUser(userId, token).subscribe({
+      next: (userProfile: any) => {
+        this.userRole = userProfile.role;
+        console.log('userRole', this.userRole);
+        // Dispatch loginSuccess here, after the role has been retrieved
+        this.store.dispatch(loginSuccess({
+          userId: userId,
+          username: this.username,
+          token: token,
+          role: this.userRole
+        }));
+  
+        onRoleRetrieved(); // Call the callback function to navigate
       },
-      error: (userError) => {
+      error: (userError: any) => {
         console.error(userError);
         this.errorMessage = userError.error.message;
       },
     });
   }
+  
 
   // File upload
   selectedFileName: string = '';

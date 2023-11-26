@@ -1,36 +1,37 @@
-<div class="navBar" >
+<div class="navBar">
     <div class="navBarHome">
         <a routerLink="/">HOME</a>
-
     </div>
     <span class="material-symbols-outlined spanLink homeLinkIcon" routerLink="/">
         home
     </span>
     <div class="navBarlinks">
-
         <a routerLink="/productList" class="link">Products</a>
         <div class="products linkDiv">
             <span class="material-symbols-outlined spanLink" routerLink="/productList">
                 shopping_bag
             </span>
         </div>
-        <a routerLink="/productManagement" class="link" *ngIf="isAdmin()">Dashboard</a>
+        <!-- Use isAdmin$ Observable with async pipe -->
+        <a routerLink="/productManagement" class="link" *ngIf="isAdmin$ | async">Dashboard</a>
         <div class="media linkDiv">
-            <span class="material-symbols-outlined spanLink "routerLink="/productManagement">
+            <span class="material-symbols-outlined spanLink" routerLink="/productManagement">
                 Dashboard
             </span>
         </div>
+        <!-- Use username$ Observable with async pipe -->
         <div class="profile" routerLink="/profileManagment">
             <img [src]="avatarUrl" alt="" class=""> 
-            <a class="profileName" *ngIf="isLoggedIn()">{{username}}</a>
+            <a class="profileName" *ngIf="isAuthenticated$ | async">{{username$ | async}}</a>
         </div>
         <div class="logStatus">
-            <a [class.visible]="!isLoggedIn()" class="logInLink" routerLink="/logIn">Log in/Sign up</a>
-            <span class="material-symbols-outlined logSpan" [class.visibleIcon]="!isLoggedIn()" routerLink="/logIn">
+            <!-- Use isAuthenticated$ Observable with async pipe -->
+            <a *ngIf="!(isAuthenticated$ | async)" class="logInLink" routerLink="/logIn">Log in/Sign up</a>
+            <span *ngIf="!(isAuthenticated$ | async)" class="material-symbols-outlined logSpan" routerLink="/logIn">
                 login
             </span>
-            <a [class.visible]="isLoggedIn()" (click)="logOut()" class="logOutLink">Log out</a>
-            <span class="material-symbols-outlined logSpan" [class.visibleIcon]="isLoggedIn()" (click)="logOut()">
+            <a *ngIf="isAuthenticated$ | async" (click)="logOut()" class="logOutLink">Log out</a>
+            <span *ngIf="isAuthenticated$ | async" class="material-symbols-outlined logSpan" (click)="logOut()">
                 logout
             </span>
         </div>
