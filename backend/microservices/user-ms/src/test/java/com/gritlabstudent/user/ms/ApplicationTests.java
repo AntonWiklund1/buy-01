@@ -1,4 +1,4 @@
-package com.com.gritlabstudent.media.ms.ms.product.ms;
+package com.gritlabstudent.user.ms;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

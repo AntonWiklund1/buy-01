@@ -1,4 +1,4 @@
-package com.com.gritlabstudent.user.ms;
+package com.gritlabstudent.user.ms;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
