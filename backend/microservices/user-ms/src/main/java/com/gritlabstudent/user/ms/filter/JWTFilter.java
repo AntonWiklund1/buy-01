@@ -13,7 +13,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.gritlabstudent.user.ms.services.JWTService;
-import com.gritlabstudent.user.ms.service.UserInfoDetailsService;
+import com.gritlabstudent.user.ms.services.UserInfoDetailsService;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

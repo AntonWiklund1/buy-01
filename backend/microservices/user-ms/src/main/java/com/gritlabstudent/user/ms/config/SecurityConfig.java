@@ -24,7 +24,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.gritlabstudent.user.ms.filter.JWTFilter;
-import com.gritlabstudent.user.ms.service.UserInfoDetailsService;
+import com.gritlabstudent.user.ms.services.UserInfoDetailsService;
 import jakarta.servlet.http.HttpServletResponse;
 
 

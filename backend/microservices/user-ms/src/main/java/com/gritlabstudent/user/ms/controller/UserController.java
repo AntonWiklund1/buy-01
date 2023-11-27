@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.gritlabstudent.user.ms.exceptions.UserCollectionException;
 import com.gritlabstudent.user.ms.models.User;
 import com.gritlabstudent.user.ms.models.UserDTO;
-import com.gritlabstudent.user.ms.service.UserService;
+import com.gritlabstudent.user.ms.services.UserService;
 
 
 @RestController

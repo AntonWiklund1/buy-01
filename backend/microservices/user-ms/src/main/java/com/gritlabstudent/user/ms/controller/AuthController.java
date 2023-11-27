@@ -16,7 +16,7 @@ import com.gritlabstudent.user.ms.models.AuthRequest;
 import com.gritlabstudent.user.ms.models.AuthResponse;
 import com.gritlabstudent.user.ms.models.User;
 import com.gritlabstudent.user.ms.repositories.UserRepository;
-import com.gritlabstudent.user.ms.service.JWTService;
+import com.gritlabstudent.user.ms.services.JWTService;
 
 @RestController
 @RequestMapping("/api/auth")

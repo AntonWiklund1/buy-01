@@ -4,9 +4,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.gritlabstudent.user.ms.models.Product;
+import com.gritlabstudent.product.ms.models.Product;
+import com.gritlabstudent.product.ms.repositories.ProductRepository;
 import com.gritlabstudent.user.ms.models.User;
-import com.gritlabstudent.user.ms.repositories.ProductRepository;
 import com.gritlabstudent.user.ms.repositories.UserRepository;
 
 @Component
