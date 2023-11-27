@@ -92,7 +92,7 @@ export class LogInComponent {
           // jwtToken is now just a string, not an object
           console.log('JWT Token:', jwtToken);
           const bearer = Object.values(jwtToken)[1] as string;
-          localStorage.setItem('bearer', bearer);
+          
           role = this.isSeller ? 'ROLE_ADMIN' : 'ROLE_USER';
           // Assuming you want to use the JWT token immediately to create a user
           const newUser = {
@@ -106,14 +106,13 @@ export class LogInComponent {
           // Call the userService to create a new user
           // Make sure to include the JWT token in your request if needed
           this.userService
-            .createUser(newUser, localStorage.getItem('bearer') || '')
+            .createUser(newUser, bearer || '')
             .subscribe({
               next: (response: any) => {
                 console.log('User created', response);
-                localStorage.setItem('loggedIn', 'true');
-                localStorage.setItem('username', this.username);
-                localStorage.setItem('userId', this.username);
 
+                this.token = bearer;
+                this.userId = newUser.id;
 
                 const fileInput = document.getElementById(
                   'mediaUpload'
@@ -124,17 +123,16 @@ export class LogInComponent {
                   fileInput.files.length > 0
                 ) {
                   const file = fileInput.files[0]; // Access the first file in the files list
-                  const userId = localStorage.getItem('userId') || '';
-                  const bearerToken = localStorage.getItem('bearer') || '';
+                  
 
                   this.mediaService
-                    .uploadAvatar(file, userId, bearerToken)
+                    .uploadAvatar(file, this.userId, bearer)
                     .subscribe(
                       () => {
                         console.log('Profile picture updated successfully');
                       },
                       (error: { status: number }) => {
-                        console.log(file, userId);
+                        console.log(file, this.userId);
                         if (error.status === 413) {
                           this.errorMessage =
                             'The file is too large to upload.';

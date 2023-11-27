@@ -13,18 +13,26 @@
   /* Flex child */
   .productCard {
     background-color: #ffffff;
-    flex: 0 0 calc(15% - 1rem); /* Will not grow, will not shrink, with the width adjusted for gap */
+    flex: 0 0 calc(20% - 1rem); /* Will not grow, will not shrink, with the width adjusted for gap */
     min-width: 15rem;
-    height: 27rem;
+    height: 31rem;
     border-radius: 5px;
     padding: 1rem; /* Added padding */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Added box shadow */
     box-sizing: border-box; /* Include padding and border in the element's total width and height */
     transition: transform 0.3s; /* Transition for hover effect */
   }
-  
-  .productCard:hover {
-    transform: scale(1.02); /* Scale up cards on hover */
+  .expanded {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    height: auto;
+    z-index: 10;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 3rem;
   }
   .productImageDiv{
     position: relative;
@@ -41,6 +49,14 @@
     border-top-left-radius: 5px; /* Rounded top-left corner */
     border-top-right-radius: 5px; /* Rounded top-right corner */
 
+  }
+  .closeIcon {
+    position: absolute;
+    top: 0.7rem;
+    right: 0.7rem;
+    cursor: pointer;
+    z-index: 11; /* Ensure it's above other content */
+    color: var(--first-color);
   }
   /* Responsive adjustments with fixed size */
   @media (max-width: 1400px) {

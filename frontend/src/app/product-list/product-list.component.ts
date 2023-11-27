@@ -2,18 +2,19 @@ import { Component } from '@angular/core';
 import { ProductService } from '../services/product.service';
 import { MediaService } from '../services/media.service';
 
-
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list.component.html',
-  styleUrls: ['./product-list.component.css']
+  styleUrls: ['./product-list.component.css'],
 })
 export class ProductListComponent {
   products: any[] | undefined;
   productMediaUrls: Map<string, string> = new Map(); // Map to store media URLs
 
-  constructor(private productService: ProductService,    private MediaService: MediaService,
-    ) {}
+  constructor(
+    private productService: ProductService,
+    private MediaService: MediaService
+  ) {}
 
   ngOnInit(): void {
     this.productService.getProducts().subscribe(
@@ -25,13 +26,19 @@ export class ProductListComponent {
       }
     );
     this.loadProducts();
-
-    console.log("bearer:",localStorage.getItem('bearer'));
   }
+  toggleDescription(product: any) {
+    product.isReadMore = !product.isReadMore;
+    product.isExpanded = !product.isExpanded; // Toggle the expanded state
+  }
+
   loadProducts(): void {
     this.productService.getProducts().subscribe(
       (products) => {
-        this.products = products;
+        this.products = products.map((product: any) => ({
+          ...product,
+          isReadMore: true, // Add this line for each product
+        }));
         this.preloadMediaForProducts(products);
       },
       (error) => {
@@ -42,7 +49,7 @@ export class ProductListComponent {
 
   preloadMediaForProducts(products: any[]): void {
     const backendUrl = 'https://localhost:8443/'; // Adjust this URL to where your backend serves media files
-    products.forEach(product => {
+    products.forEach((product) => {
       this.MediaService.getMedia(product.id).subscribe(
         (mediaDataArray) => {
           if (Array.isArray(mediaDataArray) && mediaDataArray.length > 0) {
@@ -51,26 +58,30 @@ export class ProductListComponent {
               const imagePath = `${backendUrl}${mediaObject.imagePath}`;
               this.productMediaUrls.set(product.id, imagePath);
             } else {
-              
-              this.productMediaUrls.set(product.id, 'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png');
+              this.productMediaUrls.set(
+                product.id,
+                'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png'
+              );
             }
           } else {
-
-            this.productMediaUrls.set(product.id, 'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png');
+            this.productMediaUrls.set(
+              product.id,
+              'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png'
+            );
           }
         },
         (error) => {
           console.error(error);
-          this.productMediaUrls.set(product.id, 'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png');
+          this.productMediaUrls.set(
+            product.id,
+            'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png'
+          );
         }
       );
     });
   }
-  
-    
 
   getMediaUrl(productId: string): string | undefined {
     return this.productMediaUrls.get(productId);
   }
-
 }
