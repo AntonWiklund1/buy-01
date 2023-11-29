@@ -21,25 +21,23 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.gritlabstudent.user.ms.config.ValidateUser;
 import com.gritlabstudent.user.ms.exceptions.UserCollectionException;
-import com.gritlabstudent.user.ms.models.Product;
+
 import com.gritlabstudent.user.ms.models.User;
 import com.gritlabstudent.user.ms.models.UserDTO;
-import com.gritlabstudent.user.ms.repositories.ProductRepository;
+
 import com.gritlabstudent.user.ms.repositories.UserRepository;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
-    private final ProductRepository productRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
-            ProductRepository productRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder){
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.productRepository = productRepository;
+
     }
 
     // Conversion Method
@@ -61,7 +59,7 @@ public class UserService {
 
     // Read All Users
     public List<UserDTO> getAllUsers() {
-        List<User> users = userRepository.findAll();
+        List<User> users = (List<User>) userRepository.findAll();
         return users.stream().map(this::convertToUserDTO).collect(Collectors.toList());
     }
 
@@ -98,11 +96,6 @@ public class UserService {
             throw new UserCollectionException(UserCollectionException.NotFoundException(id));
         } else {
             // Find all products associated with the user and delete them
-            List<Product> productsToDelete = productRepository.findByUserId(id);
-            System.out.println("Products to delete: " + productsToDelete);
-            for (Product product : productsToDelete) {
-                productRepository.delete(product);
-            }
 
             // Now delete the user
             userRepository.deleteById(id);

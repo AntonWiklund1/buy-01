@@ -38,25 +38,26 @@ public class SecurityConfig {
     private JWTFilter jwtFilter;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http)  throws Exception {
+
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .cors().and()
                 .exceptionHandling(
                         exceptionHandling -> exceptionHandling
-                                .authenticationEntryPoint((request, response,
-                                                           authException) -> response
+                                .authenticationEntryPoint((request, response, authException) -> response
                                         .sendError(HttpServletResponse.SC_UNAUTHORIZED)))
-                .authorizeHttpRequests(
-                        authorize -> authorize.requestMatchers("/api/products").permitAll()
-                                .requestMatchers("/api/products/{id}").permitAll()
-                                .requestMatchers("/api/auth").permitAll()
+                .authorizeRequests(
+                        authorize -> authorize
+                                .antMatchers("/api/products").permitAll()
+                                .antMatchers("/api/products/{id}").permitAll()
+                                .antMatchers("/api/auth").permitAll()
                                 .anyRequest().permitAll())
                 .authenticationProvider(authenticationProvider())
                 .sessionManagement(
                         sessionManagement -> sessionManagement.sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-        
+
         return http.build();
     }
 
