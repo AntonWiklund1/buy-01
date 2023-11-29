@@ -1,15 +1,12 @@
 package com.gritlabstudent.product.ms.service;
 
 import com.gritlabstudent.product.ms.exceptions.ProductCollectionException;
-import com.gritlabstudent.product.ms.models.User;
 import com.gritlabstudent.product.ms.models.Product;
 import com.gritlabstudent.product.ms.repositories.ProductRepository;
-import com.gritlabstudent.product.ms.repositories.UserRepository;
 import com.gritlabstudent.product.ms.config.ValidateProduct;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolationException;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -17,11 +14,9 @@ import java.util.Optional;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final UserRepository userRepository;
 
-    public ProductService(ProductRepository productRepository, UserRepository userRepository) {
+    public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
-        this.userRepository = userRepository;
     }
 
     public void createProduct(Product product) throws ConstraintViolationException, ProductCollectionException {
@@ -29,13 +24,10 @@ public class ProductService {
         if (product.getId() != null) {
             product.setProductid(product.uuidGenerator());
         }
-        Optional<User> userOptional = userRepository.findById(product.getUserid().trim());
 
-        if (userOptional.isEmpty()) {
-            throw new ProductCollectionException(ProductCollectionException.UserNotFoundException());
-        } else {
-            productRepository.save(product);
-        }
+        // Here, you would make an API call to User service if user validation is necessary
+
+        productRepository.save(product);
     }
 
     public List<Product> getAllProducts() {
@@ -51,23 +43,16 @@ public class ProductService {
 
         ValidateProduct.validateProduct(product);
 
-        Optional<User> userOptional = userRepository.findById(product.getUserid().trim());
+        // Here, you would make an API call to User service if user validation is necessary
 
         if (productOptional.isPresent()) {
-            if (productOptional.get().getName().equals(product.getName()) &&
-                    productOptional.get().getDescription().equals(product.getDescription()) &&
-                    productOptional.get().getPrice().equals(product.getPrice()) &&
-                    productOptional.get().getQuantity() == (product.getQuantity()) &&
-                    productOptional.get().getUserid().equals(product.getUserid())) {
-                throw new ProductCollectionException(ProductCollectionException.NoChangesMadeException());
-            } else if (userOptional.isEmpty()) {
-                throw new ProductCollectionException(ProductCollectionException.UserNotFoundException());
-            }
+            // Update product details
             Product productUpdate = productOptional.get();
             productUpdate.setName(product.getName());
             productUpdate.setDescription(product.getDescription());
             productUpdate.setPrice(product.getPrice());
             productUpdate.setQuantity(product.getQuantity());
+            // Keep or remove the following line based on your architecture
             productUpdate.setUserId(product.getUserid());
             productRepository.save(productUpdate);
         } else {
@@ -86,6 +71,5 @@ public class ProductService {
 
     public Iterable<Product> getProductsByUserId(String userId) {
         return productRepository.findByUserId(userId);
-
     }
 }

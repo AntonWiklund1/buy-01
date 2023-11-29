@@ -6,7 +6,7 @@ import com.gritlabstudent.product.ms.service.ProductService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+
 import org.springframework.web.bind.annotation.*;
 import javax.validation.ConstraintViolationException;
 import java.util.List;
@@ -21,11 +21,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-
-
-
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> createProduct(@RequestBody Product product) {
         try {
             productService.createProduct(product);
@@ -50,7 +46,6 @@ public class ProductController {
     }
 
     @GetMapping("/user/{userId}")
-    //@PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> getProductsByUser(@PathVariable String userId) {
         try {
             if (!isValidInput(userId)) {
@@ -64,7 +59,6 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> updateProduct(@PathVariable("id") String id, @RequestBody Product product) {
         try {
             productService.updateProduct(id, product);
@@ -77,7 +71,6 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> deleteProduct(@PathVariable("id") String id) {
         try {
             productService.deleteProduct(id);
