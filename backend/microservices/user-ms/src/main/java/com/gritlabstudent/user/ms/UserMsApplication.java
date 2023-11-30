@@ -10,7 +10,7 @@ public class UserMsApplication {
 		SpringApplication.run(UserMsApplication.class, args);
 	}
 	@Autowired
-	public void send(String topic, String payload) {
+	public void sendToTopic(String topic, String payload) {
         kafkaTemplate.send(topic, payload);
     }
 
