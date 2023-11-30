@@ -35,7 +35,8 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
     // Create User
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -43,6 +44,9 @@ public class UserController {
         try {
             userService.createUser(user);
             return new ResponseEntity<User>(user, HttpStatus.CREATED); // Changed from OK to CREATED (201)
+            String topic = "user_registration";
+            String payload = convertUserToJson(user);
+            send(topic, payload);
         } catch (ConstraintViolationException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
         } catch (UserCollectionException e) {
