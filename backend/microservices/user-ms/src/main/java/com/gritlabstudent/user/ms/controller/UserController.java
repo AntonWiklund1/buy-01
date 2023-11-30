@@ -35,8 +35,10 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
+    
     @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
+    private KafkaSenderService kafkaSenderService;
+
     // Create User
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -46,7 +48,7 @@ public class UserController {
             return new ResponseEntity<User>(user, HttpStatus.CREATED); // Changed from OK to CREATED (201)
             String topic = "user_registration";
             String payload = convertUserToJson(user);
-            sendToTopic(topic, payload);
+            kafkaSenderService.sendToTopic(topic, payload);
         } catch (ConstraintViolationException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
         } catch (UserCollectionException e) {
@@ -54,6 +56,12 @@ public class UserController {
         } catch (Exception e) {
             return new ResponseEntity<>("An error occurred", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    private String convertUserToJson(User user) {
+        // Convert user object to JSON string
+        // Use a library like Jackson if available
+        return "..."; // JSON representation of the user
     }
 
     // Read All Users
