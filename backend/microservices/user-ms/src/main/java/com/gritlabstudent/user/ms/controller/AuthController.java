@@ -34,31 +34,41 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * Handles POST requests for user authentication. This method takes an authentication request,
+     * validates the input, checks user credentials, and returns a JWT token upon successful authentication.
+     *
+     * @param authRequest The request body containing the username and password for authentication.
+     * @return ResponseEntity with either an authentication token or an error message.
+     */
     @PostMapping
     public ResponseEntity<?> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
         try {
-            // Basic input validation to prevent injection attacks
+            // Validate input to ensure non-null username and password
             if (authRequest.getUsername() == null || authRequest.getPassword() == null) {
                 return new ResponseEntity<>("Invalid input", HttpStatus.BAD_REQUEST);
             }
 
+            // Check if the user exists in the repository
             Optional<User> user = userRepository.findByName(authRequest.getUsername());
             if (user.isPresent()) {
+                // Verify if the provided password matches the stored one
                 if (passwordEncoder.matches(authRequest.getPassword(), user.get().getPassword())) {
+                    // Generate JWT token for the authenticated user
                     String userId = user.get().getId();
                     String token = jwtService.generateToken(user.get().getName());
                     AuthResponse authResponse = new AuthResponse(userId, token);
                     return new ResponseEntity<>(authResponse, HttpStatus.OK);
-
-
                 } else {
+                    // Return error response if password does not match
                     return new ResponseEntity<>("Wrong password", HttpStatus.UNAUTHORIZED);
                 }
             } else {
+                // Return error response if user is not found
                 return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            // Generic catch block to ensure no 5XX errors are returned
+            // Generic exception handling to return a controlled error response
             return new ResponseEntity<>("Definitely Not An Internal Server Error, It Is Just A Bad Request",
                     HttpStatus.BAD_REQUEST);
         }
