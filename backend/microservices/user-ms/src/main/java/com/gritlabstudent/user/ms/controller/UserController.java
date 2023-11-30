@@ -35,7 +35,7 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-    
+
     @Autowired
     private KafkaSenderService kafkaSenderService;
 
@@ -45,10 +45,10 @@ public class UserController {
     public ResponseEntity<?> createUser(@Valid @RequestBody User user) {
         try {
             userService.createUser(user);
-            return new ResponseEntity<User>(user, HttpStatus.CREATED); // Changed from OK to CREATED (201)
             String topic = "user_registration";
             String payload = convertUserToJson(user);
             kafkaSenderService.sendToTopic(topic, payload);
+            return new ResponseEntity<User>(user, HttpStatus.CREATED); // Changed from OK to CREATED (201)
         } catch (ConstraintViolationException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
         } catch (UserCollectionException e) {
