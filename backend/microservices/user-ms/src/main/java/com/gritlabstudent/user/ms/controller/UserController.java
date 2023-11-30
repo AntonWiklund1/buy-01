@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -59,9 +59,14 @@ public class UserController {
     }
 
     private String convertUserToJson(User user) {
-        // Convert user object to JSON string
-        // Use a library like Jackson if available
-        return "..."; // JSON representation of the user
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writeValueAsString(user);
+        } catch (IOException e) {
+            // Handle the exception, maybe log it and/or throw a custom exception
+            e.printStackTrace();
+            return null;
+        }
     }
 
     // Read All Users
