@@ -39,7 +39,6 @@ public class SecurityConfig {
     private JWTFilter jwtFilter;
 
     @Bean
-
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .cors().and()

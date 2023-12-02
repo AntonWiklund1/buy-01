@@ -1,0 +1,19 @@
+server:
+  port: 8080
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: media-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/media/**
+        - id: product-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/product/**
+        - id: user-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/users/**
