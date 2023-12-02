@@ -19,8 +19,9 @@ public class SecurityConfig {
                 .pathMatchers("/api/auth/**").permitAll()
                 .pathMatchers(HttpMethod.POST, "/api/users/**").permitAll()
                 .pathMatchers(HttpMethod.GET, "/api/users").permitAll()
+                .pathMatchers(HttpMethod.POST, "/api/products").permitAll()
+                .pathMatchers(HttpMethod.GET, "/api/products").permitAll()
                 .anyExchange().authenticated()
-        // ... other configurations ...
         ;
 
         return http.build();

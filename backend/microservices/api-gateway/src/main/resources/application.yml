@@ -12,7 +12,7 @@ spring:
         - id: product-service
           uri: http://localhost:8082
           predicates:
-            - Path=/api/product/**
+            - Path=/api/products/**  # Assuming the endpoint is /api/products
         - id: user-service
           uri: http://localhost:8081
           predicates:
