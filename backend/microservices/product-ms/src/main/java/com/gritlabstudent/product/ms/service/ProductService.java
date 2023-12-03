@@ -1,14 +1,15 @@
 package com.gritlabstudent.product.ms.service;
+import java.util.List;
+import java.util.Optional;
 
+import javax.validation.ConstraintViolationException;
+
+import org.springframework.stereotype.Service;
+
+import com.gritlabstudent.product.ms.config.ValidateProduct;
 import com.gritlabstudent.product.ms.exceptions.ProductCollectionException;
 import com.gritlabstudent.product.ms.models.Product;
 import com.gritlabstudent.product.ms.repositories.ProductRepository;
-import com.gritlabstudent.product.ms.config.ValidateProduct;
-import org.springframework.stereotype.Service;
-
-import javax.validation.ConstraintViolationException;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProductService {

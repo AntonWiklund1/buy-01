@@ -15,8 +15,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.gritlabstudent.user.ms.services.JWTService;
 import com.gritlabstudent.user.ms.services.UserInfoDetailsService;
 
-import org.springframework.web.filter.OncePerRequestFilter;  // Import from org.springframework.web.filter
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
