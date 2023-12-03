@@ -14,15 +14,15 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         http
-                .csrf().disable()
-                .authorizeExchange()
-                .pathMatchers("/api/auth/**").permitAll()
-                .pathMatchers(HttpMethod.POST, "/api/users/**").permitAll()
-                .pathMatchers(HttpMethod.GET, "/api/users").permitAll()
-                .pathMatchers(HttpMethod.POST, "/api/products").permitAll()
-                .pathMatchers(HttpMethod.GET, "/api/products").permitAll()
-                .anyExchange().authenticated()
-        ;
+                .csrf(csrf -> csrf.disable()
+                        .authorizeExchange(exchanges -> exchanges
+                                        .pathMatchers("/api/auth/**").permitAll()
+                                        .pathMatchers(HttpMethod.POST, "/api/users/**").permitAll()
+                                        .pathMatchers(HttpMethod.GET, "/api/users").permitAll()
+                                        .pathMatchers(HttpMethod.POST, "/api/products").permitAll()
+                                        .pathMatchers(HttpMethod.GET, "/api/products").permitAll()
+                                        .anyExchange().authenticated()
+                        ));
 
         return http.build();
     }
