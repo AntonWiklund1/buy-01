@@ -1,12 +1,8 @@
 package com.gritlabstudent.user.ms.config;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -20,79 +16,98 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.gritlabstudent.user.ms.filter.JWTFilter;
 import com.gritlabstudent.user.ms.services.UserInfoDetailsService;
+
 import jakarta.servlet.http.HttpServletResponse;
 
-
-
+// The @Configuration annotation indicates that this class contains Spring configuration
+// The @EnableWebSecurity annotation enables Spring Security
+// The @EnableMethodSecurity annotation enables Spring Security method-level security
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+// The SecurityConfig class is annotated with @Configuration, @EnableWebSecurity, and @EnableMethodSecurity.
 public class SecurityConfig {
 
-    @Autowired
-    private JWTFilter jwtFilter;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // The JWTFilter bean is used to validate the JWT in the Authorization header
+        // and set the user in the SecurityContext if the token is valid
+        @Autowired
+        private JWTFilter jwtFilter;
+
+        // The UserDetailsService bean is used to retrieve user details from the database
+        // and return a UserDetails object that Spring Security can use for authentication and validation
+        @Bean
+        public UserDetailsService userDetailService() {
+                return new UserInfoDetailsService();
+        }
+
+        // the SecurityFilterChain bean is used to configure the security filters
+        // that are applied to secure your application
+        // The SecurityFilterChain bean is created by the Spring Security auto-configuration
+        // and is used to configure the security filters that are applied to secure your application.
+        @Bean
+        SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // Configure the SecurityFilterChain, which defines security settings for your application
+        // Disable Cross-Site Request Forgery (CSRF) protection
         http.csrf(csrf -> csrf.disable())
-                .cors().and()
+
+                // Handle exceptions related to authentication
                 .exceptionHandling(
                         exceptionHandling -> exceptionHandling
-                                .authenticationEntryPoint((request, response, authException) -> response
-                                        .sendError(HttpServletResponse.SC_UNAUTHORIZED)))
-                .authorizeRequests(
+                .authenticationEntryPoint((request, response, authException) ->
+                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED)))
+
+                // Authorize HTTP requests based on their URL paths
+                .authorizeHttpRequests(
                         authorize -> authorize
-                                .dispatcherTypeMatchers(HttpMethod.valueOf("/api/products")).permitAll()
-                                .dispatcherTypeMatchers(HttpMethod.valueOf("/api/products/{id}")).permitAll()
-                                .dispatcherTypeMatchers(HttpMethod.valueOf("/api/auth")).permitAll()
-                                .anyRequest().permitAll())
+                // Allow unauthenticated access to "/api/product/all" and "/api/product/{id}"
+                .requestMatchers("/api/product/all").permitAll()
+                .requestMatchers("/api/product/{id}").permitAll()
+                // Allow unauthenticated access to "/api/auth"
+                .requestMatchers("/api/auth").permitAll()
+                // Require authentication for any other requests
+                .anyRequest().authenticated())
+
+                // Set the AuthenticationProvider for user authentication
                 .authenticationProvider(authenticationProvider())
+
+                // Configure session management and set it to be stateless
                 .sessionManagement(
                         sessionManagement -> sessionManagement.sessionCreationPolicy(
-                                SessionCreationPolicy.STATELESS))
+                        SessionCreationPolicy.STATELESS))
+
+                // Add the JWTFilter before the UsernamePasswordAuthenticationFilter in the filter chain
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
-        return http.build();
-    }
+                // Build and return the configured HttpSecurity object
+                return http.build();
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+        }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new UserInfoDetailsService();
-    }
+        // The password encoder bean is used to encrypt the password before saving it to the database
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
 
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService());
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }
+        // The authentication provider bean is used to authenticate users with the database
+        // and set the PasswordEncoder to be used
+        @Bean
+        public AuthenticationProvider authenticationProvider() {
+                DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+                authProvider.setUserDetailsService(userDetailService());
+                authProvider.setPasswordEncoder(passwordEncoder());
+                return authProvider;
+        }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("https://localhost:4200")); // Adjust this if you have more origins
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(true);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+        // The AuthenticationManager bean is used to authenticate users with the database
+        @Bean
+        public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+                return config.getAuthenticationManager();
+        }
+
 }
