@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolationException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -21,10 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.gritlabstudent.user.ms.config.ValidateUser;
 import com.gritlabstudent.user.ms.exceptions.UserCollectionException;
-
 import com.gritlabstudent.user.ms.models.User;
 import com.gritlabstudent.user.ms.models.UserDTO;
-
 import com.gritlabstudent.user.ms.repositories.UserRepository;
 
 @Service
@@ -33,7 +30,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder){
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
