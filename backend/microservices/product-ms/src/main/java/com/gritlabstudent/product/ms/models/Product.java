@@ -1,10 +1,11 @@
 package com.gritlabstudent.product.ms.models;
+
 import java.util.UUID;
 
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -28,7 +29,7 @@ public class Product {
     @Field
     private Double price;
 
-    @NotNull(message = "Product price cannot be null")
+    @NotNull(message = "Product quantity cannot be null")
     @Min(value = 0, message = "Product quantity must be greater than or equal to 0")
     @Field
     private int quantity;

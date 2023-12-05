@@ -1,5 +1,5 @@
 package com.gritlabstudent.user.ms.services;
-
+/**
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -16,3 +16,6 @@ public class KafkaService {
         kafkaTemplate.send(topic, payload);
     }
 }
+
+
+ */

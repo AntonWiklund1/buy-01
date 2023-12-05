@@ -1,8 +1,12 @@
 package com.gritlabstudent.user.ms.controller;
 
+import java.security.Key;
+import java.util.Base64;
 import java.util.Optional;
 
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,6 +25,9 @@ import com.gritlabstudent.user.ms.services.JWTService;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+
+    private String encodedSecretKey = "xajG3FHq3hTBkY56D9/0PJKJGqPf2bpXKAcC6KTHsZo=";
+    private Key SECRET = Keys.hmacShaKeyFor(Base64.getDecoder().decode(encodedSecretKey));
 
     @Autowired
     private JWTService jwtService;
@@ -44,8 +51,9 @@ public class AuthController {
     @PostMapping
     public ResponseEntity<?> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
         try {
-            // Validate input to ensure non-null username and password
-            if (authRequest.getUsername() == null || authRequest.getPassword() == null) {
+            // Validate input to ensure non-null and non-empty username and password
+            if (authRequest.getUsername() == null || authRequest.getUsername().trim().isEmpty() ||
+                    authRequest.getPassword() == null || authRequest.getPassword().trim().isEmpty()) {
                 return new ResponseEntity<>("Invalid input", HttpStatus.BAD_REQUEST);
             }
 
@@ -56,7 +64,8 @@ public class AuthController {
                 if (passwordEncoder.matches(authRequest.getPassword(), user.get().getPassword())) {
                     // Generate JWT token for the authenticated user
                     String userId = user.get().getId();
-                    String token = jwtService.generateToken(user.get().getName());
+                    String userRole = user.get().getRole(); // Assuming you have a getRole method
+                    String token = jwtService.generateToken(user.get().getName(), userRole);
                     AuthResponse authResponse = new AuthResponse(userId, token);
                     return new ResponseEntity<>(authResponse, HttpStatus.OK);
                 } else {
@@ -68,9 +77,10 @@ public class AuthController {
                 return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
+            // Log the exception for debugging
+            e.printStackTrace(); // Or use a logger
             // Generic exception handling to return a controlled error response
-            return new ResponseEntity<>("Definitely Not An Internal Server Error, It Is Just A Bad Request",
-                    HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("An error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

@@ -1,10 +1,11 @@
 package com.gritlabstudent.user.ms.client;
-
+/**
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.gritlabstudent.user.ms.models.User;
+
+ import com.gritlabstudent.user.ms.models.User;
 
 
 
@@ -22,3 +23,5 @@ public class UserClient {
         return restTemplate.getForObject(userServiceUrl + "/users/" + userId, User.class);
     }
 }
+
+ */

@@ -66,6 +66,8 @@ public class SecurityConfig {
                 // Allow unauthenticated access to "/api/product/all" and "/api/product/{id}"
                 .requestMatchers("/api/product/all").permitAll()
                 .requestMatchers("/api/product/{id}").permitAll()
+                                .requestMatchers("/api/users").permitAll()
+                                .requestMatchers("/api/users/{id}").permitAll()
                 // Allow unauthenticated access to "/api/auth"
                 .requestMatchers("/api/auth").permitAll()
                 // Require authentication for any other requests

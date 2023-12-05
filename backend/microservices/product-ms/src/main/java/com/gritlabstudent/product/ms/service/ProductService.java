@@ -2,7 +2,7 @@ package com.gritlabstudent.product.ms.service;
 import java.util.List;
 import java.util.Optional;
 
-import javax.validation.ConstraintViolationException;
+import jakarta.validation.ConstraintViolationException;
 
 import org.springframework.stereotype.Service;
 
