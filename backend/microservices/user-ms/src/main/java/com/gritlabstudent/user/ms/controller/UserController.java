@@ -2,7 +2,7 @@ package com.gritlabstudent.user.ms.controller;
 
 import java.io.IOException;
 import java.util.List;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.gritlabstudent.user.ms.exceptions.UserCollectionException;
 import com.gritlabstudent.user.ms.models.User;
 import com.gritlabstudent.user.ms.models.UserDTO;
+import com.gritlabstudent.user.ms.services.KafkaService;
 import com.gritlabstudent.user.ms.services.UserService;
 
 
@@ -36,8 +37,8 @@ public class UserController {
         this.userService = userService;
     }
 
-    //@Autowired
-    //private KafkaSenderService kafkaSenderService;
+    @Autowired
+    private KafkaService KafkaService;
 
     // Create User
     @PostMapping
@@ -47,7 +48,7 @@ public class UserController {
             userService.createUser(user);
             String topic = "user_registration";
             String payload = convertUserToJson(user);
-            //kafkaSenderService.sendToTopic(topic, payload);
+            KafkaService.sendToTopic(topic, payload);
             return new ResponseEntity<User>(user, HttpStatus.CREATED); // Changed from OK to CREATED (201)
         } catch (ConstraintViolationException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
@@ -110,7 +111,7 @@ public class UserController {
             userService.deleteUser(id);
             String topic = "user_deletion";
             String payload = id;
-            //kafkaSenderService.sendToTopic(topic, payload);
+            KafkaService.sendToTopic(topic, payload);
             return new ResponseEntity<>("Successfully deleted user with id " + id, HttpStatus.OK);
         } catch (UserCollectionException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
