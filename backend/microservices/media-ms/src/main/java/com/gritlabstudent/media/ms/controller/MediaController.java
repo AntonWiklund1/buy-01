@@ -9,6 +9,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -105,6 +106,14 @@ public class MediaController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().body(file);
+    }
+    @KafkaListener(topics = "user_deletion")
+    public void listenUserDeletion(String userId) {
+        try {
+            mediaService.deleteMediaByUserId(userId);
+        } catch (Exception e) {
+            //for errors
+        }
     }
     
 }

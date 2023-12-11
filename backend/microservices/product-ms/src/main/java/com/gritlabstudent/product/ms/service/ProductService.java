@@ -73,4 +73,8 @@ public class ProductService {
     public Iterable<Product> getProductsByUserId(String userId) {
         return productRepository.findByUserId(userId);
     }
+    public void deleteProductsByUserId(String userId) {
+        Iterable<Product> products = getProductsByUserId(userId);
+        products.forEach(product -> productRepository.delete(product));
+    }
 }

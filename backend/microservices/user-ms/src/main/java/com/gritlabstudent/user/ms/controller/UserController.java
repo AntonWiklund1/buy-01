@@ -108,6 +108,9 @@ public class UserController {
     public ResponseEntity<?> deleteUserById(@PathVariable("id") String id) {
         try {
             userService.deleteUser(id);
+            String topic = "user_deletion";
+            String payload = id;
+            //kafkaSenderService.sendToTopic(topic, payload);
             return new ResponseEntity<>("Successfully deleted user with id " + id, HttpStatus.OK);
         } catch (UserCollectionException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

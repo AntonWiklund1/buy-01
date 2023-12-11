@@ -4,6 +4,7 @@ import jakarta.validation.ConstraintViolationException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -97,7 +98,14 @@ public class ProductController {
         Product product = productService.getProductById(id);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
-
+    @KafkaListener(topics = "user_deletion")
+    public void listenUserDeletion(String userId) {
+        try {
+            productService.deleteProductsByUserId(userId);
+        } catch (Exception e) {
+            //for errors implement here
+        }
+    }
 
     private boolean isValidInput(String input) {
         return input != null && !input.isEmpty() && !input.contains("$") && !input.contains("{") && !input.contains("}");

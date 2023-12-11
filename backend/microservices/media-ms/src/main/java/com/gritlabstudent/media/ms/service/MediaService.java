@@ -93,4 +93,12 @@ public class MediaService {
         }
         throw new FileNotFoundException("File not found");
     }
+
+    public Iterable<Media> getMediaByUserId(String userId) {
+        return mediaRepository.findByUserId(userId);
+    }
+    public void deleteMediaByUserId(String userId) {
+        Iterable<Media> products = getMediaByUserId(userId);
+        products.forEach(product -> mediaRepository.delete(product));
+    }
 }
