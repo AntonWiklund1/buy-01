@@ -34,9 +34,10 @@ Welcome to our e-commerce platform, an end-to-end solution built with Spring Boo
    mvn install
    ```
 3. Start mongodb server
-    ```shell
-    mongod
-    ```
+
+   ```shell
+   mongod
+   ```
 
 4. Start the backend
    ```shell
@@ -48,8 +49,10 @@ Welcome to our e-commerce platform, an end-to-end solution built with Spring Boo
    npm install
    ```
 6. Start the angular frontend
-    ng serve
+   ng serve
 
 7. Navigato to https://localhost:4200
 
-Done 
+Done
+
+![data-flow](data-flow.png)
