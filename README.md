@@ -39,6 +39,10 @@ Welcome to our e-commerce platform, an end-to-end solution built with Spring Boo
    mongod
    ```
 
+   ```shell
+   mongod
+   ```
+
 4. Start the backend
    ```shell
     mvn spring-boot:run
