@@ -11,3 +11,4 @@ import com.gritlabstudent.user.ms.models.User;
 public interface UserRepository extends MongoRepository<User, String> {
     Optional<User> findByName(String username);
 }
+
