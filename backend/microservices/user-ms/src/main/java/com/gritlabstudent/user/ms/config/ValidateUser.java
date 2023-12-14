@@ -31,8 +31,8 @@ public class ValidateUser {
         }
 
         if (user.getRole() != null) {
-            // check if role enum is either user.getRole() is "ROLE_ADMIN" or "ROLE_USER"
-            if (!(user.getRole().equals("ROLE_ADMIN") || user.getRole().equals("ROLE_USER"))) {
+            // check if role enum is either user.getRole() is "ROLE_SELLER" or "ROLE_CLIENT"
+            if (!(user.getRole().equals("ROLE_SELLER") || user.getRole().equals("ROLE_CLIENT"))) {
                 throw new UserCollectionException("User role" + UserCollectionException.InvalidRoleException());
             }
             user.setRole(user.getRole().trim());

@@ -30,7 +30,7 @@ public class UserCollectionException extends Exception {
     }
 
     public static String InvalidRoleException() {
-        return " has to be in either ROLE_ADMIN or ROLE_USER format!";
+        return " has to be in either ROLE_SELLER or ROLE_CLIENT format!";
     }
 
     public static String BadCredentialsException() {

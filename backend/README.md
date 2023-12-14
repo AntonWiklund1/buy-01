@@ -81,7 +81,7 @@ These endpoints are used to POST user credentials to the server and get back a J
 
 ## End-point: Get JWT from user
 
-This is a user with the "ROLE_USER" which is created by the DatabaseSeeder.
+This is a user with the "ROLE_CLIENT" which is created by the DatabaseSeeder.
 
 ### Method: POST
 
@@ -108,7 +108,7 @@ eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiaWF0IjoxNjk1NTgyNDcwLCJleHAiOjE2OTU1ODQ
 
 ## End-point: Get JWT from admin
 
-This is a user with the "ROLE_ADMIN" which is created by the DatabaseSeeder.
+This is a user with the "ROLE_SELLER" which is created by the DatabaseSeeder.
 
 ### Method: POST
 
@@ -363,12 +363,12 @@ Endpoint to view all users, will return a stripped down model of the Users with 
   {
     "id": "1",
     "name": "user",
-    "role": "ROLE_USER"
+    "role": "ROLE_CLIENT"
   },
   {
     "id": "2",
     "name": "admin",
-    "role": "ROLE_ADMIN"
+    "role": "ROLE_SELLER"
   }
 ]
 ```
@@ -413,7 +413,7 @@ Endpoint to create a user, in this case, it is filled with Anton for demonstrati
   "name": "Anton",
   "email": "Anton@hotmale.com",
   "password": "Antonrocks",
-  "role": "ROLE_ADMIN"
+  "role": "ROLE_SELLER"
 }
 ```
 
@@ -448,7 +448,7 @@ Endpoint to modify a specific user using ID, in this case, it is modifying Anton
    "name": "NotAnton2",
    "email": "notemail@example.com",
    "password": "notyourpassword",
-   "role": "ROLE_ADMIN"
+   "role": "ROLE_SELLER"
 }
 ```
 

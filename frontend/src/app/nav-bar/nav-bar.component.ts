@@ -33,7 +33,7 @@ avatarUrl = 'assets/images/default-avatar.png';
     this.checkLogInStatus();
   }
   isAdmin(){
-    return localStorage.getItem('role') === 'ROLE_ADMIN';
+    return localStorage.getItem('role') === 'ROLE_SELLER';
   }
   checkLogInStatus(){
     if (!this.isLoggedIn()){

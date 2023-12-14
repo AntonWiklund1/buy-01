@@ -42,7 +42,7 @@ public class UserController {
 
     // Create User
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_SELLER')")
     public ResponseEntity<?> createUser(@Valid @RequestBody User user) {
         try {
             userService.createUser(user);
@@ -79,7 +79,7 @@ public class UserController {
 
     // Read User by Id
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_CLIENT') or hasRole('ROLE_SELLER')")
     public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
         UserDTO userDTO = userService.getUserById(id);
         if (userDTO != null) {
@@ -91,7 +91,7 @@ public class UserController {
 
     // Update User
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_SELLER')")
     public ResponseEntity<?> updateUserById(@PathVariable("id") String id, @RequestBody User user) {
         try {
             userService.updateUser(id, user);
@@ -105,7 +105,7 @@ public class UserController {
 
     // Delete User
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_SELLER')")
     public ResponseEntity<?> deleteUserById(@PathVariable("id") String id) {
         try {
             userService.deleteUser(id);
@@ -119,7 +119,7 @@ public class UserController {
     }
 
     @PostMapping("/{id}/avatar")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_SELLER')")
     public ResponseEntity<?> uploadAvatar(@PathVariable String id, @RequestParam("avatar") MultipartFile avatarFile) {
         // Validate file size
         final long MAX_SIZE = 2 * 1024 * 1024; // 2 MB
@@ -148,7 +148,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/avatar")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_SELLER') or hasRole('ROLE_CLIENT')")
     public ResponseEntity<?> getUserAvatar(@PathVariable String id) {
         try {
             UserDTO userDTO = userService.getUserById(id); // This method returns a UserDTO

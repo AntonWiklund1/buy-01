@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserService } from '../services/user.service'; // Adjust the path as necessary
 import { AuthService } from '../services/auth.service';
 import { MediaService } from '../services/media.service';
+import { UserService } from '../services/user.service'; // Adjust the path as necessary
 
 @Component({
   selector: 'app-logIn',
@@ -83,7 +82,7 @@ export class LogInComponent {
           console.log('JWT Token:', jwtToken);
           const bearer = Object.values(jwtToken)[1];
           localStorage.setItem('bearer', bearer);
-          role = this.isSeller ? 'ROLE_ADMIN' : 'ROLE_USER';
+          role = this.isSeller ? 'ROLE_SELLER' : 'ROLE_CLIENT';
           // Assuming you want to use the JWT token immediately to create a user
           const newUser = {
             id: this.username,

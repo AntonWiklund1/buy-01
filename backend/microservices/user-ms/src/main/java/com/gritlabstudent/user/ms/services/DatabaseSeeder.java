@@ -34,14 +34,14 @@ public class DatabaseSeeder implements CommandLineRunner {
         user1.setName("user");
         user1.setEmail("user@example.com");
         user1.setPassword(passwordEncoder.encode("password"));
-        user1.setRole("ROLE_USER");
+        user1.setRole("ROLE_CLIENT");
 
         User user2 = new User();
         user2.setId("2");
         user2.setName("admin");
         user2.setEmail("admin@example.com");
         user2.setPassword(passwordEncoder.encode("password"));
-        user2.setRole("ROLE_ADMIN");
+        user2.setRole("ROLE_SELLER");
 
         userRepository.save(user1);
         userRepository.save(user2);

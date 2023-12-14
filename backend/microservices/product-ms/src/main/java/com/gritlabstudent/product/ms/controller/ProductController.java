@@ -1,7 +1,5 @@
 package com.gritlabstudent.product.ms.controller;
 
-import jakarta.validation.ConstraintViolationException;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -19,6 +17,8 @@ import com.gritlabstudent.product.ms.exceptions.ProductCollectionException;
 import com.gritlabstudent.product.ms.models.Product;
 import com.gritlabstudent.product.ms.service.ProductService;
 
+import jakarta.validation.ConstraintViolationException;
+
 
 @RestController
 @RequestMapping("/api/products")
@@ -32,7 +32,7 @@ public class ProductController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_SELLER')")
     public ResponseEntity<?> createProduct(@RequestBody Product product) {
         try {
     
