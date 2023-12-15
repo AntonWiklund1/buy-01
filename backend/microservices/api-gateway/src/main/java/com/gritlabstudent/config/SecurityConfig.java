@@ -21,6 +21,9 @@ public class SecurityConfig {
                                         .pathMatchers(HttpMethod.GET, "/api/users").permitAll()
                                         .pathMatchers(HttpMethod.POST, "/api/products").permitAll()
                                         .pathMatchers(HttpMethod.GET, "/api/products").permitAll()
+                                        .pathMatchers(HttpMethod.GET, "/media/**").permitAll()
+                                        .pathMatchers(HttpMethod.GET, "/media").permitAll()
+                                        .pathMatchers(HttpMethod.POST, "/media/upload").permitAll()
                                         .anyExchange().authenticated()
                         ));
 
