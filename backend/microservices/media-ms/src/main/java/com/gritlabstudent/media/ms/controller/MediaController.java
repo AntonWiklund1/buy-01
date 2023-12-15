@@ -75,7 +75,8 @@ public class MediaController {
     public ResponseEntity<?> deleteMediaForProduct(@PathVariable String productId) {
         try {
             mediaService.deleteMediaByProductId(productId);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            String message = "Media deleted for the product with ID: " + productId;
+            return ResponseEntity.ok().body(message);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred: " + e.getMessage());
         }
