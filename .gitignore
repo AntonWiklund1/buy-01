@@ -5,4 +5,5 @@
 # Ignore media directory
 backend/media/
 backend/target
-backend/microservices/media-ms/target/classes/com/gritlabstudent/media/ms/controller/MediaController.class
+backend/microservices/media-ms/target/classes/com/gritlabstudent/media/ms/controller
+backend/microservices/api-gateway/target/classes/com/gritlabstudent/config
