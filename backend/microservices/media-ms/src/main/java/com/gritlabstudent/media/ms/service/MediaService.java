@@ -18,6 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.gritlabstudent.media.ms.models.Media;
 import com.gritlabstudent.media.ms.repositories.MediaRepository;
 
+import org.springframework.beans.factory.annotation.Value;
+
 @Service
 public class MediaService {
     private static final Logger log = LoggerFactory.getLogger(MediaService.class);
@@ -25,8 +27,19 @@ public class MediaService {
     @Autowired
     private MediaRepository mediaRepository;
 
-    private final Path rootLocation = Paths.get("media");
 
+    private final Path rootLocation;
+
+    @Autowired
+    public MediaService(@Value("${media.storage.location}") String storageLocation) {
+
+        this.rootLocation = Paths.get(storageLocation.replace("file:", ""));
+        try {
+            Files.createDirectories(rootLocation);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not initialize storage location", e);
+        }
+    }
     public Media storeFile(MultipartFile file, String productId) throws IOException {
 
         deleteMediaByProductId(productId);

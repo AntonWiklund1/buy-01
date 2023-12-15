@@ -1,6 +1,6 @@
-package com.gritlabstudent.product.ms.config;
+package com.gritlabstudent.media.ms.config;
 
-import com.gritlabstudent.product.ms.filter.ProductJWTFilter;
+import com.gritlabstudent.media.ms.filter.MediaJWTFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,10 +16,10 @@ import jakarta.servlet.http.HttpServletResponse;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true) // Enable method-level security
-public class ProductSecurityConfig {
+public class MediaSecurityConfig {
 
     @Autowired
-    private ProductJWTFilter jwtFilter;
+    private MediaJWTFilter jwtFilter;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -31,9 +31,8 @@ public class ProductSecurityConfig {
                 .authorizeRequests(authorizeRequests -> {
                     try {
                         authorizeRequests
-                                .requestMatchers("/api/products/**").permitAll()
-                                .requestMatchers("/api/products").permitAll()
-                                .anyRequest().authenticated(); // Require authentication for all other requests
+                                .requestMatchers("/media/upload").permitAll()
+                                .requestMatchers("/media/upload/**").permitAll();
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -43,6 +42,4 @@ public class ProductSecurityConfig {
         // Build and return the configured HttpSecurity object
         return http.build();
     }
-
-
 }

@@ -23,9 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.gritlabstudent.media.ms.models.Media;
 import com.gritlabstudent.media.ms.service.MediaService;
 
-
-
-
 @RestController
 @RequestMapping("/media")
 public class MediaController {
