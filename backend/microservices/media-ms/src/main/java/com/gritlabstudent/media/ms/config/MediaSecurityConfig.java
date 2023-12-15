@@ -31,8 +31,12 @@ public class MediaSecurityConfig {
                 .authorizeRequests(authorizeRequests -> {
                     try {
                         authorizeRequests
-                                .requestMatchers("/media/upload").permitAll()
-                                .requestMatchers("/media/upload/**").permitAll();
+                        .requestMatchers(HttpMethod.GET, "/media/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/media").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/media/upload").permitAll()
+                                .requestMatchers(HttpMethod.DELETE, "/media/**").permitAll()
+                        .anyRequest().authenticated();
+
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }

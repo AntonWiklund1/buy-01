@@ -16,14 +16,16 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()
                         .authorizeExchange(exchanges -> exchanges
-                                        .pathMatchers("/api/auth/**").permitAll()
-                                        .pathMatchers(HttpMethod.POST, "/api/users/**").permitAll()
-                                        .pathMatchers(HttpMethod.GET, "/api/users").permitAll()
-                                        .pathMatchers(HttpMethod.POST, "/api/products").permitAll()
-                                        .pathMatchers(HttpMethod.GET, "/api/products").permitAll()
-                                        .pathMatchers(HttpMethod.GET, "/media/**").permitAll()
-                                        .pathMatchers(HttpMethod.GET, "/media").permitAll()
-                                        .pathMatchers(HttpMethod.POST, "/media/upload").permitAll()
+                                .pathMatchers("/api/auth/**").permitAll()
+                                .pathMatchers(HttpMethod.POST, "/api/users/**").permitAll()
+                                .pathMatchers(HttpMethod.GET, "/api/users").permitAll()
+                                .pathMatchers(HttpMethod.POST, "/api/products").permitAll()
+                                .pathMatchers(HttpMethod.GET, "/api/products").permitAll()
+                                .pathMatchers(HttpMethod.GET, "/media/**").permitAll()
+                                .pathMatchers(HttpMethod.GET, "/media").permitAll()
+                                .pathMatchers(HttpMethod.POST, "/media/upload").permitAll()
+                                .pathMatchers(HttpMethod.DELETE, "/media/**").permitAll()
+                                .pathMatchers(HttpMethod.DELETE, "/api/users/**").permitAll()
                                         .anyExchange().authenticated()
                         ));
 
