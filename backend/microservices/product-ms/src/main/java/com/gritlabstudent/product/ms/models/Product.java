@@ -102,4 +102,7 @@ public class Product {
         this.quantity = quantity;
     }
 
+    public String getUserId() {
+        return userId;
+    }
 }

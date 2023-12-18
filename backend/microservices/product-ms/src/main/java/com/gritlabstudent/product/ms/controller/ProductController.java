@@ -1,52 +1,55 @@
 package com.gritlabstudent.product.ms.controller;
 
+import com.gritlabstudent.product.ms.models.ProductCreationRequest;
+import com.gritlabstudent.product.ms.models.ProductCreationStatus;
+import com.gritlabstudent.product.ms.producer.UserValidationProducer;
+import com.gritlabstudent.product.ms.service.ProductCreationRequestService;
+import com.gritlabstudent.product.ms.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.gritlabstudent.product.ms.exceptions.ProductCollectionException;
 import com.gritlabstudent.product.ms.models.Product;
-import com.gritlabstudent.product.ms.service.ProductService;
 
 import jakarta.validation.ConstraintViolationException;
-
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
 
     private final ProductService productService;
+    private final UserValidationProducer userValidationProducer;
+    private final ProductCreationRequestService productCreationRequestService;
 
-
-    public ProductController(ProductService productService) {
+    @Autowired
+    public ProductController(ProductService productService,
+                             UserValidationProducer userValidationProducer,
+                             ProductCreationRequestService productCreationRequestService) {
         this.productService = productService;
+        this.userValidationProducer = userValidationProducer;
+        this.productCreationRequestService = productCreationRequestService;
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ROLE_SELLER')")
     public ResponseEntity<?> createProduct(@RequestBody Product product) {
-        try {
-    
-            productService.createProduct(product);
-            return new ResponseEntity<Product>(product, HttpStatus.OK);
-        } catch (ConstraintViolationException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
-        } catch (ProductCollectionException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+        ProductCreationRequest request = new ProductCreationRequest(product, ProductCreationStatus.PENDING_VALIDATION);
+        request = productCreationRequestService.saveRequest(request);
+        String requestId = request.getId();
+        String userId = product.getUserId();
+
+        userValidationProducer.sendUserIdForValidation(requestId, userId);
+
+        // Acknowledge the request to the client
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Product creation request received, pending user validation.");
+        response.put("requestId", request.getId());  // Some identifier for the client to refer to
+        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
-    
 
     @GetMapping
     public ResponseEntity<?> getAllProducts() {

@@ -117,4 +117,9 @@ public class UserService {
         user.setAvatarImagePath(filePath.toString());
         userRepository.save(user);
     }
+
+    public boolean checkUserExistence(String userId) {
+        System.out.println("Checking user existence for ID: " + userId);
+        return userRepository.existsById(userId);
+    }
 }
