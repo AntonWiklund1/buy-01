@@ -8,7 +8,7 @@
 		<groupId>com.gritlabstudent</groupId>
 		<artifactId>backend</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../../pom.xml</relativePath> <!-- Adjust the relative path accordingly -->
+		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
     <groupId>com.gritlabstudent.user.ms</groupId>
@@ -19,12 +19,14 @@
 
     <properties>
         <java.version>17</java.version>
-        <lombok.version>1.18.20</lombok.version> <!-- Add the lombok.version property -->
-        <org.mapstruct.version>1.4.2.Final</org.mapstruct.version> <!-- Add the org.mapstruct.version property -->
+        <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
     </properties>
 
+	<!-- Dependencies managed by parent -->
+
 	<dependencies>
-        <!-- Dependencies managed by parent -->
+		
+		<!-- Spring Boot Dependencies-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -50,6 +52,9 @@
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka</artifactId>
 		</dependency>
+
+		<!-- JWT Dependencies-->
+
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-jackson</artifactId>
@@ -62,6 +67,9 @@
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-impl</artifactId>
 		</dependency>
+
+		<!-- Lombok Dependencies-->
+
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -73,6 +81,9 @@
 			<artifactId>mapstruct</artifactId>
 			<version>${org.mapstruct.version}</version>
 		</dependency>
+
+		<!-- Validation Dependencies-->
+
 		<dependency>
 			<groupId>jakarta.validation</groupId>
 			<artifactId>jakarta.validation-api</artifactId>
@@ -83,6 +94,9 @@
 			<artifactId>validation-api</artifactId>
 			<version>2.0.0.Final</version>
 		</dependency>
+
+		<!-- Servlet Dependencies-->
+
 		<dependency>
 			<groupId>jakarta.servlet</groupId>
 			<artifactId>jakarta.servlet-api</artifactId>
@@ -93,6 +107,9 @@
 			<version>3.0-alpha-1</version>
 			<scope>provided</scope>
         </dependency>
+
+		<!-- Jackson Dependencies-->
+
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>

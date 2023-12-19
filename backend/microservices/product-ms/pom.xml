@@ -19,17 +19,19 @@
 
     <properties>
         <java.version>17</java.version>
-		<lombok.version>1.18.20</lombok.version> <!-- Add the lombok.version property -->
-        <org.mapstruct.version>1.4.2.Final</org.mapstruct.version> <!-- Add the org.mapstruct.version property -->
+        <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
     </properties>
 
+	<!-- Dependencies managed by parent -->
+
     <dependencies>
-        <!-- Dependencies managed by parent -->
+        
+		<!-- Spring Boot Dependencies-->
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -43,6 +45,20 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
 		</dependency>
+		<dependency>
+    		<groupId>org.springframework.kafka</groupId>
+    		<artifactId>spring-kafka</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+		</dependency>
+
+		<!-- JWT Dependencies-->
 
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
@@ -59,45 +75,38 @@
 			<artifactId>jjwt-impl</artifactId>
 			<version>0.11.5</version>
 		</dependency>
+
+		<!-- Lombok Dependencies-->
+
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 			<version>${lombok.version}</version>
 		</dependency>
+
+		<!-- Mapstruct Dependencies-->
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
 			<version>${org.mapstruct.version}</version>
 		</dependency>
+
+		<!-- Validation Dependencies-->
+
 		<dependency>
 			<groupId>jakarta.validation</groupId>
 			<artifactId>jakarta.validation-api</artifactId>
-
 		</dependency>
+
+		<!-- Servlet Dependencies-->
 
 		<dependency>
 			<groupId>jakarta.servlet</groupId>
 			<artifactId>jakarta.servlet-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
-		<dependency>
-    		<groupId>org.springframework.kafka</groupId>
-    		<artifactId>spring-kafka</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-config</artifactId>
-
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-web</artifactId>
-		</dependency>
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>

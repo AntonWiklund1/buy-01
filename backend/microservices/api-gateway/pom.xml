@@ -20,6 +20,8 @@
     </properties>
 
     <dependencyManagement>
+
+        <!-- Spring Cloud Dependencies BOM -->
         <dependencies>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
@@ -52,8 +54,10 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
-
         </dependency>
+
+        <!-- Jakarta Servlet API for JWT -->
+
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
