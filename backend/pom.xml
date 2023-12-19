@@ -31,7 +31,9 @@
 
     <dependencyManagement>
         <dependencies>
+
             <!-- Spring Boot Dependencies BOM -->
+
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -41,6 +43,7 @@
             </dependency>
 
             <!-- Spring Cloud Dependencies BOM -->
+
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -60,7 +63,7 @@
             <!-- Other dependencies as needed by your microservices -->
             <!-- Just remove the version tags for the ones covered by the above BOMs -->
 
-            <!-- Lombok -->
+            <!-- Lombok Dependencies -->
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
@@ -68,14 +71,14 @@
                 <scope>provided</scope>
             </dependency>
 
-            <!-- MapStruct -->
+            <!-- MapStruct Dependencies -->
             <dependency>
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct</artifactId>
                 <version>${mapstruct.version}</version>
             </dependency>
 
-            <!-- JWT Support -->
+            <!-- JWT Support Dependencies -->
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt-api</artifactId>
@@ -93,6 +96,8 @@
                 <version>${jjwt.version}</version>
                 <scope>runtime</scope>
             </dependency>
+
+            <!-- Jakarta Servlet API -->
 
             <dependency>
                 <groupId>jakarta.validation</groupId>
