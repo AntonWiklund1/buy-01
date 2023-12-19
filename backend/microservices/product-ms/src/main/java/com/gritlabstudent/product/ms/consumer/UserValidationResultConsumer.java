@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.util.Objects;
 import java.util.Optional;
 
+
+//reads from the user-validation-result-topic topic
 @Service
 public class UserValidationResultConsumer {
 

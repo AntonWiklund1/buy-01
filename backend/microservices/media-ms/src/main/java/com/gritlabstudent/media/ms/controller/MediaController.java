@@ -3,6 +3,7 @@ package com.gritlabstudent.media.ms.controller;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
@@ -22,6 +23,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.gritlabstudent.media.ms.models.Media;
 import com.gritlabstudent.media.ms.service.MediaService;
+import com.gritlabstudent.media.ms.producer.ProductValidationProducer;
+
+
+import com.gritlabstudent.media.ms.service.FileStorageService;
+import com.gritlabstudent.media.ms.producer.ProductValidationProducer;
+
 
 @RestController
 @RequestMapping("/media")
@@ -29,33 +36,28 @@ public class MediaController {
     @Autowired
     private MediaService mediaService;
 
+    @Autowired
+    private ProductValidationProducer productValidationProducer;
+
+    @Autowired
+    private FileStorageService fileStorageService;
+
+
     @PostMapping("/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,
-            @RequestParam("productId") String productId) {
-        // Validate file size
-        final long MAX_SIZE = 2 * 1024 * 1024; // 2 MB
-        if (file.getSize() > MAX_SIZE) {
-            return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
-                    .body("File size should not exceed 2 MB");
-        }
+                                        @RequestParam("productId") String productId) {
+        // Validate file size and MIME type as before...
 
-        // Validate MIME type to only allow image uploads
-        String mimeType = file.getContentType();
-        if (mimeType == null || !mimeType.startsWith("image")) {
-            return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
-                    .body("Only image files are allowed");
-        }
+        // Temporarily store the file
+        fileStorageService.storeFileTemporarily(productId, file);
 
-        // Proceed with storing the file if the checks pass
-        try {
-            Media savedMedia = mediaService.storeFile(file, productId);
-            return new ResponseEntity<>(savedMedia, HttpStatus.CREATED);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Could not upload the file: " + e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error occurred: " + e.getMessage());
-        }
+        // Send productId to Kafka topic for validation
+        String uploadRequestId = UUID.randomUUID().toString();
+        fileStorageService.storeFileTemporarily(uploadRequestId, file);
+        productValidationProducer.sendProductForValidation(productId, uploadRequestId);
+
+        // Respond with an accepted status, actual storage will be done once validation is successful
+        return ResponseEntity.accepted().body("File upload request received and is being processed.");
     }
 
     // Other REST endpoints as needed

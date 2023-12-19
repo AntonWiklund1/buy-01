@@ -77,4 +77,8 @@ public class ProductService {
         Iterable<Product> products = getProductsByUserId(userId);
         products.forEach(product -> productRepository.delete(product));
     }
+
+    public boolean checkProductExists(String productId) {
+        return productRepository.existsById(productId);
+    }
 }
