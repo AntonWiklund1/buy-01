@@ -16,7 +16,7 @@ import java.util.Properties;
 
 public class DotenvEnvironmentPostProcessor implements EnvironmentPostProcessor {
 
-    private static final String DOTENV_PATH = "../../.env";
+    private static final String DOTENV_PATH = ".env";
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
