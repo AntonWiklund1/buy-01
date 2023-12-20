@@ -15,8 +15,12 @@ import com.gritlabstudent.product.ms.exceptions.ProductCollectionException;
 import com.gritlabstudent.product.ms.models.Product;
 
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/products")
@@ -45,13 +49,55 @@ public class ProductController {
 
         userValidationProducer.sendUserIdForValidation(requestId, userId);
 
-        // Acknowledge the request to the client
+        // Return a response with a status check URL and expected timeframe
+        URI statusCheckUri = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/api/products/status/{requestId}")
+                .buildAndExpand(requestId).toUri();
+
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Product creation request received, pending user validation.");
-        response.put("requestId", request.getId());  // Some identifier for the client to refer to
+        response.put("requestId", requestId);
+        response.put("statusCheckUrl", statusCheckUri.toString());
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
+    @GetMapping("/status/{requestId}")
+    public ResponseEntity<?> checkProductCreationStatus(@PathVariable String requestId) {
+        // Fetch the product creation request status from your service layer
+        Optional<ProductCreationRequest> productCreationRequest = productCreationRequestService.getRequestById(requestId);
 
+        if (!productCreationRequest.isPresent()) {
+            // If the request ID does not exist, return a Not Found response
+            return ResponseEntity.notFound().build();
+        }
+
+        // Assuming the ProductCreationRequest entity has a getStatus method
+        ProductCreationStatus status = productCreationRequest.get().getStatus();
+
+        // Build the response based on the status
+        Map<String, Object> response = new HashMap<>();
+        response.put("requestId", requestId);
+        response.put("status", status);
+
+        // You can also include additional information based on the status
+        switch (status) {
+            case PENDING_VALIDATION:
+                response.put("message", "Your product creation request is pending validation.");
+                break;
+            case VALIDATED:
+                response.put("message", "Your product creation request has been validated and is being processed.");
+                break;
+            case COMPLETED:
+                response.put("message", "Your product has been successfully created.");
+                // Include the product details if needed
+                break;
+            case REJECTED:
+                response.put("message", "Your product creation request was rejected.");
+                // Include rejection reasons if applicable
+                break;
+        }
+
+        return ResponseEntity.ok(response);
+    }
     @GetMapping
     public ResponseEntity<?> getAllProducts() {
         try {

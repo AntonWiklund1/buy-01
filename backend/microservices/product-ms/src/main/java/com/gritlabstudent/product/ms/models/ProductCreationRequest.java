@@ -5,17 +5,17 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+@Getter
 @Document
 public class ProductCreationRequest {
 
     // This is the getId() method that your controller is calling
     @Setter
-    @Getter
     @Id
     private String id;
     // This is the getProduct() method that your controller is calling
-    @Getter
     private Product product;
+    @Setter
     private ProductCreationStatus status;
 
     // Constructors, getters, and setters

@@ -33,6 +33,7 @@ public class ProductSecurityConfig {
                         authorizeRequests
                                 .requestMatchers("/api/products/**").permitAll()
                                 .requestMatchers("/api/products").permitAll()
+                                .requestMatchers("/products/status/**").permitAll()
                                 .anyRequest().authenticated(); // Require authentication for all other requests
                     } catch (Exception e) {
                         throw new RuntimeException(e);

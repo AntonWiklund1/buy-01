@@ -3,8 +3,8 @@ package com.gritlabstudent.product.ms.models;
 public enum ProductCreationStatus {
     PENDING_VALIDATION,
     VALIDATED,
-    FAILED,
-    USER_INVALID
+    REJECTED,
+    COMPLETED,
     // ... other statuses if necessary
 }
 
