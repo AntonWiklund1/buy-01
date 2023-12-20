@@ -64,7 +64,7 @@ To run `UserMsApplication` from IntelliJ IDEA and ensure it locates the `.env` f
 
 - Open the **Run/Debug Configurations** dialog.
 - Select your `UserMsApplication` configuration.
-- Set the **Working Directory** to the root of the `backend` directory, e.g., `$PROJECT_DIR$/backend`.
+- Set the **Working Directory** to the root of the `backend` directory, e.g., `/Users/anton.wiklund/buy-01/buy-01/backend`.
 - Apply the changes and run the application.
 
 ## Visual Overview
