@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,11 +29,15 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JWTService {
 
-    private String encodedSecretKey = "xajG3FHq3hTBkY56D9/0PJKJGqPf2bpXKAcC6KTHsZo=";
-    private Key SECRET = Keys.hmacShaKeyFor(Base64.getDecoder().decode(encodedSecretKey));
+    @Value("${JWT_SECRET_KEY}")
+    private String encodedSecretKey;
+    private Key SECRET;
 
-
-
+    @PostConstruct
+    public void init() {
+        this.SECRET = Keys.hmacShaKeyFor(Base64.getDecoder().decode(encodedSecretKey));
+        System.out.println("Current SECRET: " + encodedSecretKey); // This will print the current SECRET
+    }
     // Validates a token by checking if it has expired.
     public boolean validateToken(String token) {
         return !isTokenExpired(token);

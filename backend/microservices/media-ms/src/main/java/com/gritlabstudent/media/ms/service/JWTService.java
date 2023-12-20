@@ -6,6 +6,8 @@ import com.gritlabstudent.media.ms.models.SimpleUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -21,9 +23,15 @@ import java.util.function.Function;
 @Component
 public class JWTService {
 
-    private String encodedSecretKey = "xajG3FHq3hTBkY56D9/0PJKJGqPf2bpXKAcC6KTHsZo=";
-    private Key SECRET = Keys.hmacShaKeyFor(Base64.getDecoder().decode(encodedSecretKey));
+    @Value("${JWT_SECRET_KEY}")
+    private String encodedSecretKey;
+    private Key SECRET;
 
+    @PostConstruct
+    public void init() {
+        this.SECRET = Keys.hmacShaKeyFor(Base64.getDecoder().decode(encodedSecretKey));
+        System.out.println("Current SECRET: " + encodedSecretKey); // This will print the current SECRET
+    }
 
 
     // Validates a token by checking if it has expired.

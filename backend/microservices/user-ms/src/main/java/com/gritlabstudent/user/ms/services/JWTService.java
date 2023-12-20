@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -18,21 +19,23 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 @Component
 public class JWTService {
 
 
-    private String encodedSecretKey = "xajG3FHq3hTBkY56D9/0PJKJGqPf2bpXKAcC6KTHsZo=";
-    private Key SECRET = Keys.hmacShaKeyFor(Base64.getDecoder().decode(encodedSecretKey));
+    @Value("${JWT_SECRET_KEY}")
+    private String encodedSecretKey;
+    private Key SECRET;
+
+    @PostConstruct
+    public void init() {
+        this.SECRET = Keys.hmacShaKeyFor(Base64.getDecoder().decode(encodedSecretKey));
+        System.out.println("Current SECRET: " + encodedSecretKey); // This will print the current SECRET
+    }
 
 
-
-    /**
-     * Extracts the username from the given token.
-     *
-     * @param token the token from which to extract the username
-     * @return the extracted username as a string
-     */
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
