@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.gritlabstudent.media.ms.models.Media;
@@ -48,7 +49,16 @@ public class MediaController {
     @PreAuthorize("hasAuthority('ROLE_SELLER')")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,
                                         @RequestParam("productId") String productId) {
-        // Validate file size and MIME type as before...
+        // Check if the file is an image
+        if (!file.getContentType().startsWith("image/")) {
+            return ResponseEntity.badRequest().body("Invalid file type. Only image files are allowed.");
+        }
+
+        // Check if the file size exceeds 2 MB
+        if (file.getSize() > 2097152) { // 2 MB in bytes
+            return ResponseEntity.badRequest().body("File size exceeds 2 MB");
+        }
+
 
         // Temporarily store the file
         fileStorageService.storeFileTemporarily(productId, file);
