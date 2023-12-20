@@ -36,6 +36,7 @@ public class ProductController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_SELLER')")
     public ResponseEntity<?> createProduct(@RequestBody Product product) {
         ProductCreationRequest request = new ProductCreationRequest(product, ProductCreationStatus.PENDING_VALIDATION);
         request = productCreationRequestService.saveRequest(request);
@@ -75,6 +76,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_SELLER')")
     public ResponseEntity<?> updateProduct(@PathVariable("id") String id, @RequestBody Product product) {
         try {
             productService.updateProduct(id, product);
@@ -87,6 +89,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_SELLER')")
     public ResponseEntity<?> deleteProduct(@PathVariable("id") String id) {
         try {
             productService.deleteProduct(id);
