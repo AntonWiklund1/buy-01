@@ -8,6 +8,7 @@ import com.gritlabstudent.product.ms.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -161,5 +162,14 @@ public class ProductController {
 
     private boolean isValidInput(String input) {
         return input != null && !input.isEmpty() && !input.contains("$") && !input.contains("{") && !input.contains("}");
+    }
+
+    @KafkaListener(topics = "user_deletion")
+    public void listenUserDeletion(String userId) {
+        try {
+            productService.deleteProductsByUserId(userId);
+        } catch (Exception e) {
+            //for errors
+        }
     }
 }
