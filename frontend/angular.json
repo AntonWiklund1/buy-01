@@ -62,20 +62,20 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "ssl": true,
-            "sslCert": "../backend/src/main/resources/localhost.pem",
-            "sslKey": "../backend/src/main/resources/localhost-key.pem"
+            "sslCert": "../backend/microservices/api-gateway/src/main/resources/localhost.pem",
+            "sslKey": "../backend/microservices/api-gateway/src/main/resources/localhost-key.pem"
           },
           "configurations": {
             "production": {
               "ssl": true,
-              "sslCert": "../backend/src/main/resources/localhost.pem",
-              "sslKey": "../backend/src/main/resources/localhost-key.pem",
+              "sslCert": "../backend/microservices/api-gateway/src/main/resources/localhost.pem",
+              "sslKey": "../backend/microservices/api-gateway/src/main/resources/localhost-key.pem",
               "buildTarget": "buy-01:build:production"
             },
             "development": {
               "ssl": true,
-              "sslCert": "../backend/src/main/resources/localhost.pem",
-              "sslKey": "../backend/src/main/resources/localhost-key.pem",
+              "sslCert": "../backend/microservices/api-gateway/src/main/resources/localhost.pem",
+              "sslKey": "../backend/microservices/api-gateway/src/main/resources-key.pem",
               "buildTarget": "buy-01:build:development"
             }
           },
