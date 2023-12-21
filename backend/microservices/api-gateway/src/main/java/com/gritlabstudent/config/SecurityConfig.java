@@ -25,6 +25,7 @@ public class SecurityConfig {
                     .pathMatchers(HttpMethod.DELETE, "/api/users/**").permitAll()
                     .pathMatchers(HttpMethod.PUT, "/api/users/**").permitAll()
 
+
                     // Product-specific endpoints
                     .pathMatchers(HttpMethod.POST, "/api/products").permitAll()
                     .pathMatchers(HttpMethod.GET, "/api/products", "/api/products/**").permitAll()
@@ -36,6 +37,8 @@ public class SecurityConfig {
                     .pathMatchers(HttpMethod.POST, "/media/upload").permitAll()
                     .pathMatchers(HttpMethod.DELETE, "/media/**").permitAll()
 
+                        // kafka related endpoints
+                    .pathMatchers(HttpMethod.GET, "/api/products/status/**").permitAll()
                     // All other requests require authentication
                     .anyExchange().authenticated()
                 ));
