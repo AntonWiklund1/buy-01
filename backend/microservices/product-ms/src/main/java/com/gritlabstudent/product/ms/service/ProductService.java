@@ -4,6 +4,8 @@ import java.util.Optional;
 
 import jakarta.validation.ConstraintViolationException;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import com.gritlabstudent.product.ms.config.ValidateProduct;
@@ -16,6 +18,8 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
@@ -66,6 +70,7 @@ public class ProductService {
         if (!productOptional.isPresent()) {
             throw new ProductCollectionException(ProductCollectionException.NotFoundException(id));
         } else {
+            kafkaTemplate.send("product_deletion", id);
             productRepository.deleteById(id);
         }
     }
@@ -74,9 +79,18 @@ public class ProductService {
         return productRepository.findByUserId(userId);
     }
     public void deleteProductsByUserId(String userId) {
+
         Iterable<Product> products = getProductsByUserId(userId);
-        products.forEach(product -> productRepository.delete(product));
+
+        products.forEach(product -> {
+            // Send a message to Kafka with the product ID
+            kafkaTemplate.send("product_deletion", product.getProductid());
+
+            // Delete the product
+            productRepository.delete(product);
+        });
     }
+
 
     public boolean checkProductExists(String productId) {
         return productRepository.existsById(productId);

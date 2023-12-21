@@ -91,8 +91,6 @@ public class UserService {
         if (!userOptional.isPresent()) {
             throw new UserCollectionException(UserCollectionException.NotFoundException(id));
         } else {
-            // Find all products associated with the user and delete them
-
             // Now delete the user
             userRepository.deleteById(id);
 

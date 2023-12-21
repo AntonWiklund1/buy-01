@@ -121,12 +121,11 @@ public class MediaController {
         }
         return ResponseEntity.ok().body(file);
     }
-    @KafkaListener(topics = "user_deletion")
-    public void listenUserDeletion(String userId) {
+    @KafkaListener(topics = "product_deletion")
+    public void listenUserDeletion(String id) {
         try {
-            mediaService.deleteMediaByUserId(userId);
+            mediaService.deleteMediaByProductId(id);
         } catch (Exception e) {
-            //for errors
         }
     }
     
