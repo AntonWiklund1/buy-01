@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the directory where the certificates will be placed
-CERT_DIR="backend/src/main/resources"
+CERT_DIR="backend/microservices/api-gateway/src/main/resources"
 
 # Create the directory if it doesn't exist
 mkdir -p $CERT_DIR
@@ -20,4 +20,3 @@ mkcert -key-file $KEY_FILE -cert-file $CERT_FILE $CERT_NAME
 openssl pkcs12 -export -out $PKCS12_FILE -inkey $KEY_FILE -in $CERT_FILE -name "localhost" -password pass:$PASSWORD
 
 echo "SSL certificate generated in $CERT_DIR"
-

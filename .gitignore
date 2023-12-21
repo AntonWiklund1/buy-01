@@ -8,3 +8,4 @@ backend/target
 
 
 backend/src/main/resources/application.properties
+backend/temp/
