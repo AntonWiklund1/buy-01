@@ -5,8 +5,7 @@ import { MediaService } from '../services/media.service';
 import { Store } from '@ngrx/store';
 import { AuthState } from '../state/auth/auth.reducer';
 import * as AuthSelectors from '../state/auth/auth.selector';
-import { Observable, take } from 'rxjs';
-
+import { Observable, switchMap, take } from 'rxjs';
 
 interface Profile {
   name: string;
@@ -41,7 +40,6 @@ export class ProfileManagementComponent implements OnInit {
     this.username$ = this.store.select(AuthSelectors.selectUsername);
     this.userId$ = this.store.select(AuthSelectors.selectUserId);
     this.token$ = this.store.select(AuthSelectors.selectToken);
-
   }
 
   ngOnInit(): void {
@@ -53,7 +51,7 @@ export class ProfileManagementComponent implements OnInit {
       this.userId$.pipe(take(1)).subscribe((id) => {
         this.userId = id;
       });
-    
+
       // Subscribe to the token$ observable to get the latest token
       this.token$.pipe(take(1)).subscribe((token) => {
         this.token = token;
@@ -64,28 +62,34 @@ export class ProfileManagementComponent implements OnInit {
       });
     });
 
-
     // If the userID is already retrieved in the constructor, no need to get it again here
   }
   loadUserAvatar(userId: string): void {
-    this.token$.subscribe((token) => {
-      if (token && userId) {
-        this.mediaService.getAvatar(userId, token).subscribe(
-          (response) => {
-            console.log('User avatar retrieved successfully', response);
-            this.avatarUrl = `https://localhost:8443/${response}`; // Assuming the backend is hosted on localhost:8443
-          },
-          (error) => {
-            console.error('Get user avatar error:', error);
-            this.avatarUrl = 'assets/images/default-avatar.png'; // Fallback avatar
+    console.log('Loading user avatar');
+
+    this.token$
+      .pipe(
+        take(1),
+        switchMap((token) => {
+          if (token && userId) {
+            return this.mediaService.getAvatar(userId, token);
+          } else {
+            throw new Error('Token or UserID missing');
           }
-        );
-      }
-    });
+        })
+      )
+      .subscribe(
+        (response) => {
+          console.log('User avatar retrieved successfully', response);
+          this.avatarUrl = `https://localhost:8443/${response}`; // Assuming the backend is hosted on localhost:8443
+        },
+        (error) => {
+          console.error('Get user avatar error:', error);
+          this.avatarUrl = 'assets/images/default-avatar.png'; // Fallback avatar
+        }
+      );
   }
 
-  
-  
   deleteProfile(): void {
     console.log('Deleting Profile');
 
@@ -97,7 +101,7 @@ export class ProfileManagementComponent implements OnInit {
         localStorage.clear(); // If you're removing all items, use clear
         this.router.navigate(['/logIn']);
       },
-      (error:any) => console.error('Delete profile error:', error)
+      (error: any) => console.error('Delete profile error:', error)
     );
   }
 
@@ -130,16 +134,13 @@ export class ProfileManagementComponent implements OnInit {
     const bearerToken = this.token || '';
 
     console.log('Bearer token:', bearerToken);
-    this.userService
-      .updateProfile(userId, newProfile, bearerToken)
-      .subscribe(
-        () => {
-          console.log('Profile updated successfully');
-          this.username = newProfile.name;
-          
-        },
-        (error:any) => console.error('Update profile error:', error)
-      );
+    this.userService.updateProfile(userId, newProfile, bearerToken).subscribe(
+      () => {
+        console.log('Profile updated successfully');
+        this.username = newProfile.name;
+      },
+      (error: any) => console.error('Update profile error:', error)
+    );
   }
 
   private getInputValue(elementId: string): string {
@@ -148,31 +149,42 @@ export class ProfileManagementComponent implements OnInit {
 
   editProfilePicture(): void {
     console.log('Editing Profile Picture');
-
+  
+    // Validate user ID and token
     const userId = this.userId || '';
     const bearerToken = this.token || '';
-
-    const fileInput = document.getElementById('newProfilePicture') as HTMLInputElement;
-
-    if (fileInput && fileInput.files && fileInput.files.length > 0) {
-      const file = fileInput.files[0]; // Access the first file in the files list
-      this.mediaService.uploadAvatar(file, userId, bearerToken).subscribe(
-        () => {
-          console.log('Profile picture updated successfully');
-          this.confirmedProfilePicChange = true;
-          this.loadUserAvatar(userId);
-          this.errorMessage = '';
-        },
-        (error) => {
-          console.log(file, userId)
-          if (error.status === 413) {
-            this.errorMessage = 'The file is too large to upload.';
-          } else if (error.status === 415) {
-            this.errorMessage = 'The file type is not supported.';
-          }
-          console.error('Update profile picture error:', error)
-        }
-      );
+    if (!userId || !bearerToken) {
+      this.errorMessage = 'User ID or authentication token is missing.';
+      return;
     }
+  
+    // Validate file input
+    const fileInput = document.getElementById('newProfilePicture') as HTMLInputElement;
+    if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+      this.errorMessage = 'No file selected for upload.';
+      return;
+    }
+  
+    const file = fileInput.files[0];
+    this.mediaService.uploadAvatar(file, userId, bearerToken).subscribe(
+      () => {
+        console.log('Profile picture updated successfully');
+        this.confirmedProfilePicChange = true;
+        this.loadUserAvatar(userId);
+        this.errorMessage = '';
+      },
+      (error) => {
+        // Handle different types of errors
+        if (error.status === 413) {
+          this.errorMessage = 'The file is too large to upload.';
+        } else if (error.status === 415) {
+          this.errorMessage = 'The file type is not supported.';
+        } else {
+          this.errorMessage = 'An error occurred while updating the profile picture.';
+        }
+        console.error('Update profile picture error:', error);
+      }
+    );
   }
+  
 }

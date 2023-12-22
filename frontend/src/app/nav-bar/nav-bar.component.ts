@@ -16,6 +16,7 @@ import * as AuthSelectors from '../state/auth/auth.selector';
   templateUrl: './nav-bar.component.html',
   styleUrls: ['./nav-bar.component.css'],
 })
+
 export class NavBarComponent implements OnInit {
   isAuthenticated$: Observable<boolean>;
   isAdmin$: Observable<boolean>;
