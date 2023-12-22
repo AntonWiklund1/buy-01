@@ -85,7 +85,7 @@ export class LogInComponent {
       // Use the authService to get the JWT token
       console.log('isSeller', this.isSeller);
       var role = 'admin';
-      var jwtPassword = 'admin';
+      var jwtPassword = 'password';
 
       this.authService.getJwtToken(role, jwtPassword).subscribe({
         next: (jwtToken: any) => {
@@ -93,7 +93,7 @@ export class LogInComponent {
           console.log('JWT Token:', jwtToken);
           const bearer = Object.values(jwtToken)[1] as string;
           
-          role = this.isSeller ? 'ROLE_ADMIN' : 'ROLE_USER';
+          role = this.isSeller ? 'ROLE_SELLER' : 'ROLE_CLIENT';
           // Assuming you want to use the JWT token immediately to create a user
           const newUser = {
             id: this.username,
