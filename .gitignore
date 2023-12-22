@@ -13,3 +13,4 @@ backend/microservices/api-gateway/src/main/resources/localhost.p12
 backend/microservices/api-gateway/src/main/resources/localhost.pem
 backend/microservices/api-gateway/src/main/resources/localhost-key.pem
 backend/microservices/api-gateway/target/
+

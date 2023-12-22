@@ -7,6 +7,19 @@ import org.springframework.security.config.annotation.web.reactive.EnableWebFlux
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsConfigurationSource;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+import org.springframework.web.util.pattern.PathPatternParser;
+
+import java.util.Arrays;
+
 @Configuration
 @EnableWebFluxSecurity
 public class SecurityConfig {
@@ -14,7 +27,9 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         http
-            .csrf(csrf -> csrf.disable()
+                .cors().configurationSource(corsConfigurationSource()) // Enable and configure CORS
+                .and()
+                .csrf().disable()
                 .authorizeExchange(exchanges -> exchanges
                     // Publicly accessible paths (no authentication required)
                     .pathMatchers("/api/auth/**").permitAll()
@@ -41,8 +56,22 @@ public class SecurityConfig {
                     .pathMatchers(HttpMethod.GET, "/api/products/status/**").permitAll()
                     // All other requests require authentication
                     .anyExchange().authenticated()
-                ));
 
+                    );
         return http.build();
     }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("https://localhost:4200"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(new PathPatternParser());
+        source.registerCorsConfiguration("/**", configuration); // Apply CORS to all paths
+        return source;
+    }
+    //cors
+
 }

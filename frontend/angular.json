@@ -75,7 +75,7 @@
             "development": {
               "ssl": true,
               "sslCert": "../backend/microservices/api-gateway/src/main/resources/localhost.pem",
-              "sslKey": "../backend/microservices/api-gateway/src/main/resources-key.pem",
+              "sslKey": "../backend/microservices/api-gateway/src/main/resources/localhost-key.pem",
               "buildTarget": "buy-01:build:development"
             }
           },

@@ -35,7 +35,7 @@ export class NavBarComponent implements OnInit {
     this.isAuthenticated$ = this.store.select(selectIsAuthenticated); // This is where isLoggedIn$ is defined
     
     this.isAdmin$ = this.store.select(selectUserRole).pipe(
-      map(role => role === 'ROLE_ADMIN')
+      map(role => role === 'ROLE_SELLER')
     );
 
     this.username$ = this.store.select(selectUsername).pipe(
