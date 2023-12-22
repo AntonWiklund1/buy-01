@@ -13,13 +13,16 @@ export class MediaService {
     constructor(private http: HttpClient) {}
   
     // Upload media
-    uploadMedia(media: File, productId: string) {
+    uploadMedia(media: File, productId: string, token: string) {
       const formData = new FormData();
       formData.append('productId', productId);
       formData.append('file', media);
-  
+
+      const headers = new HttpHeaders({ 
+        'Authorization': `Bearer ${token}` 
+      });
       // No need to set the Content-Type header, HttpClient will set it automatically
-      return this.http.post(this.apiUploadUrl, formData);
+      return this.http.post(this.apiUploadUrl, formData ,{ headers: headers, responseType: 'text'});
     }
 
     //get media

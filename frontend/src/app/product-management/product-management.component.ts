@@ -66,18 +66,18 @@ export class ProductManagementComponent {
     this.userId$.pipe(take(1)).subscribe((id) => {
       this.userId = id;
     });
-  
+
     // Subscribe to the token$ observable to get the latest token
     this.token$.pipe(take(1)).subscribe((token) => {
       this.token = token;
     });
-  
+
     // closeModal and localStorage.removeItem should be used with caution;
     // Ensure they are called in the right context
     this.closeModal();
     localStorage.removeItem('productId');
   }
-  
+
   toggleDescription(product: any) {
     product.isReadMore = !product.isReadMore;
     product.isExpanded = !product.isExpanded; // Toggle the expanded state
@@ -157,7 +157,6 @@ export class ProductManagementComponent {
       userid: this.userId,
     };
 
-    
     this.productService.addProduct(newProduct, this.token || '').subscribe(
       (data) => {
         const newFileInput = document.getElementById(
@@ -171,7 +170,14 @@ export class ProductManagementComponent {
         ) {
           const newFile = newFileInput.files[0];
           console.log(data);
-          this.MediaService.uploadMedia(newFile, data.id).subscribe(
+
+          const bearerToken = this.token || '';
+
+          if (!bearerToken) {
+            this.errorMessage = 'Authentication token is missing.';
+            return;
+          }
+          this.MediaService.uploadMedia(newFile, data.id, bearerToken).subscribe(
             (data) => {
               console.log(data);
               this.closeModal();
@@ -219,8 +225,6 @@ export class ProductManagementComponent {
     this.renderer.addClass(bakground, 'darkBackground');
     this.showEditProducts = !this.showEditProducts;
 
-    
-
     this.productService.getProductById(id).subscribe(
       (data) => {
         this.editProducts = Array.isArray(data) ? data : [data];
@@ -249,8 +253,6 @@ export class ProductManagementComponent {
       userid: this.userId,
     };
 
-
-
     console.log('newProduct', id, newProduct, this.token);
     this.productService.editProduct(id, newProduct, this.token || '').subscribe(
       (data) => {
@@ -270,7 +272,6 @@ export class ProductManagementComponent {
   }
   deleteProduct(id: string) {
     console.log('deleteProduct');
-
 
     this.productService.deleteProduct(id, this.token || '').subscribe(
       (data) => {
@@ -297,30 +298,42 @@ export class ProductManagementComponent {
     if (fileInput && fileInput.files && fileInput.files.length > 0) {
       const file = fileInput.files[0];
       const productId = localStorage.getItem('productId') || '';
-      this.MediaService.uploadMedia(file, productId).subscribe(
+
+      if (!productId) {
+        this.errorMessage = 'Product ID is missing. Unable to upload media.';
+        return;
+      }
+
+      const bearerToken = this.token || '';
+      if (!bearerToken) {
+        this.errorMessage = 'Authentication token is missing.';
+        return;
+      }
+
+      this.MediaService.uploadMedia(file, productId, bearerToken).subscribe(
         (data) => {
-          console.log(data);
+          console.log('Media upload successful', data);
           this.closeModal();
-          this.ngOnInit();
-          // Reset error message if upload is successful
+          this.ngOnInit(); // Refresh the component to reflect changes
           this.errorMessage = '';
-          // Handle the response, like closing the modal or showing a success message.
         },
         (error) => {
           console.error('Upload error:', error);
-          // Check if the error status is 413 Payload Too Large
-          if (error.status === 413) {
-            this.errorMessage = 'The file is too large to upload.';
-          } else if (error.status === 415) {
-            this.errorMessage = 'The file type is not supported.';
-          }
-          // Handle the upload error, perhaps by showing an error message to the user.
+          this.handleUploadError(error); // A separate method to handle different types of errors
         }
       );
     } else {
-      console.error('No file selected.');
       this.errorMessage = 'No file selected. Please choose a file to upload.';
-      // Inform the user that no file was selected if that's the case.
+    }
+  }
+
+  private handleUploadError(error: any): void {
+    if (error.status === 413) {
+      this.errorMessage = 'The file is too large to upload.';
+    } else if (error.status === 415) {
+      this.errorMessage = 'The file type is not supported.';
+    } else {
+      this.errorMessage = 'An error occurred during the upload.';
     }
   }
 

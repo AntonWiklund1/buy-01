@@ -86,8 +86,6 @@ public class MediaController {
 
 
     @DeleteMapping("/product/{productId}")
-    @PreAuthorize("hasAuthority('ROLE_SELLER')")
-
     public ResponseEntity<?> deleteMediaForProduct(@PathVariable String productId) {
         try {
             mediaService.deleteMediaByProductId(productId);
