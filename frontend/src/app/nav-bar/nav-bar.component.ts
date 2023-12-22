@@ -52,6 +52,7 @@ export class NavBarComponent implements OnInit {
 
   ngOnInit(): void {
     this.isAuthenticated$.pipe(takeUntil(this.destroy$)).subscribe(loggedIn => {
+      console.log('Authentication Status:', loggedIn); // Log authentication status
       if (!loggedIn) {
         this.router.navigate(['/logIn']);
       } else {
@@ -83,13 +84,13 @@ export class NavBarComponent implements OnInit {
   }
 
   logOut(): void {
+    console.log('Logout initiated'); // Confirming that the method is called
     this.store.dispatch(logout()); // Dispatch logout action to clear the auth state
-    this.router.navigate(['/login']); // Navigate to the login page
+    this.router.navigate(['/logIn'])
   }
+  
 
   loadUserAvatar(userId: string): void {
-    console.log('loadUserAvatar called');
-    console.log('userId: ', userId);
     this.token$.subscribe((token) => {
       if (token && userId) {
         this.mediaService.getAvatar(userId, token).subscribe(

@@ -96,7 +96,7 @@
 }
 .logOutLink{
     position: relative;
-
+    margin-bottom: 2rem;
 }
 .spanLink{
     font-size: 1.5rem;
@@ -115,9 +115,7 @@
 .logInLink{
     display: none;
 }
-.logOutLink{
-    display: none;
-}
+
 
 .logSpan{
     display: none;
