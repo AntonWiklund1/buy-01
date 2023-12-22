@@ -63,13 +63,11 @@ public class SecurityConfig {
                 // Authorize HTTP requests based on their URL paths
                 .authorizeHttpRequests(
                         authorize -> authorize
-                // Allow unauthenticated access to "/api/product/all" and "/api/product/{id}"
                                 .requestMatchers("/api/users").permitAll()
                                 .requestMatchers("/api/users/{id}").permitAll()
-                // Allow unauthenticated access to "/api/auth"
-                .requestMatchers("/api/auth").permitAll()
-                // Require authentication for any other requests
-                .anyRequest().authenticated())
+                                .requestMatchers("/api/users/**").permitAll()
+                                .requestMatchers("/api/auth").permitAll()
+                                .anyRequest().authenticated())
 
                 // Set the AuthenticationProvider for user authentication
                 .authenticationProvider(authenticationProvider())
