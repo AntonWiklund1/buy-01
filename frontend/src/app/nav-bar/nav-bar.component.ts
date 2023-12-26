@@ -1,14 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { MediaService } from '../services/media.service';
 import { Store } from '@ngrx/store';
 import { AuthState } from '../state/auth/auth.reducer';
 import { selectIsAuthenticated, selectUserRole, selectUsername } from '../state/auth/auth.selector';
 import { logout } from '../state/auth/auth.actions';
-import { Observable, map } from 'rxjs';
-import { filter, take, takeUntil } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import * as AuthSelectors from '../state/auth/auth.selector';
+import * as AvatarSelectors from '../state/avatar/profile.selector';
+import { AppState } from '../state/app.state';
+import * as AvatarActions from '../state/avatar/profile.actions';
+import { MediaService } from '../services/media.service';
+import { switchMap, catchError, of, take } from 'rxjs';
 
 
 @Component({
@@ -16,94 +20,85 @@ import * as AuthSelectors from '../state/auth/auth.selector';
   templateUrl: './nav-bar.component.html',
   styleUrls: ['./nav-bar.component.css'],
 })
-
-export class NavBarComponent implements OnInit {
+export class NavBarComponent implements OnInit, OnDestroy {
   isAuthenticated$: Observable<boolean>;
   isAdmin$: Observable<boolean>;
   username$: Observable<string>;
-  private destroy$ = new Subject<void>(); // Declare the destroy$ subject here
-  userId$: Observable<string | null>;
-  token$: Observable<string | null>;
-  userId: string | null | undefined;
-  token: string | null | undefined;
-
+  avatarUrl$: Observable<string>; // Observable for the avatar URL
+  private destroy$ = new Subject<void>();
 
   constructor(
     private router: Router,
-    private mediaService: MediaService,
-    private store: Store<{ auth: AuthState }>
+    private store: Store<{ auth: AuthState; avatar: any; }>,
+    private mediaService: MediaService  // Assuming MediaService has a method to fetch the avatar
   ) {
-    this.isAuthenticated$ = this.store.select(selectIsAuthenticated); // This is where isLoggedIn$ is defined
-    
+
+    this.isAuthenticated$ = this.store.select(selectIsAuthenticated);
     this.isAdmin$ = this.store.select(selectUserRole).pipe(
       map(role => role === 'ROLE_SELLER')
     );
-
     this.username$ = this.store.select(selectUsername).pipe(
-      map(username => username ?? '')  // Provide an empty string as default
+      map(username => username ?? '') // If username is null, use empty string as a default
     );
-
-    this.userId$ = this.store.select(AuthSelectors.selectUserId);
-    this.token$ = this.store.select(AuthSelectors.selectToken);
     
+    this.avatarUrl$ = this.store.select(AvatarSelectors.selectAvatarUrl);
   }
-
-  avatarUrl = 'assets/images/default-avatar.png';
 
   ngOnInit(): void {
-    this.isAuthenticated$.pipe(takeUntil(this.destroy$)).subscribe(loggedIn => {
-      console.log('Authentication Status:', loggedIn); // Log authentication status
-      if (!loggedIn) {
-        this.router.navigate(['/logIn']);
+    this.store.select(selectIsAuthenticated).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(isAuthenticated => {
+      if (isAuthenticated) {
+        this.loadUserAvatar();  // Load avatar when the user is authenticated
       } else {
-        this.loadUserAvatar(this.userId!);
+        this.router.navigate(['/logIn']);
       }
-    });
-
-    this.userId$.pipe(takeUntil(this.destroy$)).subscribe(userId => {
-      if (userId) {
-        this.loadUserAvatar(userId);
-      }
-    });
-
-    this.userId$.pipe(take(1)).subscribe((id) => {
-      this.userId = id;
-    });
-  
-    // Subscribe to the token$ observable to get the latest token
-    this.token$.pipe(take(1)).subscribe((token) => {
-      this.token = token;
     });
   }
+  private loadUserAvatar(): void {
+    this.store.select(AuthSelectors.selectUserId).pipe(
+      take(1),
+      switchMap(userId => {
+        if (!userId) {
+          console.error('User ID is missing');
+          return of('assets/images/default-avatar.png'); // Return default avatar path
+        }
+        return this.store.select(AuthSelectors.selectToken).pipe(
+          take(1),
+          switchMap(token => {
+            if (!token) {
+              console.error('Token is missing');
+              return of('assets/images/default-avatar.png'); // Return default avatar path
+            }
+            return this.mediaService.getAvatar(userId, token);
+          }),
+          catchError(error => {
+            console.error('Error loading user avatar:', error);
+            return of('assets/images/default-avatar.png'); // Return default avatar path
+          })
+        );
+      })
+    ).subscribe(avatarUrl => {
+      if (!avatarUrl.startsWith('http')) {
+        // Prepend the base URL only if the avatarUrl does not already start with 'http'
+        avatarUrl = `https://localhost:8443/${avatarUrl}`;
+      }
+      this.store.dispatch(AvatarActions.updateProfilePicture({ url: avatarUrl }));
+      console.log('User avatar retrieved successfully', avatarUrl);
+    });
+  }
+  
+  
+  
+
 
   ngOnDestroy(): void {
-    // Emit a value to all subscribers to trigger unsubscription
     this.destroy$.next();
-    // Complete the subject to clean it up
     this.destroy$.complete();
   }
 
   logOut(): void {
-    console.log('Logout initiated'); // Confirming that the method is called
-    this.store.dispatch(logout()); // Dispatch logout action to clear the auth state
-    this.router.navigate(['/logIn'])
-  }
-  
-
-  loadUserAvatar(userId: string): void {
-    this.token$.subscribe((token) => {
-      if (token && userId) {
-        this.mediaService.getAvatar(userId, token).subscribe(
-          (response) => {
-            console.log('User avatar retrieved successfully', response);
-            this.avatarUrl = `https://localhost:8443/${response}`; // Assuming the backend is hosted on localhost:8443
-          },
-          (error) => {
-            console.error('Get user avatar error:', error);
-            this.avatarUrl = 'assets/images/default-avatar.png'; // Fallback avatar
-          }
-        );
-      }
-    });
+    this.store.dispatch(logout());
+    this.router.navigate(['/logIn']);
   }
 }

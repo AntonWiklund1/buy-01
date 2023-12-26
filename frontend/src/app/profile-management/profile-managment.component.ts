@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { UserService } from '../services/user.service';
 import { MediaService } from '../services/media.service';
-import { Store } from '@ngrx/store';
-import { AuthState } from '../state/auth/auth.reducer';
 import * as AuthSelectors from '../state/auth/auth.selector';
-import { Observable, switchMap, take } from 'rxjs';
+import * as AvatarActions from '../state/avatar/profile.actions'; 
+import { catchError, of, switchMap, take } from 'rxjs';
+import { AuthState } from '../state/auth/auth.reducer';
 
 interface Profile {
   name: string;
@@ -20,10 +21,6 @@ interface Profile {
   styleUrls: ['./profile-management.component.css'],
 })
 export class ProfileManagementComponent implements OnInit {
-  username$: Observable<string | null>;
-  userId$: Observable<string | null>;
-  token$: Observable<string | null>;
-
   confirmDeleteProfile: boolean = false;
   avatarUrl: string = 'assets/images/default-avatar.png';
   confirmedProfilePicChange: boolean = false;
@@ -31,96 +28,64 @@ export class ProfileManagementComponent implements OnInit {
   userId: string | null | undefined;
   token: string | null | undefined;
   username: string | null | undefined;
+
   constructor(
     private store: Store<{ auth: AuthState }>,
     private userService: UserService,
     private router: Router,
     private mediaService: MediaService
   ) {
-    this.username$ = this.store.select(AuthSelectors.selectUsername);
-    this.userId$ = this.store.select(AuthSelectors.selectUserId);
-    this.token$ = this.store.select(AuthSelectors.selectToken);
+    this.store.select(AuthSelectors.selectUserId).pipe(take(1)).subscribe(id => this.userId = id);
+    this.store.select(AuthSelectors.selectToken).pipe(take(1)).subscribe(token => this.token = token);
+    this.store.select(AuthSelectors.selectUsername).pipe(take(1)).subscribe(username => this.username = username);
   }
 
   ngOnInit(): void {
-    this.userId$.subscribe((userId) => {
-      if (userId) {
-        this.loadUserAvatar(userId);
-      }
-
-      this.userId$.pipe(take(1)).subscribe((id) => {
-        this.userId = id;
-      });
-
-      // Subscribe to the token$ observable to get the latest token
-      this.token$.pipe(take(1)).subscribe((token) => {
-        this.token = token;
-      });
-
-      this.username$.pipe(take(1)).subscribe((username) => {
-        this.username = username;
-      });
-    });
-
-    // If the userID is already retrieved in the constructor, no need to get it again here
+    if (this.userId) {
+      this.loadUserAvatar(this.userId);
+    }
   }
-  loadUserAvatar(userId: string): void {
-    console.log('Loading user avatar');
 
-    this.token$
-      .pipe(
-        take(1),
-        switchMap((token) => {
-          if (token && userId) {
-            return this.mediaService.getAvatar(userId, token);
-          } else {
-            throw new Error('Token or UserID missing');
-          }
-        })
-      )
-      .subscribe(
-        (response) => {
-          console.log('User avatar retrieved successfully', response);
-          this.avatarUrl = `https://localhost:8443/${response}`; // Assuming the backend is hosted on localhost:8443
-        },
-        (error) => {
-          console.error('Get user avatar error:', error);
-          this.avatarUrl = 'assets/images/default-avatar.png'; // Fallback avatar
-        }
-      );
+  loadUserAvatar(userId: string): void {
+    this.store.select(AuthSelectors.selectToken).pipe(
+      take(1),
+      switchMap(token => token ? this.mediaService.getAvatar(userId, token) : of(null)),
+      catchError(error => {
+        console.error('Get user avatar error:', error);
+        return of('assets/images/default-avatar.png'); // Return the fallback avatar
+      })
+    ).subscribe(avatarPath => {
+      this.avatarUrl = avatarPath ? `https://localhost:8443/${avatarPath}` : 'assets/images/default-avatar.png';
+      console.log('User avatar retrieved successfully', avatarPath);
+    });
   }
 
   deleteProfile(): void {
-    console.log('Deleting Profile');
-
-    const bearerToken = this.token || '';
-
-    this.userService.deleteProfile(this.userId, bearerToken).subscribe(
-      () => {
-        console.log('Profile deleted successfully');
-        localStorage.clear(); // If you're removing all items, use clear
-        this.router.navigate(['/logIn']);
-      },
-      (error: any) => console.error('Delete profile error:', error)
-    );
+    if (this.userId && this.token) {
+      this.userService.deleteProfile(this.userId, this.token).subscribe(
+        () => {
+          console.log('Profile deleted successfully');
+          localStorage.clear();
+          this.router.navigate(['/logIn']);
+        },
+        (error: any) => console.error('Delete profile error:', error)
+      );
+    }
   }
 
   toggleConfirmDelete(): void {
     this.confirmDeleteProfile = !this.confirmDeleteProfile;
   }
-  // This is now a property, not a method.
+
+  checkDelete(): void {
+    this.toggleConfirmDelete();
+  }
+
   showDelete(): boolean {
     return this.confirmDeleteProfile;
   }
 
-  // Renamed method to match your HTML template
-  checkDelete(): void {
-    this.confirmDeleteProfile = !this.confirmDeleteProfile;
-  }
-
   editProfile(): void {
-    console.log('Editing Profile');
-
     const newProfile: Profile = {
       name: this.getInputValue('newName'),
       email: this.getInputValue('newEmail'),
@@ -128,63 +93,60 @@ export class ProfileManagementComponent implements OnInit {
       role: this.getInputValue('newRole'),
     };
 
-    console.log('New profile data:', newProfile);
-
-    const userId = this.userId || '';
-    const bearerToken = this.token || '';
-
-    console.log('Bearer token:', bearerToken);
-    this.userService.updateProfile(userId, newProfile, bearerToken).subscribe(
-      () => {
-        console.log('Profile updated successfully');
-        this.username = newProfile.name;
-      },
-      (error: any) => console.error('Update profile error:', error)
-    );
+    if (this.userId && this.token) {
+      this.userService.updateProfile(this.userId, newProfile, this.token).subscribe(
+        () => {
+          console.log('Profile updated successfully');
+          this.username = newProfile.name;
+        },
+        (error: any) => console.error('Update profile error:', error)
+      );
+    }
   }
+
+  editProfilePicture(): void {
+    const userId = this.userId;
+    const token = this.token;
+
+    if (userId && token) {
+      const fileInput = document.getElementById('newProfilePicture') as HTMLInputElement;
+
+      if (!fileInput?.files?.length) {
+        this.errorMessage = 'No file selected for upload.';
+        return;
+      }
+
+      const file = fileInput.files[0];
+      this.mediaService.uploadAvatar(file, userId, token).subscribe(
+        (response) => {
+          const newAvatarUrl = `https://localhost:8443/${response}`;
+          this.store.dispatch(AvatarActions.updateProfilePicture({ url: newAvatarUrl }));
+          console.log('Profile picture updated successfully');
+          this.ngOnInit(); // Reload the avatar
+          this.errorMessage = ''; // Clear any previous error message
+        },
+        (error) => {
+          this.handleProfilePictureUploadError(error);
+        }
+      );
+    } else {
+      this.errorMessage = 'Authentication required.';
+    }
+  }
+
 
   private getInputValue(elementId: string): string {
     return (document.getElementById(elementId) as HTMLInputElement).value;
   }
 
-  editProfilePicture(): void {
-    console.log('Editing Profile Picture');
-  
-    // Validate user ID and token
-    const userId = this.userId || '';
-    const bearerToken = this.token || '';
-    if (!userId || !bearerToken) {
-      this.errorMessage = 'User ID or authentication token is missing.';
-      return;
+  private handleProfilePictureUploadError(error: any): void {
+    if (error.status === 413) {
+      this.errorMessage = 'The file is too large to upload.';
+    } else if (error.status === 415) {
+      this.errorMessage = 'The file type is not supported.';
+    } else {
+      this.errorMessage = 'An error occurred while updating the profile picture.';
     }
-  
-    // Validate file input
-    const fileInput = document.getElementById('newProfilePicture') as HTMLInputElement;
-    if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
-      this.errorMessage = 'No file selected for upload.';
-      return;
-    }
-  
-    const file = fileInput.files[0];
-    this.mediaService.uploadAvatar(file, userId, bearerToken).subscribe(
-      () => {
-        console.log('Profile picture updated successfully');
-        this.confirmedProfilePicChange = true;
-        this.loadUserAvatar(userId);
-        this.errorMessage = '';
-      },
-      (error) => {
-        // Handle different types of errors
-        if (error.status === 413) {
-          this.errorMessage = 'The file is too large to upload.';
-        } else if (error.status === 415) {
-          this.errorMessage = 'The file type is not supported.';
-        } else {
-          this.errorMessage = 'An error occurred while updating the profile picture.';
-        }
-        console.error('Update profile picture error:', error);
-      }
-    );
+    console.error('Update profile picture error:', error);
   }
-  
 }

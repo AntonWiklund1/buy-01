@@ -14,8 +14,8 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { authReducer } from './state/auth/auth.reducer';
+import { avatarReducer } from './state/avatar/profile.reducer'; // Import the avatar reducer
 import { environment } from '../environments/environment';
-
 
 @NgModule({
   declarations: [
@@ -30,21 +30,19 @@ import { environment } from '../environments/environment';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule, // Import FormsModule here
+    FormsModule,
     HttpClientModule,
-    StoreModule.forRoot({ auth: authReducer }),
+    StoreModule.forRoot({
+      auth: authReducer,
+      avatar: avatarReducer, 
+    }),
     EffectsModule.forRoot([]),
     StoreDevtoolsModule.instrument({
-      maxAge: 25, // Retains last 25 states
+      maxAge: 25,
+      logOnly: environment.production,
     }),
-    StoreDevtoolsModule.instrument({
-      maxAge: 25, // Retains the last 25 states
-      logOnly: environment.production, // Restrict extension to log-only mode
-    }),
-
   ],
   providers: [],
-
   bootstrap: [AppComponent],
 })
 export class AppModule {}

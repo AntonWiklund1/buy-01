@@ -137,8 +137,10 @@ public class UserController {
 
         // If file size and MIME type are valid, proceed with upload
         try {
-            userService.uploadUserAvatar(id, avatarFile);
-            return new ResponseEntity<>("Avatar uploaded successfully", HttpStatus.OK);
+            String avatarUrl = userService.uploadUserAvatar(id, avatarFile);
+            // Assuming `uploadUserAvatar` returns the URL to the uploaded avatar
+            return ResponseEntity.ok(avatarUrl); // Return the URL in the response body
+
         } catch (IOException e) {
             return new ResponseEntity<>("Could not upload the file: " + avatarFile.getOriginalFilename(),
                     HttpStatus.INTERNAL_SERVER_ERROR);

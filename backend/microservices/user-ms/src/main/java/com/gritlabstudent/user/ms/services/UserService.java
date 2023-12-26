@@ -23,6 +23,7 @@ import com.gritlabstudent.user.ms.exceptions.UserCollectionException;
 import com.gritlabstudent.user.ms.models.User;
 import com.gritlabstudent.user.ms.models.UserDTO;
 import com.gritlabstudent.user.ms.repositories.UserRepository;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Service
 public class UserService {
@@ -102,7 +103,7 @@ public class UserService {
         return userOptional.isPresent() && passwordEncoder.matches(password, userOptional.get().getPassword());
     }
 
-    public void uploadUserAvatar(String id, MultipartFile avatarFile) throws IOException, UserCollectionException {
+    public String uploadUserAvatar(String id, MultipartFile avatarFile) throws IOException, UserCollectionException {
         Optional<User> userOptional = userRepository.findById(id);
         if (!userOptional.isPresent()) {
             throw new UserCollectionException(UserCollectionException.NotFoundException(id));
@@ -110,11 +111,25 @@ public class UserService {
 
         User user = userOptional.get();
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(avatarFile.getOriginalFilename()));
-        Path filePath = Paths.get("media/avatars/" + fileName);
+
+        // Construct the relative file path
+        String relativeFilePath = "media/avatars/" + fileName;
+        Path filePath = Paths.get(relativeFilePath);
+
+        // Ensure directory exists
+        Files.createDirectories(filePath.getParent());
+
+        // Save the file on the server
         Files.copy(avatarFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-        user.setAvatarImagePath(filePath.toString());
+
+        // Update the user entity with the relative file path
+        user.setAvatarImagePath(relativeFilePath);
         userRepository.save(user);
+
+        // Return the URL
+        return relativeFilePath;
     }
+
 
     public boolean checkUserExistence(String userId) {
         System.out.println("Checking user existence for ID: " + userId);

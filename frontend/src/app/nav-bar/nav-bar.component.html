@@ -21,7 +21,8 @@
         </div>
         <!-- Use username$ Observable with async pipe -->
         <div class="profile" routerLink="/profileManagment">
-            <img [src]="avatarUrl" alt="" class=""> 
+            <img *ngIf="(avatarUrl$ | async) as avatarUrl" [src]="avatarUrl" alt="Profile Picture">
+
             <a class="profileName" *ngIf="isAuthenticated$ | async">{{username$ | async}}</a>
         </div>
         <div class="logStatus">
