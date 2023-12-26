@@ -61,32 +61,39 @@ export class NavBarComponent implements OnInit, OnDestroy {
       switchMap(userId => {
         if (!userId) {
           console.error('User ID is missing');
-          return of('assets/images/default-avatar.png'); // Return default avatar path
+          // Return the path to the image in the assets folder
+          return of('/assets/images/default-avatar.png');
         }
         return this.store.select(AuthSelectors.selectToken).pipe(
           take(1),
           switchMap(token => {
             if (!token) {
               console.error('Token is missing');
-              return of('assets/images/default-avatar.png'); // Return default avatar path
+              // Return the path to the image in the assets folder
+              return of('/assets/images/default-avatar.png');
             }
             return this.mediaService.getAvatar(userId, token);
           }),
           catchError(error => {
             console.error('Error loading user avatar:', error);
-            return of('assets/images/default-avatar.png'); // Return default avatar path
+            // Return the path to the image in the assets folder
+            return of('/assets/images/default-avatar.png');
           })
         );
       })
-    ).subscribe(avatarUrl => {
-      if (!avatarUrl.startsWith('http')) {
-        // Prepend the base URL only if the avatarUrl does not already start with 'http'
-        avatarUrl = `https://localhost:8443/${avatarUrl}`;
+    ).subscribe(avatarPath => {
+      // Check if avatarPath is a full URL or a relative path
+      let avatarUrl = avatarPath;
+      if (!avatarPath.startsWith('http') && !avatarPath.startsWith('/assets')) {
+        // If avatarPath is neither a full URL nor an asset path, assume it's a relative path from the server
+        avatarUrl = `https://localhost:8443/${avatarPath}`;
       }
+      // Dispatch the action with the correct URL
       this.store.dispatch(AvatarActions.updateProfilePicture({ url: avatarUrl }));
       console.log('User avatar retrieved successfully', avatarUrl);
     });
   }
+  
   
   
   

@@ -4,8 +4,9 @@ import { Store } from '@ngrx/store';
 import { UserService } from '../services/user.service';
 import { MediaService } from '../services/media.service';
 import * as AuthSelectors from '../state/auth/auth.selector';
+import * as AvatarSelectors from '../state/avatar/profile.selector';
 import * as AvatarActions from '../state/avatar/profile.actions'; 
-import { catchError, of, switchMap, take } from 'rxjs';
+import { Observable, catchError, of, switchMap, take } from 'rxjs';
 import { AuthState } from '../state/auth/auth.reducer';
 
 interface Profile {
@@ -23,6 +24,9 @@ interface Profile {
 export class ProfileManagementComponent implements OnInit {
   confirmDeleteProfile: boolean = false;
   avatarUrl: string = 'assets/images/default-avatar.png';
+  avatarUrl$: Observable<string>; // Observable for the avatar URL
+
+
   confirmedProfilePicChange: boolean = false;
   errorMessage: string = '';
   userId: string | null | undefined;
@@ -30,7 +34,7 @@ export class ProfileManagementComponent implements OnInit {
   username: string | null | undefined;
 
   constructor(
-    private store: Store<{ auth: AuthState }>,
+    private store: Store<{ auth: AuthState, avatar: any }>, // Ensure the avatar state is correctly defined
     private userService: UserService,
     private router: Router,
     private mediaService: MediaService
@@ -38,27 +42,58 @@ export class ProfileManagementComponent implements OnInit {
     this.store.select(AuthSelectors.selectUserId).pipe(take(1)).subscribe(id => this.userId = id);
     this.store.select(AuthSelectors.selectToken).pipe(take(1)).subscribe(token => this.token = token);
     this.store.select(AuthSelectors.selectUsername).pipe(take(1)).subscribe(username => this.username = username);
+
+    this.avatarUrl$ = this.store.select(AvatarSelectors.selectAvatarUrl);
+
+
+
   }
 
   ngOnInit(): void {
     if (this.userId) {
-      this.loadUserAvatar(this.userId);
+      this.loadUserAvatar();
     }
   }
 
-  loadUserAvatar(userId: string): void {
-    this.store.select(AuthSelectors.selectToken).pipe(
+  private loadUserAvatar(): void {
+    this.store.select(AuthSelectors.selectUserId).pipe(
       take(1),
-      switchMap(token => token ? this.mediaService.getAvatar(userId, token) : of(null)),
-      catchError(error => {
-        console.error('Get user avatar error:', error);
-        return of('assets/images/default-avatar.png'); // Return the fallback avatar
+      switchMap(userId => {
+        if (!userId) {
+          console.error('User ID is missing');
+          // Return the path to the image in the assets folder
+          return of('/assets/images/default-avatar.png');
+        }
+        return this.store.select(AuthSelectors.selectToken).pipe(
+          take(1),
+          switchMap(token => {
+            if (!token) {
+              console.error('Token is missing');
+              // Return the path to the image in the assets folder
+              return of('/assets/images/default-avatar.png');
+            }
+            return this.mediaService.getAvatar(userId, token);
+          }),
+          catchError(error => {
+            console.error('Error loading user avatar:', error);
+            // Return the path to the image in the assets folder
+            return of('/assets/images/default-avatar.png');
+          })
+        );
       })
     ).subscribe(avatarPath => {
-      this.avatarUrl = avatarPath ? `https://localhost:8443/${avatarPath}` : 'assets/images/default-avatar.png';
-      console.log('User avatar retrieved successfully', avatarPath);
+      // Check if avatarPath is a full URL or a relative path
+      let avatarUrl = avatarPath;
+      if (!avatarPath.startsWith('http') && !avatarPath.startsWith('/assets')) {
+        // If avatarPath is neither a full URL nor an asset path, assume it's a relative path from the server
+        avatarUrl = `https://localhost:8443/${avatarPath}`;
+      }
+      // Dispatch the action with the correct URL
+      this.store.dispatch(AvatarActions.updateProfilePicture({ url: avatarUrl }));
+      console.log('User avatar retrieved successfully', avatarUrl);
     });
   }
+  
 
   deleteProfile(): void {
     if (this.userId && this.token) {
@@ -122,7 +157,7 @@ export class ProfileManagementComponent implements OnInit {
           const newAvatarUrl = `https://localhost:8443/${response}`;
           this.store.dispatch(AvatarActions.updateProfilePicture({ url: newAvatarUrl }));
           console.log('Profile picture updated successfully');
-          this.ngOnInit(); // Reload the avatar
+          this.ngOnInit
           this.errorMessage = ''; // Clear any previous error message
         },
         (error) => {
