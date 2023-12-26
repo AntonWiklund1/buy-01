@@ -13,7 +13,7 @@
   /* Flex child */
   .productCard {
     background-color: #ffffff;
-    flex: 0 0 calc(20% - 1rem); /* Will not grow, will not shrink, with the width adjusted for gap */
+    flex: 0 0 calc(15% - 1rem); /* Will not grow, will not shrink, with the width adjusted for gap */
     min-width: 15rem;
     height: 31rem;
     border-radius: 5px;
