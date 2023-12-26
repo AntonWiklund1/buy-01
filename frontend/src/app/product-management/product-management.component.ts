@@ -170,11 +170,12 @@ export class ProductManagementComponent {
         ) {
           const newFile = newFileInput.files[0];
           console.log(data);
-          const productId = data.id;
+          const productId = data.productId;
           const bearerToken = this.token || '';
 
           if (!bearerToken) {
-            this.errorMessage = 'Authentication token is missing.';
+            this.errorMessage = 'Authentication token is missing try logging in again.';
+            alert(this.errorMessage);
             return;
           }
           console.log('productId',productId);
@@ -182,7 +183,7 @@ export class ProductManagementComponent {
             (data) => {
               console.log("uplaod media response: ",data);
               this.closeModal();
-
+              this.ngOnInit();
             },
             (error) => {
               this.closeModal();
