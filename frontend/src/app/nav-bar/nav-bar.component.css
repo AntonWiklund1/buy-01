@@ -13,20 +13,20 @@
     padding-left: 2rem;
     padding-right: 2rem;
 }
-.navBarHome{
+.navBarLogo{
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 2rem;
     position: relative;
     top: 5vh;
-
+    
 }
-.navBarHome a{
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--second-color);
-    text-decoration: none;
-    cursor: pointer;
+.navBarLogo img{
+    width: 10rem;
+    height: auto;
+    position: relative;
+    left: -2.5rem;
+
 }
 .navBarlinks{
     display: flex;
@@ -150,7 +150,7 @@
     .link{
         display: none;
     }
-    .logOutLink, .logInLink ,.navBarHome{
+    .logOutLink, .logInLink ,.navBarLogo{
         visibility: hidden;
     }
     .navBarlinks .spanLink{
