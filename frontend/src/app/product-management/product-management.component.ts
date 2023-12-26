@@ -170,18 +170,19 @@ export class ProductManagementComponent {
         ) {
           const newFile = newFileInput.files[0];
           console.log(data);
-
+          const productId = data.id;
           const bearerToken = this.token || '';
 
           if (!bearerToken) {
             this.errorMessage = 'Authentication token is missing.';
             return;
           }
-          this.MediaService.uploadMedia(newFile, data.id, bearerToken).subscribe(
+          console.log('productId',productId);
+          this.MediaService.uploadMedia(newFile, productId, bearerToken).subscribe(
             (data) => {
-              console.log(data);
+              console.log("uplaod media response: ",data);
               this.closeModal();
-              // Handle the response, like closing the modal or showing a success message.
+
             },
             (error) => {
               this.closeModal();
@@ -192,7 +193,7 @@ export class ProductManagementComponent {
           );
         } else {
           this.closeModal();
-          this.router.navigate(['/productManagement']);
+          this.ngOnInit();
         }
       },
       (error) => {

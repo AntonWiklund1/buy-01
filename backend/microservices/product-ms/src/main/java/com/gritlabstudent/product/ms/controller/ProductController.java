@@ -22,6 +22,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/products")
@@ -43,11 +44,17 @@ public class ProductController {
     @PostMapping
     @PreAuthorize("hasRole('ROLE_SELLER')")
     public ResponseEntity<?> createProduct(@RequestBody Product product) {
+        // Generate UUID for the product ID
+        String productId = product.uuidGenerator();
+        product.setProductid(productId);
+
+        // Create and save the product creation request
         ProductCreationRequest request = new ProductCreationRequest(product, ProductCreationStatus.PENDING_VALIDATION);
         request = productCreationRequestService.saveRequest(request);
         String requestId = request.getId();
         String userId = product.getUserId();
 
+        // Send user ID for validation
         userValidationProducer.sendUserIdForValidation(requestId, userId);
 
         // Return a response with a status check URL and expected timeframe
@@ -56,11 +63,13 @@ public class ProductController {
                 .buildAndExpand(requestId).toUri();
 
         Map<String, Object> response = new HashMap<>();
+        response.put("productId", productId);
         response.put("message", "Product creation request received, pending user validation.");
         response.put("requestId", requestId);
         response.put("statusCheckUrl", statusCheckUri.toString());
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
+
     @GetMapping("/status/{requestId}")
     public ResponseEntity<?> checkProductCreationStatus(@PathVariable String requestId) {
         // Fetch the product creation request status from your service layer

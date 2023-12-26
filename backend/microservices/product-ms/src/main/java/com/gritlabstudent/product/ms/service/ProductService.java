@@ -26,11 +26,6 @@ public class ProductService {
 
     public void createProduct(Product product) throws ConstraintViolationException, ProductCollectionException {
         ValidateProduct.validateProduct(product);
-        if (product.getId() != null) {
-            product.setProductid(product.uuidGenerator());
-        }
-
-        // Here, you would make an API call to User service if user validation is necessary
 
         productRepository.save(product);
     }
