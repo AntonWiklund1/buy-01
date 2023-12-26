@@ -81,13 +81,17 @@
         <h1>Edit a product</h1>
         <div *ngFor="let editProduct of editProducts">
             <form action="" class="formClass">
+                <label for="editProductName">Name:</label>
                 <input type="text" [(ngModel)]="editProduct.name" name="name" class="name" id="editProductName">
+                <label for="editProductDescription">Description:</label>
                 <textarea [(ngModel)]="editProduct.description" name="description" class="description"
                     id="editProductDescription"></textarea>
+                <label for="editProductPrice">Price:</label>
                 <input type="number" [(ngModel)]="editProduct.price" name="price" class="price" id="editProductPrice">
+                <label for="editProductQuantity{{editProduct.id}}">Quantity:</label>
                 <input type="number" [(ngModel)]="editProduct.quantity" name="quantity" class="quantity" id="editProductQuantity{{editProduct.id}}">
                 <button type="submit"
-                    (click)="updateProduct(editProduct.id,editProduct.name,editProduct.description,editProduct.price,editProduct.quantity)">edit</button>
+                    (click)="updateProduct(editProduct.id,editProduct.name,editProduct.description,editProduct.price,editProduct.quantity)">Edit</button>
             </form>
         </div>
     </div>
