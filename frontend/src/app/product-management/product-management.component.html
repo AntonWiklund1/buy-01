@@ -85,7 +85,7 @@
                 <textarea [(ngModel)]="editProduct.description" name="description" class="description"
                     id="editProductDescription"></textarea>
                 <input type="number" [(ngModel)]="editProduct.price" name="price" class="price" id="editProductPrice">
-                <input type="number" [(ngModel)]="editProduct.quantity" id="quantity" class="quantity" id="editProductQuantity">
+                <input type="number" [(ngModel)]="editProduct.quantity" name="quantity" class="quantity" id="editProductQuantity{{editProduct.id}}">
                 <button type="submit"
                     (click)="updateProduct(editProduct.id,editProduct.name,editProduct.description,editProduct.price,editProduct.quantity)">edit</button>
             </form>
