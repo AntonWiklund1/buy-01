@@ -12,28 +12,29 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 public class DotenvEnvironmentPostProcessor implements EnvironmentPostProcessor {
 
-    private static final String DOTENV_PATH = ".env";
+    private static final String DOTENV_FILE_NAME = "target/.env"; // The file is directly in the target directory
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
-        try {
-            File file = ResourceUtils.getFile(DOTENV_PATH);
-            Path dotenvFilePath = file.toPath();
+        Path rootPath = Paths.get("").toAbsolutePath(); // This should be the root of the media-ms module
+        Path dotenvFilePath = rootPath.resolve(DOTENV_FILE_NAME); // Construct the path to the .env file
 
-            if (Files.exists(dotenvFilePath)) {
-                System.out.println("Loading .env file from: " + dotenvFilePath);
-                FileSystemResource resource = new FileSystemResource(dotenvFilePath.toString());
+        if (Files.exists(dotenvFilePath)) {
+            System.out.println("Loading .env file from: " + dotenvFilePath);
+            FileSystemResource resource = new FileSystemResource(dotenvFilePath.toString());
+            try {
                 Properties dotenvProperties = PropertiesLoaderUtils.loadProperties(resource);
                 environment.getPropertySources().addFirst(new PropertiesPropertySource("dotenvProperties", dotenvProperties));
-            } else {
-                System.out.println("Could not find .env file at: " + dotenvFilePath);
+            } catch (IOException e) {
+                throw new RuntimeException("Could not load .env file from " + dotenvFilePath, e);
             }
-        } catch (IOException e) {
-            throw new RuntimeException("Could not load .env file", e);
+        } else {
+            System.out.println("Could not find .env file at: " + dotenvFilePath);
         }
     }
 }
