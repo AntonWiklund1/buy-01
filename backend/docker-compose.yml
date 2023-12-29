@@ -1,56 +1,56 @@
 version: '3.8'
 
 services:
-  api-gateway:
-    build: ./microservices/api-gateway
-    image: api-gateway:latest
-    ports:
-      - "8080:8080"
-    depends_on:
-      - user-ms
-      - product-ms
-      - media-ms
-    networks:
-      - backend-network
+  # api-gateway:
+  #   build: ./microservices/api-gateway
+  #   image: api-gateway:latest
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     - user-ms
+  #     - product-ms
+  #     - media-ms
+  #   networks:
+  #     - backend-network
 
-  user-ms:
-    build: ./microservices/user-ms
-    image: user-ms:latest
-    ports:
-      - "8081:8081"
-    env_file:
-      - .env
-    depends_on:
-      - mongodb
-      - kafka
-    networks:
-      - backend-network
+  # user-ms:
+  #   build: ./microservices/user-ms
+  #   image: user-ms:latest
+  #   ports:
+  #     - "8081:8081"
+  #   env_file:
+  #     - .env
+  #   depends_on:
+  #     - mongodb
+  #     - kafka
+  #   networks:
+  #     - backend-network
 
-  product-ms:
-    build: ./microservices/product-ms
-    image: product-ms:latest
-    ports:
-      - "8082:8082"
-    env_file:
-      - .env
-    depends_on:
-      - mongodb
-      - kafka
-    networks:
-      - backend-network
+  # product-ms:
+  #   build: ./microservices/product-ms
+  #   image: product-ms:latest
+  #   ports:
+  #     - "8082:8082"
+  #   env_file:
+  #     - .env
+  #   depends_on:
+  #     - mongodb
+  #     - kafka
+  #   networks:
+  #     - backend-network
 
-  media-ms:
-    build: ./microservices/media-ms
-    image: media-ms:latest
-    ports:
-      - "8083:8083"
-    env_file:
-      - .env
-    depends_on:
-      - mongodb
-      - kafka
-    networks:
-      - backend-network
+  # media-ms:
+  #   build: ./microservices/media-ms
+  #   image: media-ms:latest
+  #   ports:
+  #     - "8083:8083"
+  #   env_file:
+  #     - .env
+  #   depends_on:
+  #     - mongodb
+  #     - kafka
+  #   networks:
+  #     - backend-network
 
   mongodb:
     image: mongo:latest
@@ -68,23 +68,28 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT_INTERNAL://kafka:9092,PLAINTEXT_EXTERNAL://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT_INTERNAL://kafka:29092,PLAINTEXT_EXTERNAL://localhost:9093
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT_INTERNAL:PLAINTEXT,PLAINTEXT_EXTERNAL:PLAINTEXT
-      KAFKA_LISTENERS: PLAINTEXT_INTERNAL://0.0.0.0:9092,PLAINTEXT_EXTERNAL://0.0.0.0:9093
+      KAFKA_LISTENERS: PLAINTEXT_INTERNAL://0.0.0.0:29092,PLAINTEXT_EXTERNAL://0.0.0.0:9093
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    depends_on:
-      - zookeeper
     networks:
       - backend-network
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
-    ports:
-      - "2181:2181"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+      - "2888:2888"
+      - "3888:3888"
+    healthcheck:
+      test: ["CMD", "echo", "ruok", "|", "nc", "localhost", "2181", "|", "grep", "imok"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     networks:
       - backend-network
 
