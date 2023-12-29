@@ -29,10 +29,12 @@ Welcome to our e-commerce platform, an end-to-end solution built with Spring Boo
    ```
 
 2. Navigate to the backend and install the backend dependencies with Maven:
+
    ```shell
    cd /backend
    mvn install
    ```
+
 3. Start mongodb server
 
    ```shell
@@ -44,18 +46,22 @@ Welcome to our e-commerce platform, an end-to-end solution built with Spring Boo
    ```
 
 4. Start the backend
+
    ```shell
     mvn spring-boot:run
    ```
+
 5. Install the frontend dependencies with npm:
+
    ```shell
    cd /frontend
    npm install
    ```
+
 6. Start the angular frontend
    ng serve
 
-7. Navigato to https://localhost:4200
+7. Navigato to <https://localhost:4200>
 
 Done
 
