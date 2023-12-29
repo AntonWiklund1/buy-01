@@ -17,12 +17,13 @@ import java.util.Properties;
 
 public class DotenvEnvironmentPostProcessor implements EnvironmentPostProcessor {
 
-    private static final String DOTENV_FILE_NAME = "target/.env"; // The file is directly in the target directory
+    private static final String DOTENV_FILE_NAME = ".env";
+    private static final String TARGET_DIRECTORY = "target";
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
-        Path rootPath = Paths.get("").toAbsolutePath(); // This should be the root of the media-ms module
-        Path dotenvFilePath = rootPath.resolve(DOTENV_FILE_NAME); // Construct the path to the .env file
+        Path rootPath = Paths.get("").toAbsolutePath(); // Current module root (media-ms)
+        Path dotenvFilePath = rootPath.resolve(TARGET_DIRECTORY).resolve(DOTENV_FILE_NAME); // Path to .env in target directory
 
         if (Files.exists(dotenvFilePath)) {
             System.out.println("Loading .env file from: " + dotenvFilePath);
@@ -38,5 +39,4 @@ public class DotenvEnvironmentPostProcessor implements EnvironmentPostProcessor 
         }
     }
 }
-
 

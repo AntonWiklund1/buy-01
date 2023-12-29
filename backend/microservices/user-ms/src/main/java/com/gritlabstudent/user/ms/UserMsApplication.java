@@ -5,7 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.kafka.annotation.EnableKafka;
 
 @SpringBootApplication
-@EnableKafka // Enables detection of Kafka listeners
+@EnableKafka
+
 public class UserMsApplication {
 
 	public static void main(String[] args) {
