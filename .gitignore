@@ -14,3 +14,7 @@ backend/microservices/api-gateway/src/main/resources/localhost.pem
 backend/microservices/api-gateway/src/main/resources/localhost-key.pem
 backend/microservices/api-gateway/target/
 
+# Ignore java compiled files
+*.class
+*.jar
+*.war

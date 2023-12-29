@@ -1,6 +1,5 @@
 package com.gritlabstudent.media.ms.producer;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +8,6 @@ public class ProductValidationProducer {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
 
-    @Autowired
     public ProductValidationProducer(KafkaTemplate<String, String> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }

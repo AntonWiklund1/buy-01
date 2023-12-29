@@ -30,7 +30,6 @@ public class MediaService {
 
     private final Path rootLocation;
 
-    @Autowired
     public MediaService(@Value("${media.storage.location}") String storageLocation) {
 
         this.rootLocation = Paths.get(storageLocation.replace("file:", ""));
