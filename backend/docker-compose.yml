@@ -25,6 +25,10 @@ services:
       - kafka
     networks:
       - backend-network
+    environment:
+        - MONGO_HOST= mongodb
+        - KAFKA_HOST= kafka
+
 
   product-ms:
     build: microservices/product-ms
@@ -38,6 +42,9 @@ services:
       - kafka
     networks:
       - backend-network
+    environment:
+      - MONGO_HOST= mongodb
+      - KAFKA_HOST= kafka
 
   media-ms:
     build: microservices/media-ms
@@ -51,6 +58,9 @@ services:
       - kafka
     networks:
       - backend-network
+    environment:
+      - MONGO_HOST= mongodb
+      - KAFKA_HOST= kafka
 
   mongodb:
     image: mongo:latest
