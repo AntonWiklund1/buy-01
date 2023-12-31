@@ -27,10 +27,8 @@ import com.gritlabstudent.media.ms.models.Media;
 import com.gritlabstudent.media.ms.service.MediaService;
 import com.gritlabstudent.media.ms.producer.ProductValidationProducer;
 
-
 import com.gritlabstudent.media.ms.service.FileStorageService;
 import com.gritlabstudent.media.ms.producer.ProductValidationProducer;
-
 
 @RestController
 @RequestMapping("/media")
@@ -44,13 +42,13 @@ public class MediaController {
     @Autowired
     private FileStorageService fileStorageService;
 
-
     @PostMapping("/upload")
     @PreAuthorize("hasAuthority('ROLE_SELLER')")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,
-                                        @RequestParam("productId") String productId) {
+            @RequestParam("productId") String productId) {
         // Check if the file is an image
-        if (!file.getContentType().startsWith("image/")) {
+        String contentType = file.getContentType();
+        if (contentType != null && !contentType.startsWith("image/")) {
             return ResponseEntity.badRequest().body("Invalid file type. Only image files are allowed.");
         }
 
@@ -58,7 +56,6 @@ public class MediaController {
         if (file.getSize() > 2097152) { // 2 MB in bytes
             return ResponseEntity.badRequest().body("File size exceeds 2 MB");
         }
-
 
         // Temporarily store the file
         fileStorageService.storeFileTemporarily(productId, file);
@@ -68,7 +65,8 @@ public class MediaController {
         fileStorageService.storeFileTemporarily(uploadRequestId, file);
         productValidationProducer.sendProductForValidation(productId, uploadRequestId);
 
-        // Respond with an accepted status, actual storage will be done once validation is successful
+        // Respond with an accepted status, actual storage will be done once validation
+        // is successful
         return ResponseEntity.accepted().body("File upload request received and is being processed.");
     }
 
@@ -84,7 +82,6 @@ public class MediaController {
         return new ResponseEntity<>(mediaFiles, HttpStatus.OK);
     }
 
-
     @DeleteMapping("/product/{productId}")
     public ResponseEntity<?> deleteMediaForProduct(@PathVariable String productId) {
         try {
@@ -98,7 +95,6 @@ public class MediaController {
 
     private final String mediaPath = Paths.get("media").toAbsolutePath().toString();
 
-
     @GetMapping("/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
@@ -109,7 +105,7 @@ public class MediaController {
         return ResponseEntity.ok().body(file);
     }
 
-    //serve files form /media/avatars
+    // serve files form /media/avatars
     @GetMapping("/avatars/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> serveAvatar(@PathVariable String filename) {
@@ -119,6 +115,7 @@ public class MediaController {
         }
         return ResponseEntity.ok().body(file);
     }
+
     @KafkaListener(topics = "product_deletion")
     public void listenUserDeletion(String id) {
         try {
@@ -126,5 +123,5 @@ public class MediaController {
         } catch (Exception e) {
         }
     }
-    
+
 }
