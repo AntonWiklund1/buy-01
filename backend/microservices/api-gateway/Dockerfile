@@ -1,14 +1,14 @@
-# Use a base image with Java 11
 FROM openjdk:17-slim as build
 
 # Set a working directory for the application
 WORKDIR /app
 
-# Copy the JAR file into the container
-COPY target/api-gateway-0.0.1-SNAPSHOT.jar app.jar
+# Copy the all of the JAR files into the container and rename it to app.jar
+COPY target/*.jar app.jar
+
 
 # Expose the port the app runs on
-EXPOSE 8080
+EXPOSE 8443
 
 # Run the jar file
 ENTRYPOINT ["java", "-jar", "app.jar"]

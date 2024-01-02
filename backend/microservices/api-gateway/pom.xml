@@ -19,8 +19,6 @@
         <jjwt.version>0.11.5</jjwt.version>
     </properties>
 
-   
-
         <!-- Spring Cloud Dependencies BOM -->
         <dependencies>
             <dependency>
@@ -75,6 +73,13 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

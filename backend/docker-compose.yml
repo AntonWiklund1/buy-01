@@ -5,12 +5,8 @@
         build: microservices/api-gateway
         image: api-gateway:latest
         ports:
-          - "8080:8080"
-        depends_on:
-          - user-ms
-          - product-ms
-          - media-ms
-
+          - "8443:8443"
+        
       user-ms:
         build: microservices/user-ms
         image: user-ms:latest
