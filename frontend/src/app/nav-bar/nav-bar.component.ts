@@ -30,7 +30,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private store: Store<{ auth: AuthState; avatar: any; }>,
-    private mediaService: MediaService  // Assuming MediaService has a method to fetch the avatar
+    private mediaService: MediaService 
   ) {
 
     this.isAuthenticated$ = this.store.select(selectIsAuthenticated);

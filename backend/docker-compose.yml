@@ -57,7 +57,7 @@
       frontend:
         build:
           context: ..
-          dockerfile: frontend/Dockerfile
+          dockerfile: frontend/dockerfile
         image: frontend:latest
         ports:
           - "4200:443"
