@@ -56,9 +56,7 @@ export class ProductManagementComponent {
             console.error(error);
           }
         );
-        // If you need to load products, you should call it here within the subscription
-        // after you get the userId.
-        this.loadProducts(userId); // Assuming loadProducts needs the userId
+        this.loadProducts(userId); 
       } else {
         // Handle the case where there is no userId (e.g., user is not logged in)
       }
@@ -130,7 +128,7 @@ export class ProductManagementComponent {
         }
       );
     });
-  }
+  };
 
   getMediaUrl(productId: string): string | undefined {
     return this.productMediaUrls.get(productId);
