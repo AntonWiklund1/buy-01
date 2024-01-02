@@ -10,7 +10,7 @@ RUN mkdir -p /app/temp
 # Give permission to write to the temp directory
 RUN chmod -R 777 /app/temp
 
-run mkdir -p /app/media/avatars
+RUN mkdir -p /app/media/avatars
 
 RUN chmod -R 777 /app/media/avatars
 

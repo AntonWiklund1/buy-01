@@ -1,6 +1,7 @@
 package com.gritlabstudent.media.ms.controller;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.gritlabstudent.media.ms.models.Media;
@@ -28,7 +28,11 @@ import com.gritlabstudent.media.ms.service.MediaService;
 import com.gritlabstudent.media.ms.producer.ProductValidationProducer;
 
 import com.gritlabstudent.media.ms.service.FileStorageService;
-import com.gritlabstudent.media.ms.producer.ProductValidationProducer;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.nio.file.Paths;
 
 @RestController
 @RequestMapping("/media")
@@ -41,6 +45,9 @@ public class MediaController {
 
     @Autowired
     private FileStorageService fileStorageService;
+
+    private static final Logger log = LoggerFactory.getLogger(MediaController.class);
+
 
     @PostMapping("/upload")
     @PreAuthorize("hasAuthority('ROLE_SELLER')")
@@ -109,8 +116,11 @@ public class MediaController {
     @GetMapping("/avatars/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> serveAvatar(@PathVariable String filename) {
-        Resource file = new FileSystemResource(Paths.get(mediaPath, "avatars", filename));
+        Path filePath = Paths.get(mediaPath, "avatars", filename);
+        log.info("Serving file: {}", filePath.toString());
+        Resource file = new FileSystemResource(filePath);
         if (!file.exists() || !file.isReadable()) {
+            log.warn("File not found or not readable: {}", filePath.toString());
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().body(file);

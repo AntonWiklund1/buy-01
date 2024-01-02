@@ -20,6 +20,9 @@
         environment:
             - MONGO_HOST= mongodb
             - ENV_KAFKA_HOST= kafka
+        volumes:
+                - ./media:/app/media # Shared volume with media-ms
+
 
       product-ms:
         build: microservices/product-ms
@@ -52,7 +55,6 @@
           - ./temp:/app/temp
           - ./media:/app/media
 
-
       frontend:
         build:
           context: ..
@@ -60,11 +62,11 @@
         image: frontend:latest
         ports:
           - "4200:443"
-        depends_on:
-          - api-gateway
-          - user-ms
-          - product-ms
-          - media-ms
+        # depends_on:
+        #   - api-gateway
+        #   - user-ms
+        #   - product-ms
+        #   - media-ms
 
       mongodb:
         image: mongo:latest
