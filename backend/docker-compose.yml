@@ -55,6 +55,18 @@
         volumes:
           - ./temp:/app/temp
 
+      frontend:
+        build:
+          context: ..
+          dockerfile: frontend/Dockerfile
+        image: frontend:latest
+        ports:
+          - "4200:443"
+        depends_on:
+          - api-gateway
+          - user-ms
+          - product-ms
+          - media-ms
 
       mongodb:
         image: mongo:latest
