@@ -23,7 +23,6 @@
         volumes:
                 - ./media:/app/media # Shared volume with media-ms
 
-
       product-ms:
         build: microservices/product-ms
         image: product-ms:latest
