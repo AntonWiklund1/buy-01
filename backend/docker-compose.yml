@@ -50,6 +50,8 @@
           - ENV_KAFKA_HOST= kafka
         volumes:
           - ./temp:/app/temp
+          - ./media:/app/media
+
 
       frontend:
         build:
