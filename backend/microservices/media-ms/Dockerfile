@@ -4,6 +4,12 @@ FROM openjdk:17-slim as build
 # Set a working directory for the application
 WORKDIR /app
 
+# Create the temp directory
+RUN mkdir -p /app/temp
+
+# Give permission to write to the temp directory
+RUN chmod -R 777 /app/temp
+
 # Copy the JAR file into the container
 COPY target/media.ms-0.0.1-SNAPSHOT.jar app.jar
 

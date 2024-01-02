@@ -49,10 +49,12 @@
         depends_on:
           - mongodb
           - kafka
-
         environment:
           - MONGO_HOST= mongodb
           - ENV_KAFKA_HOST= kafka
+        volumes:
+          - ./temp:/app/temp
+
 
       mongodb:
         image: mongo:latest
