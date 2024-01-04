@@ -25,6 +25,8 @@ export class MediaManagementComponent implements OnInit {
   // Array to store all media URLs
   allMediaUrls: string[] = [];
 
+  showEdit = true;
+
   constructor(
     private store: Store<{ auth: AuthState }>,
     private mediaService: MediaService,
@@ -62,5 +64,9 @@ export class MediaManagementComponent implements OnInit {
     this.mediaService.getMediaByProductId(productId, this.token || '').subscribe((mediaUrls) => {
       this.allMediaUrls.push(...mediaUrls); // Adds all URLs to the array
     });
+  }
+
+  toggleEdit() {
+    this.showEdit = !this.showEdit;
   }
 }

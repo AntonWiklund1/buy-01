@@ -23,12 +23,8 @@
   box-sizing: border-box; /* Include padding and border in the element's total width and height */
   transition: transform 0.3s; /* Transition for hover effect */
   position: relative;
-
 }
 
-.productCard:hover {
-  /* transform: scale(1.02);  */
-}
 .productImageDiv {
   position: relative;
   left: -1rem;
@@ -53,10 +49,11 @@
 }
 .productsControll span {
   cursor: pointer;
-
 }
 
-.addProductContainer, .editProductContainer, .mediaUploadContainer {
+.addProductContainer,
+.editProductContainer,
+.mediaUploadContainer {
   position: fixed;
   top: 0;
   left: 7rem;
@@ -81,9 +78,10 @@
 .darkBackground {
   background-color: rgba(0, 0, 0, 0.5);
   display: block;
-
 }
-.addProductModal, .editProductModal, .mediaUploadModal {
+.addProductModal,
+.editProductModal,
+.mediaUploadModal {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -94,7 +92,7 @@
   background-color: #ffffff;
   z-index: 3;
 }
-.addProduct{
+.addProduct {
   cursor: pointer;
 }
 .closeModal {
@@ -124,7 +122,7 @@
   z-index: 11; /* Ensure it's above other content */
   color: var(--first-color);
 }
-.formClass{
+.formClass {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -141,7 +139,7 @@
   box-sizing: border-box;
   width: 100%;
 }
-.formClass button{
+.formClass button {
   background-color: var(--fifth-color);
   color: white;
   padding: 10px 15px;
@@ -150,7 +148,7 @@
   cursor: pointer;
   width: 100%;
 }
-.description{
+.description {
   width: 100%; /* Set the width for the textarea */
   height: 5rem;
   padding: 10px; /* Add padding if needed */
@@ -160,22 +158,22 @@
   box-sizing: border-box;
 }
 
-.formClass button:hover{
+.formClass button:hover {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
-.productId{
+.productId {
   display: none;
 }
-.deleteProduct{
+.deleteProduct {
   position: relative;
   left: -0.5rem;
   top: 0.6rem;
 }
-.deleteProductHeading{
+.deleteProductHeading {
   position: relative;
   top: 10px;
 }
-.yesDelete{
+.yesDelete {
   background-color: red;
   color: white;
   width: 50%;
@@ -184,7 +182,7 @@
   border-radius: 4px;
   cursor: pointer;
 }
-.noDelete{
+.noDelete {
   width: 50%;
   height: 2rem;
   border: none;

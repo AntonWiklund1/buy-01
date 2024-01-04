@@ -1,3 +1,13 @@
+.bakground {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2; /* Adjusted z-index */
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
 .mediaManagementContainer {
   margin-left: 15rem;
 }
@@ -15,6 +25,7 @@
 .mediaItem {
   position: relative;
   margin-bottom: 20px;
+  z-index: 1;
 }
 .infoDiv {
   position: absolute;
@@ -33,11 +44,64 @@
 }
 .edit {
   cursor: pointer;
-  z-index: 2;
+  z-index: 3;
 }
 .delete {
   cursor: pointer;
-  z-index: 2;
+  z-index: 3;
+}
+.close {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  cursor: pointer;
+  z-index: 5;
+}
+.mediaEditContainer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  gap: 1rem;
+  height: 50vh;
+  width: 40vw;
+}
+.editForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 50%;
+  position: relative;
+  left: 25%;
+}
+.editForm input {
+  position: relative;
+  left: 25%;
+  border-radius: 4px;
+  box-sizing: border-box;
+  width: 100%;
+  cursor: pointer;
+  transform: scale(1.5);
+}
+.editForm button {
+  background-color: var(--fifth-color);
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+}
+.editForm button:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 .mediaUrlContainer div:hover .infoDiv {
   opacity: 1; /* Make infoDiv visible on hover */

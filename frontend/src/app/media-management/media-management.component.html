@@ -1,3 +1,4 @@
+<div class="bakground" *ngIf="showEdit"></div>
 <div class="mediaManagementContainer">
   <div *ngIf="username$ | async as username">
     <h1>Media management for {{ username }}</h1>
@@ -7,7 +8,9 @@
   <div class="mediaUrlContainer">
     <div *ngFor="let mediaUrl of allMediaUrls" class="mediaItem">
       <div class="infoDiv">
-        <span class="material-symbols-outlined edit"> edit </span>
+        <span class="material-symbols-outlined edit" (click)="toggleEdit()">
+          edit
+        </span>
         <span class="material-symbols-outlined delete"> delete </span>
       </div>
       <img
@@ -16,5 +19,17 @@
         class="mediaImage"
       />
     </div>
+  </div>
+
+  <!-- edit media modal -->
+  <div class="mediaEditContainer" *ngIf="showEdit">
+    <span class="material-symbols-outlined close" (click)="toggleEdit()">
+      close
+    </span>
+    <form action="" class="editForm">
+      <h1>Edit</h1>
+      <input type="file" class="file" />
+      <button type="submit">Edit</button>
+    </form>
   </div>
 </div>
