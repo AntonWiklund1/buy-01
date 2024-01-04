@@ -1,4 +1,4 @@
-.mediaManagmentContainer {
+.mediaManagementContainer {
   margin-left: 15rem;
 }
 .mediaImage {
@@ -6,13 +6,44 @@
   object-fit: cover;
 }
 .mediaUrlContainer {
+  position: relative;
   width: calc(100% - 20rem);
   display: flex;
   gap: 1rem;
   flex-direction: row;
 }
+.mediaItem {
+  position: relative;
+  margin-bottom: 20px;
+}
+.infoDiv {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  gap: 1rem;
+}
+.edit {
+  cursor: pointer;
+  z-index: 2;
+}
+.delete {
+  cursor: pointer;
+  z-index: 2;
+}
+.mediaUrlContainer div:hover .infoDiv {
+  opacity: 1; /* Make infoDiv visible on hover */
+}
 @media (max-width: 768px) {
-  .mediaManagmentContainer {
+  .mediaManagementContainer {
     margin-left: 6rem;
   }
 }

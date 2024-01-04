@@ -1,11 +1,15 @@
-<div class="mediaManagmentContainer">
-  <div *ngIf="username$ | async as username$">
-    <h1>Media managment for {{ username$ }}</h1>
+<div class="mediaManagementContainer">
+  <div *ngIf="username$ | async as username">
+    <h1>Media management for {{ username }}</h1>
   </div>
 
-  <!-- display all of the users media -->
+  <!-- Display all of the user's media -->
   <div class="mediaUrlContainer">
-    <div *ngFor="let mediaUrl of allMediaUrls">
+    <div *ngFor="let mediaUrl of allMediaUrls" class="mediaItem">
+      <div class="infoDiv">
+        <span class="material-symbols-outlined edit"> edit </span>
+        <span class="material-symbols-outlined delete"> delete </span>
+      </div>
       <img
         [src]="'https://localhost:8443/' + mediaUrl"
         alt="User's media"
