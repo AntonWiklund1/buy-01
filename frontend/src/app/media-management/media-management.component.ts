@@ -50,6 +50,8 @@ export class MediaManagementComponent implements OnInit {
     // Fetch products after getting the user ID
     this.getProductsByUserId(this.userId || '');
 
+
+    // Reset the component state
     this.showEdit = false;
     this.currentEditMediaId = null;
     this.allMedia = [];
