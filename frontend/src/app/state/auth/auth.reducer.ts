@@ -12,10 +12,10 @@ export interface AuthState {
 }
 
 export const initialAuthState: AuthState = {
-  userId: null,
-  username: null,
-  token: null,
-  role: null,
+  userId: "2",
+  username: "admin",
+  token: "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUk9MRV9TRUxMRVIiLCJzdWIiOiJhZG1pbiIsImlhdCI6MTcwNDM1ODA3NywiZXhwIjoxNzA0MzU5ODc3fQ.Y6qVvuGzGx5fLWIBmDVQNqV159INoRRIjazq_u3JwKU",
+  role: "ROLE_SELLER",
   loading: false,
   error: null,
 };

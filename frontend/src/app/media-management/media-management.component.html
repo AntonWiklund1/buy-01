@@ -1,6 +1,16 @@
 <div class="mediaManagmentContainer">
+  <div *ngIf="username$ | async as username$">
+    <h1>Media managment for {{ username$ }}</h1>
+  </div>
 
-    <div *ngIf="username$ | async as username">
-        <h1>Media managment for {{ username }}</h1>
-      </div>
+  <!-- display all of the users media -->
+  <div class="mediaUrlContainer">
+    <div *ngFor="let mediaUrl of allMediaUrls">
+      <img
+        [src]="'https://localhost:8443/' + mediaUrl"
+        alt="User's media"
+        class="mediaImage"
+      />
+    </div>
+  </div>
 </div>

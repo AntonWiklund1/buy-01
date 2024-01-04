@@ -16,6 +16,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { authReducer } from './state/auth/auth.reducer';
 import { avatarReducer } from './state/avatar/profile.reducer'; // Import the avatar reducer
 import { environment } from '../environments/environment';
+import { MediaManagementComponent } from './media-management/media-management.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,8 @@ import { environment } from '../environments/environment';
     ProductManagementComponent,
     ProfileManagementComponent,
     HomeComponent,
+    MediaManagementComponent,
+
   ],
   imports: [
     BrowserModule,

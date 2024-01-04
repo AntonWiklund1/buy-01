@@ -1,10 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
+
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+
 @Injectable({
   providedIn: 'root',
 })
 export class MediaService {
+    
     private apiUploadUrl = 'https://localhost:8443/media/upload';
     private apiGetMediaUrl = 'https://localhost:8443/media/product/';
     private apiUploadAvatarUrl = 'https://localhost:8443/api/users';
@@ -52,5 +58,18 @@ export class MediaService {
 
       return this.http.get(`${this.apiGetAvatarUrl}/${userId}` + '/avatar' ,{ headers: headers, responseType: 'text'});
     }
+
+
+    getMediaByProductId(productId: string, token: string): Observable<string[]> {
+      const headers = new HttpHeaders({ 
+        'Authorization': `Bearer ${token}` 
+      });
+  
+      return this.http.get<any[]>(this.apiGetMediaUrl + productId, { headers: headers })
+        .pipe(
+          map(response => response.map(item => item.imagePath))
+        );
+    }
+  
   }
   
