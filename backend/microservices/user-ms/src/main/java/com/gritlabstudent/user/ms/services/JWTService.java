@@ -118,9 +118,6 @@ public class JWTService {
         return createToken(claims, userName);
     }
 
-
-
-
     /**
      * Creates a JWT token with the provided claims, username, and secret.
      *
@@ -133,7 +130,7 @@ public class JWTService {
                 .setClaims(claims)
                 .setSubject(userName)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30)) // Set expiration time appropriately
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // 24 hours
                 .signWith(SECRET, SignatureAlgorithm.HS256).compact(); // Use SECRET directly
     }
 
