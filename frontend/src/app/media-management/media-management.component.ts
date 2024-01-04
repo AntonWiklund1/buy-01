@@ -6,67 +6,68 @@ import { AuthState } from '../state/auth/auth.reducer';
 import { MediaService } from '../services/media.service';
 import { ProductService } from '../services/product.service';
 
+// Component decorator with selector, template, and style information
 @Component({
   selector: 'app-media-management',
   templateUrl: './media-management.component.html',
   styleUrls: ['./media-management.component.css'],
 })
+
+// MediaManagementComponent manages the media assets for an admin user
 export class MediaManagementComponent implements OnInit {
-  // Observables for user details
+  // State observables for the current user
   username$: Observable<string | null>;
   userId$: Observable<string | null>;
   token$: Observable<string | null>;
 
-  // Local variables to store user details
+  // User state variables
   userId: string | null | undefined;
   token: string | null | undefined;
   username: string | null | undefined;
 
-  // Array to store all media URLs
+  // Array to keep track of all media items associated with products
   allMedia: { productId: string; mediaUrl: string }[] = [];
 
+  // Flags to control UI elements for editing and deleting media
   showEdit = false;
   showDelete = false;
 
+  // Variables to hold IDs for edit and delete operations
   currentEditMediaId: string | null = null;
   currentDeleteMedia: string | null = null;
 
 
+  errorMessage: string | null = null;
+  // Injecting required services and state management
   constructor(
     private store: Store<{ auth: AuthState }>,
     private mediaService: MediaService,
     private productService: ProductService
   ) {
-    // Selecting user details from the store
+    // Initialize state observables from the store
     this.username$ = this.store.select(AuthSelectors.selectUsername);
     this.userId$ = this.store.select(AuthSelectors.selectUserId);
     this.token$ = this.store.select(AuthSelectors.selectToken);
   }
 
+  // OnInit lifecycle hook for initial component setup
   ngOnInit(): void {
-    // Subscribe to the observables to get user data
+    // Subscribe to user details from the state management and initialize local variables
     this.userId$.pipe(take(1)).subscribe((id) => this.userId = id);
     this.token$.pipe(take(1)).subscribe((token) => this.token = token);
     this.username$.pipe(take(1)).subscribe((username) => this.username = username);
-    // Reset the component state
-    this.showEdit = false;
-    this.showDelete = false;
-    this.currentEditMediaId = null;
-    this.allMedia = [];
 
-    // Fetch products after getting the user ID
+    // Fetch products associated with the user after initialization
     this.getProductsByUserId(this.userId || '');
-
   }
 
+  // Refreshes the media list by clearing and fetching the latest media items
   refreshMediaList(): void {
-    // Clear existing media.
-    this.allMedia = [];
-
-    // Re-fetch products and media.
-    this.getProductsByUserId(this.userId || '');
+    this.allMedia = []; // Clear current media list
+    this.getProductsByUserId(this.userId || ''); // Fetch new media items
   }
-  // Fetches products by user ID
+
+  // Retrieves products associated with a user ID and fetches their media
   getProductsByUserId(userId: string) {
     this.productService.getProductsByUserId(userId).subscribe((products) => {
       products.forEach((product: { id: string; }) => {
@@ -75,57 +76,58 @@ export class MediaManagementComponent implements OnInit {
     });
   }
 
-  // Fetches media by product ID and stores URLs in an array
+  // Retrieves media by product ID and updates the media list
   getMediaByProductId(productId: string) {
-    this.allMedia = [];
     this.mediaService.getMediaByProductId(productId, this.token || '').subscribe((mediaUrls) => {
       const mediaObjects = mediaUrls.map(url => ({ productId, mediaUrl: url }));
       this.allMedia.push(...mediaObjects);
-
-      // Sort the allMedia array
-      this.allMedia.sort((a, b) => a.productId.localeCompare(b.productId));
+      this.allMedia.sort((a, b) => a.productId.localeCompare(b.productId)); // Sort media items
     });
   }
 
-
-
+  // Toggles the edit state and sets the current media ID for editing
   toggleEdit(mediaId?: string): void {
     this.showEdit = !this.showEdit;
-    this.currentEditMediaId = mediaId || null; // Set the current media ID or clear it
-    console.log(this.currentEditMediaId);
+    this.currentEditMediaId = mediaId || null;
   }
 
+  // Toggles the delete state and sets the current media ID for deletion
   toggleDelete(mediaId?: string): void {
     this.showDelete = !this.showDelete;
     this.currentDeleteMedia = mediaId || null;
   }
 
+  // Handles the media upload process after editing
   submitEditMedia() {
-    const newFileInput = document.getElementById(
-      'file'
-    ) as HTMLInputElement;
-
+    const newFileInput = document.getElementById('file') as HTMLInputElement;
     const file = newFileInput.files?.item(0);
 
     if (file) {
-      this.mediaService.uploadMedia(file, this.currentEditMediaId || '', this.token || '').subscribe((res) => {
-        console.log(res);
-        setTimeout(() => {
+      this.mediaService.uploadMedia(file, this.currentEditMediaId || '', this.token || '').subscribe({
+        next: (res) => {
+          console.log('Success:', res);
           this.refreshMediaList();
           this.showEdit = false;
-        }, 500); // Timeout for 0.5 seconds
-      }, (error) => {
-        console.error('Error:', error);
+        },
+        error: (error) => {
+          // Handle the error response here
+          this.errorMessage = 'Upload failed';
+          if (error.error && typeof error.error === 'string') {
+            this.errorMessage = error.error;
+          }
+          console.error(this.errorMessage);
+        }
       });
     }
   }
 
+
+  // Handles the media deletion process
   submitDeleteMedia() {
     this.mediaService.deleteMedia(this.currentDeleteMedia || '', this.token || '').subscribe((res) => {
-      // Remove the deleted item from the array
-      this.allMedia = this.allMedia.filter(media => media.productId !== this.currentDeleteMedia);
-      this.currentDeleteMedia = null;
-      this.showDelete = false;
+      this.allMedia = this.allMedia.filter(media => media.productId !== this.currentDeleteMedia); // Remove deleted media from the list
+      this.currentDeleteMedia = null; // Reset delete media ID
+      this.showDelete = false; // Hide delete confirmation
     }, (error) => {
       console.error('Error:', error);
     });

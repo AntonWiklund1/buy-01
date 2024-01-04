@@ -3,7 +3,9 @@ package com.gritlabstudent.media.ms.controller;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,16 +54,21 @@ public class MediaController {
     @PostMapping("/upload")
     @PreAuthorize("hasAuthority('ROLE_SELLER')")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,
-            @RequestParam("productId") String productId) {
+                                        @RequestParam("productId") String productId) {
+        // Object to hold response data
+        Map<String, String> response = new HashMap<>();
+
         // Check if the file is an image
         String contentType = file.getContentType();
         if (contentType != null && !contentType.startsWith("image/")) {
-            return ResponseEntity.badRequest().body("Invalid file type. Only image files are allowed.");
+            response.put("error", "Invalid file type. Only image files are allowed.");
+            return ResponseEntity.badRequest().body(response);
         }
 
         // Check if the file size exceeds 2 MB
         if (file.getSize() > 2097152) { // 2 MB in bytes
-            return ResponseEntity.badRequest().body("File size exceeds 2 MB");
+            response.put("error", "File size exceeds 2 MB");
+            return ResponseEntity.badRequest().body(response);
         }
 
         // Temporarily store the file
@@ -72,10 +79,11 @@ public class MediaController {
         fileStorageService.storeFileTemporarily(uploadRequestId, file);
         productValidationProducer.sendProductForValidation(productId, uploadRequestId);
 
-        // Respond with an accepted status, actual storage will be done once validation
-        // is successful
-        return ResponseEntity.accepted().body("File upload request received and is being processed.");
+        // Respond with an accepted status, actual storage will be done once validation is successful
+        response.put("message", "File upload request received and is being processed.");
+        return ResponseEntity.accepted().body(response);
     }
+
 
     // Other REST endpoints as needed
 

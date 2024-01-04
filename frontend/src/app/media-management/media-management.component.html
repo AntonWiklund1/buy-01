@@ -35,6 +35,7 @@
       close
     </span>
     <form (ngSubmit)="submitEditMedia()" class="editForm">
+      <p *ngIf="errorMessage">{{ errorMessage }}</p>
       <h1>Edit</h1>
       <input type="file" class="file" id="file" />
       <button type="submit" (click)="submitEditMedia()">Edit</button>
