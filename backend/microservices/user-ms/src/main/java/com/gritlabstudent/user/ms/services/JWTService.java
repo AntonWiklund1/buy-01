@@ -127,11 +127,11 @@ public class JWTService {
      */
     private String createToken(Map<String, Object> claims, String userName) {
         return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(userName)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // 24 hours
-                .signWith(SECRET, SignatureAlgorithm.HS256).compact(); // Use SECRET directly
+            .setClaims(claims)
+            .setSubject(userName)
+            .setIssuedAt(new Date(System.currentTimeMillis()))
+            .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // 24 hours
+            .signWith(SECRET, SignatureAlgorithm.HS256).compact(); // Use SECRET directly
     }
 
     /**

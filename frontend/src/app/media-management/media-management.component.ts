@@ -70,11 +70,14 @@ export class MediaManagementComponent implements OnInit {
   // Fetches media by product ID and stores URLs in an array
   getMediaByProductId(productId: string) {
     this.mediaService.getMediaByProductId(productId, this.token || '').subscribe((mediaUrls) => {
-      // Create a new array of objects containing productId and mediaUrl
       const mediaObjects = mediaUrls.map(url => ({ productId, mediaUrl: url }));
-      this.allMedia.push(...mediaObjects); // Adds all media objects to the array
+      this.allMedia.push(...mediaObjects);
+
+      // Sort the allMedia array
+      this.allMedia.sort((a, b) => a.productId.localeCompare(b.productId));
     });
   }
+
 
 
   toggleEdit(mediaId?: string): void {
@@ -94,15 +97,14 @@ export class MediaManagementComponent implements OnInit {
     console.log(this.currentEditMediaId);
     console.log(this.token);
     if (file) {
-      this.mediaService.uploadMedia(file, this.currentEditMediaId || '', this.token || '')
-        .subscribe((res) => {
-          console.log(res);
-          setTimeout(() => {
-            this.ngOnInit(); // Refresh the page
-          }, 500); // Timeout for 0.5 seconds
-        }, (error) => {
-          console.error('Error:', error);
-        });
+      this.mediaService.uploadMedia(file, this.currentEditMediaId || '', this.token || '').subscribe((res) => {
+        console.log(res);
+        setTimeout(() => {
+          this.ngOnInit(); // Refresh the page
+        }, 500); // Timeout for 0.5 seconds
+      }, (error) => {
+        console.error('Error:', error);
+      });
     }
   }
 }
