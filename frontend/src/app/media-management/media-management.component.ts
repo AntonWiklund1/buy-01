@@ -3,7 +3,7 @@ import { Observable, take } from 'rxjs';
 import { Store } from '@ngrx/store';
 import * as AuthSelectors from '../state/auth/auth.selector';
 import { AuthState } from '../state/auth/auth.reducer';
-import { MediaService } from '../services/media.service'; 
+import { MediaService } from '../services/media.service';
 import { ProductService } from '../services/product.service';
 
 @Component({
@@ -23,9 +23,12 @@ export class MediaManagementComponent implements OnInit {
   username: string | null | undefined;
 
   // Array to store all media URLs
-  allMediaUrls: string[] = [];
+  allMedia: { productId: string; mediaUrl: string }[] = [];
 
-  showEdit = true;
+  showEdit = false;
+
+  currentEditMediaId: string | null = null;
+
 
   constructor(
     private store: Store<{ auth: AuthState }>,
@@ -47,7 +50,10 @@ export class MediaManagementComponent implements OnInit {
     // Fetch products after getting the user ID
     this.getProductsByUserId(this.userId || '');
 
-    console.log(this.allMediaUrls);
+    this.showEdit = false;
+    this.currentEditMediaId = null;
+    this.allMedia = [];
+
   }
 
   // Fetches products by user ID
@@ -62,11 +68,39 @@ export class MediaManagementComponent implements OnInit {
   // Fetches media by product ID and stores URLs in an array
   getMediaByProductId(productId: string) {
     this.mediaService.getMediaByProductId(productId, this.token || '').subscribe((mediaUrls) => {
-      this.allMediaUrls.push(...mediaUrls); // Adds all URLs to the array
+      // Create a new array of objects containing productId and mediaUrl
+      const mediaObjects = mediaUrls.map(url => ({ productId, mediaUrl: url }));
+      this.allMedia.push(...mediaObjects); // Adds all media objects to the array
     });
   }
 
-  toggleEdit() {
+
+  toggleEdit(mediaId?: string): void {
     this.showEdit = !this.showEdit;
+    this.currentEditMediaId = mediaId || null; // Set the current media ID or clear it
+    console.log(this.currentEditMediaId);
+  }
+
+  submitEditMedia() {
+    const newFileInput = document.getElementById(
+      'file'
+    ) as HTMLInputElement;
+
+    const file = newFileInput.files?.item(0);
+
+    console.log(file);
+    console.log(this.currentEditMediaId);
+    console.log(this.token);
+    if (file) {
+      this.mediaService.uploadMedia(file, this.currentEditMediaId || '', this.token || '')
+        .subscribe((res) => {
+          console.log(res);
+          setTimeout(() => {
+            this.ngOnInit(); // Refresh the page
+          }, 500); // Timeout for 0.5 seconds
+        }, (error) => {
+          console.error('Error:', error);
+        });
+    }
   }
 }

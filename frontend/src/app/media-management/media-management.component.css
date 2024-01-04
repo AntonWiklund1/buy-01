@@ -9,23 +9,27 @@
 }
 
 .mediaManagementContainer {
-  margin-left: 15rem;
+  margin-left: 14rem;
 }
-.mediaImage {
-  height: 15rem;
-  object-fit: cover;
-}
+
 .mediaUrlContainer {
   position: relative;
   width: calc(100% - 20rem);
   display: flex;
   gap: 1rem;
   flex-direction: row;
+  flex-wrap: wrap;
 }
+
 .mediaItem {
   position: relative;
   margin-bottom: 20px;
   z-index: 1;
+  height: 15rem;
+}
+.mediaImage {
+  object-fit: cover;
+  height: 15rem;
 }
 .infoDiv {
   position: absolute;
@@ -106,8 +110,46 @@
 .mediaUrlContainer div:hover .infoDiv {
   opacity: 1; /* Make infoDiv visible on hover */
 }
-@media (max-width: 768px) {
+
+@media screen and (max-width: 850px) {
+  .mediaUrlContainer {
+    width: calc(100% - 15rem);
+  }
+  .mediaImage {
+    height: 10rem;
+  }
+  .mediaItem {
+    height: 10rem;
+  }
+  .mediaEditContainer {
+    width: 60vw;
+  }
+  .editForm {
+    width: 70%;
+    left: 15%;
+  }
+}
+
+@media (max-width: 800px) {
+  .mediaItem,
+  .mediaImage {
+    height: 10rem;
+  }
+}
+@media screen and (max-width: 768px) {
   .mediaManagementContainer {
     margin-left: 6rem;
+  }
+}
+@media (max-width: 576px) {
+  .mediaItem,
+  .mediaImage {
+    height: 9rem;
+  }
+}
+@media (max-width: 400px) {
+  .mediaItem,
+  .mediaImage {
+    height: 5rem;
   }
 }

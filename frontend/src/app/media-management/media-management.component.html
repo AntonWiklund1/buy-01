@@ -6,15 +6,18 @@
 
   <!-- Display all of the user's media -->
   <div class="mediaUrlContainer">
-    <div *ngFor="let mediaUrl of allMediaUrls" class="mediaItem">
+    <div *ngFor="let media of allMedia" class="mediaItem">
       <div class="infoDiv">
-        <span class="material-symbols-outlined edit" (click)="toggleEdit()">
+        <span
+          class="material-symbols-outlined edit"
+          (click)="toggleEdit(media.productId)"
+        >
           edit
         </span>
         <span class="material-symbols-outlined delete"> delete </span>
       </div>
       <img
-        [src]="'https://localhost:8443/' + mediaUrl"
+        [src]="'https://localhost:8443/' + media.mediaUrl"
         alt="User's media"
         class="mediaImage"
       />
@@ -26,10 +29,10 @@
     <span class="material-symbols-outlined close" (click)="toggleEdit()">
       close
     </span>
-    <form action="" class="editForm">
+    <form (ngSubmit)="submitEditMedia()" class="editForm">
       <h1>Edit</h1>
-      <input type="file" class="file" />
-      <button type="submit">Edit</button>
+      <input type="file" class="file" id="file" />
+      <button type="submit" (click)="submitEditMedia()">Edit</button>
     </form>
   </div>
 </div>
