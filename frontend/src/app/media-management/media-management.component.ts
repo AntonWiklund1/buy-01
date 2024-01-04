@@ -26,8 +26,10 @@ export class MediaManagementComponent implements OnInit {
   allMedia: { productId: string; mediaUrl: string }[] = [];
 
   showEdit = false;
+  showDelete = false;
 
   currentEditMediaId: string | null = null;
+  currentDeleteMedia: string | null = null;
 
 
   constructor(
@@ -46,18 +48,24 @@ export class MediaManagementComponent implements OnInit {
     this.userId$.pipe(take(1)).subscribe((id) => this.userId = id);
     this.token$.pipe(take(1)).subscribe((token) => this.token = token);
     this.username$.pipe(take(1)).subscribe((username) => this.username = username);
+    // Reset the component state
+    this.showEdit = false;
+    this.showDelete = false;
+    this.currentEditMediaId = null;
+    this.allMedia = [];
 
     // Fetch products after getting the user ID
     this.getProductsByUserId(this.userId || '');
 
-
-    // Reset the component state
-    this.showEdit = false;
-    this.currentEditMediaId = null;
-    this.allMedia = [];
-
   }
 
+  refreshMediaList(): void {
+    // Clear existing media.
+    this.allMedia = [];
+
+    // Re-fetch products and media.
+    this.getProductsByUserId(this.userId || '');
+  }
   // Fetches products by user ID
   getProductsByUserId(userId: string) {
     this.productService.getProductsByUserId(userId).subscribe((products) => {
@@ -69,6 +77,7 @@ export class MediaManagementComponent implements OnInit {
 
   // Fetches media by product ID and stores URLs in an array
   getMediaByProductId(productId: string) {
+    this.allMedia = [];
     this.mediaService.getMediaByProductId(productId, this.token || '').subscribe((mediaUrls) => {
       const mediaObjects = mediaUrls.map(url => ({ productId, mediaUrl: url }));
       this.allMedia.push(...mediaObjects);
@@ -86,6 +95,11 @@ export class MediaManagementComponent implements OnInit {
     console.log(this.currentEditMediaId);
   }
 
+  toggleDelete(mediaId?: string): void {
+    this.showDelete = !this.showDelete;
+    this.currentDeleteMedia = mediaId || null;
+  }
+
   submitEditMedia() {
     const newFileInput = document.getElementById(
       'file'
@@ -93,18 +107,28 @@ export class MediaManagementComponent implements OnInit {
 
     const file = newFileInput.files?.item(0);
 
-    console.log(file);
-    console.log(this.currentEditMediaId);
-    console.log(this.token);
     if (file) {
       this.mediaService.uploadMedia(file, this.currentEditMediaId || '', this.token || '').subscribe((res) => {
         console.log(res);
         setTimeout(() => {
-          this.ngOnInit(); // Refresh the page
+          this.refreshMediaList();
+          this.showEdit = false;
         }, 500); // Timeout for 0.5 seconds
       }, (error) => {
         console.error('Error:', error);
       });
     }
   }
+
+  submitDeleteMedia() {
+    this.mediaService.deleteMedia(this.currentDeleteMedia || '', this.token || '').subscribe((res) => {
+      // Remove the deleted item from the array
+      this.allMedia = this.allMedia.filter(media => media.productId !== this.currentDeleteMedia);
+      this.currentDeleteMedia = null;
+      this.showDelete = false;
+    }, (error) => {
+      console.error('Error:', error);
+    });
+  }
+
 }

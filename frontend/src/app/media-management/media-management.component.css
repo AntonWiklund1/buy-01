@@ -63,7 +63,8 @@
   cursor: pointer;
   z-index: 5;
 }
-.mediaEditContainer {
+.mediaEditContainer,
+.mediaDeleteContainer {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -121,7 +122,8 @@
     height: 10rem;
     width: 10rem;
   }
-  .mediaEditContainer {
+  .mediaEditContainer,
+  .mediaDeleteContainer {
     width: 60vw;
   }
   .editForm {
