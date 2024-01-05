@@ -24,7 +24,7 @@
             <span class="material-symbols-outlined spanLink" routerLink="/mediaManagement">
                 photo_library
         </span>
-
+        </div>
         <!-- Use username$ Observable with async pipe -->
         <div class="profile" routerLink="/profileManagment">
             <img *ngIf="(avatarUrl$ | async) as avatarUrl" [src]="avatarUrl" alt="Profile Picture">
@@ -41,6 +41,7 @@
             <span *ngIf="isAuthenticated$ | async" class="material-symbols-outlined logSpan" (click)="logOut()">
                 logout
             </span>
+            
         </div>
     </div>
 </div>

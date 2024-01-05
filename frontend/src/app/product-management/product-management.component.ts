@@ -5,7 +5,7 @@ import { Renderer2, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { MediaService } from '../services/media.service';
 import * as AuthSelectors from '../state/auth/auth.selector';
-import { Observable, take } from 'rxjs';
+import { Observable, take, timeout } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AuthState } from '../state/auth/auth.reducer';
 
@@ -56,7 +56,7 @@ export class ProductManagementComponent {
             console.error(error);
           }
         );
-        this.loadProducts(userId); 
+        this.loadProducts(userId);
       } else {
         // Handle the case where there is no userId (e.g., user is not logged in)
       }
@@ -176,12 +176,15 @@ export class ProductManagementComponent {
             alert(this.errorMessage);
             return;
           }
-          console.log('productId',productId);
+          console.log('productId', productId);
           this.MediaService.uploadMedia(newFile, productId, bearerToken).subscribe(
             (data) => {
-              console.log("uplaod media response: ",data);
-              this.closeModal();
-              this.ngOnInit();
+              // Add timeout on 0.5 seconds to allow for media to be uploaded
+              setTimeout(() => {
+                console.log("upload media response: ", data);
+                this.closeModal();
+                this.ngOnInit();
+              }, 500);
             },
             (error) => {
               this.closeModal();
