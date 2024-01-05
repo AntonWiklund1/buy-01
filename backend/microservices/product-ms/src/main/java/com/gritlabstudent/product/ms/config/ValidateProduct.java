@@ -19,9 +19,9 @@ public class ValidateProduct {
             throw new ProductCollectionException("Product description" + ProductCollectionException.NullException());
         }
         // if product.getPrice() is not null, trim, else throw exception
-        if (product.getUserid() != null) {
-            product.setUserId(product.getUserid().trim()); // Trim the ID field as well
-            System.out.println("product userId: " + product.getUserid());
+        if (product.getUserId() != null) {
+            product.setUserId(product.getUserId().trim()); // Trim the ID field as well
+            System.out.println("product userId: " + product.getUserId());
         } else {
             throw new ProductCollectionException("Product userId" + ProductCollectionException.NullException());
         }

@@ -53,7 +53,7 @@ public class ProductService {
             productUpdate.setPrice(product.getPrice());
             productUpdate.setQuantity(product.getQuantity());
             // Keep or remove the following line based on your architecture
-            productUpdate.setUserId(product.getUserid());
+            productUpdate.setUserId(product.getUserId());
             productRepository.save(productUpdate);
         } else {
             throw new ProductCollectionException(ProductCollectionException.NotFoundException(id));
@@ -79,7 +79,7 @@ public class ProductService {
 
         products.forEach(product -> {
             // Send a message to Kafka with the product ID
-            kafkaTemplate.send("product_deletion", product.getProductid());
+            kafkaTemplate.send("product_deletion", product.getProductId());
 
             // Delete the product
             productRepository.delete(product);
