@@ -153,7 +153,15 @@
                         </execution>
                     </executions>
                 </plugin>
-
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.1</version> <!-- specify the version you wish to use -->
+                    <configuration>
+                        <source>${java.version}</source> <!-- uses the java.version property from your pom.xml -->
+                        <target>${java.version}</target> <!-- uses the java.version property from your pom.xml -->
+                    </configuration>
+                </plugin>
 
 
             </plugins>

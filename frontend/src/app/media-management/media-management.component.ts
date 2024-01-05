@@ -121,7 +121,6 @@ export class MediaManagementComponent implements OnInit {
     }
   }
 
-
   // Handles the media deletion process
   submitDeleteMedia() {
     this.mediaService.deleteMedia(this.currentDeleteMedia || '', this.token || '').subscribe((res) => {

@@ -18,8 +18,8 @@ services:
       - mongodb
       - kafka
     environment:
-      - MONGO_HOST= mongodb
-      - ENV_KAFKA_HOST= kafka
+      - MONGO_HOST=mongodb
+      - ENV_KAFKA_HOST=kafka
     volumes:
       - ./media:/app/media # Shared volume with media-ms
 
@@ -34,8 +34,8 @@ services:
       - mongodb
       - kafka
     environment:
-      - MONGO_HOST= mongodb
-      - ENV_KAFKA_HOST= kafka
+      - MONGO_HOST=mongodb
+      - ENV_KAFKA_HOST=kafka
 
   media-ms:
     build: microservices/media-ms
@@ -48,19 +48,19 @@ services:
       - mongodb
       - kafka
     environment:
-      - MONGO_HOST= mongodb
-      - ENV_KAFKA_HOST= kafka
+      - MONGO_HOST=mongodb
+      - ENV_KAFKA_HOST=kafka
     volumes:
       - ./temp:/app/temp
       - ./media:/app/media
 
-    # frontend:
-    #     build:
-    #       context: ..
-    #       dockerfile: frontend/dockerfile
-    #     image: frontend:latest
-    #     ports:
-    #       - "4200:443"
+  frontend:
+    build:
+      context: ..
+      dockerfile: frontend/dockerfile
+    image: frontend:latest
+    ports:
+      - "4200:443"
 
   mongodb:
     image: mongo:latest
@@ -74,16 +74,13 @@ services:
     ports:
       - "29092:29092" # Port for external connections from the host
       - "29093:29093" # Port for internal connections from within Docker
-
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29093,EXTERNAL://localhost:29092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29093,EXTERNAL://0.0.0.0:29092
-
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-
     depends_on:
       - zookeeper
 
