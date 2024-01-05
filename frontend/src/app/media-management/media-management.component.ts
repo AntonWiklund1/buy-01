@@ -5,6 +5,7 @@ import * as AuthSelectors from '../state/auth/auth.selector';
 import { AuthState } from '../state/auth/auth.reducer';
 import { MediaService } from '../services/media.service';
 import { ProductService } from '../services/product.service';
+import { Router } from '@angular/router';
 
 // Component decorator with selector, template, and style information
 @Component({
@@ -40,6 +41,7 @@ export class MediaManagementComponent implements OnInit {
   errorMessage: string | null = null;
   // Injecting required services and state management
   constructor(
+    private router: Router,
     private store: Store<{ auth: AuthState }>,
     private mediaService: MediaService,
     private productService: ProductService
@@ -69,6 +71,7 @@ export class MediaManagementComponent implements OnInit {
 
   // Retrieves products associated with a user ID and fetches their media
   getProductsByUserId(userId: string) {
+    console.log('getProductsByUserId:');
     this.productService.getProductsByUserId(userId).subscribe((products) => {
       products.forEach((product: { id: string; }) => {
         this.getMediaByProductId(product.id);
@@ -105,24 +108,18 @@ export class MediaManagementComponent implements OnInit {
     const file = newFileInput.files?.item(0);
 
     if (file) {
-      this.mediaService.uploadMedia(file, this.currentEditMediaId || '', this.token || '').subscribe({
-        next: (res) => {
-          setTimeout(() => {
-            this.allMedia = this.allMedia.filter(media => media.productId !== this.currentEditMediaId); // Remove deleted media from the list
-            console.log('Success:', res);
-            this.refreshMediaList();
-            this.showEdit = false;
+      this.mediaService.uploadMedia(file, this.currentEditMediaId || '', this.token || '').subscribe((res) => {
+        //timeout to wait for the file to be uploaded
+        setTimeout(() => {
+          this.refreshMediaList(); // Refresh media list after upload
+          this.showEdit = false; // Hide edit form
         }, 500);
-        },
-        error: (error) => {
-          // Handle the error response here
-          this.errorMessage = 'Upload failed';
-          if (error.error && typeof error.error === 'string') {
-            this.errorMessage = error.error;
-          }
-          console.error(this.errorMessage);
-        }
-      });
+      }, (error) => {
+        this.errorMessage = error.message;
+        console.error('Error:', error);
+      }
+      );
+        
     }
   }
 

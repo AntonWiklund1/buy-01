@@ -14,7 +14,7 @@ export interface AuthState {
 export const initialAuthState: AuthState = {
   userId: "2",
   username: "admin",
-  token: "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUk9MRV9TRUxMRVIiLCJzdWIiOiJhZG1pbiIsImlhdCI6MTcwNDQ0OTU3MywiZXhwIjoxNzA0NTM1OTczfQ.2LMeUig4icgUREwX-bK3xsUPilI634ZMTx64HWA8SkA",
+  token: "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUk9MRV9TRUxMRVIiLCJzdWIiOiJhZG1pbiIsImlhdCI6MTcwNDQ1NTcyMywiZXhwIjoxNzA0NTQyMTIzfQ.uBW9I7C_7V_6SN0nLIr1JPAN8ggEt7hAH9lQlrs-2Jw",
   role: "ROLE_SELLER",
   loading: false,
   error: null,
