@@ -13,5 +13,8 @@
         <module name="media.ms" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="shared" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>

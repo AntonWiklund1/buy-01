@@ -78,6 +78,8 @@ export class MediaManagementComponent implements OnInit {
 
   // Retrieves media by product ID and updates the media list
   getMediaByProductId(productId: string) {
+    console.log('Fetching media for product:', productId);
+    this.allMedia = []; // Clear current media list
     this.mediaService.getMediaByProductId(productId, this.token || '').subscribe((mediaUrls) => {
       const mediaObjects = mediaUrls.map(url => ({ productId, mediaUrl: url }));
       this.allMedia.push(...mediaObjects);
@@ -105,9 +107,12 @@ export class MediaManagementComponent implements OnInit {
     if (file) {
       this.mediaService.uploadMedia(file, this.currentEditMediaId || '', this.token || '').subscribe({
         next: (res) => {
-          console.log('Success:', res);
-          this.refreshMediaList();
-          this.showEdit = false;
+          setTimeout(() => {
+            this.allMedia = this.allMedia.filter(media => media.productId !== this.currentEditMediaId); // Remove deleted media from the list
+            console.log('Success:', res);
+            this.refreshMediaList();
+            this.showEdit = false;
+        }, 500);
         },
         error: (error) => {
           // Handle the error response here
