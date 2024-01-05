@@ -14,5 +14,8 @@ export const loginFailure = createAction(
   '[Auth] Login Failure',
   props<{ error: string }>()
 );
-
+export const updateProfileSuccess = createAction(
+  '[Auth] Update Profile Success',
+  props<{ username: string; role: string; }>()
+);
 export const logout = createAction('[Auth] Logout');

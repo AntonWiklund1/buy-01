@@ -5,9 +5,10 @@ import { UserService } from '../services/user.service';
 import { MediaService } from '../services/media.service';
 import * as AuthSelectors from '../state/auth/auth.selector';
 import * as AvatarSelectors from '../state/avatar/profile.selector';
-import * as AvatarActions from '../state/avatar/profile.actions'; 
+import * as AvatarActions from '../state/avatar/profile.actions';
 import { Observable, catchError, of, switchMap, take } from 'rxjs';
 import { AuthState } from '../state/auth/auth.reducer';
+import * as AuthActions from '../state/auth/auth.actions';
 
 interface Profile {
   name: string;
@@ -44,9 +45,6 @@ export class ProfileManagementComponent implements OnInit {
     this.store.select(AuthSelectors.selectUsername).pipe(take(1)).subscribe(username => this.username = username);
 
     this.avatarUrl$ = this.store.select(AvatarSelectors.selectAvatarUrl);
-
-
-
   }
 
   ngOnInit(): void {
@@ -93,7 +91,7 @@ export class ProfileManagementComponent implements OnInit {
       console.log('User avatar retrieved successfully', avatarUrl);
     });
   }
-  
+
 
   deleteProfile(): void {
     if (this.userId && this.token) {
@@ -133,6 +131,12 @@ export class ProfileManagementComponent implements OnInit {
         () => {
           console.log('Profile updated successfully');
           this.username = newProfile.name;
+
+          // Dispatch the updateProfileSuccess action
+          this.store.dispatch(AuthActions.updateProfileSuccess({
+            username: newProfile.name,
+            role: newProfile.role
+          }));
         },
         (error: any) => console.error('Update profile error:', error)
       );

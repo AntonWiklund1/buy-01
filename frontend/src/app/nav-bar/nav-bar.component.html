@@ -19,17 +19,19 @@
                 Dashboard
             </span>
         </div>
-        <a routerLink="/mediaManagement" class="link" >Media</a>
+        <a routerLink="/mediaManagement" class="link">Media</a>
         <div class="media linkDiv">
             <span class="material-symbols-outlined spanLink" routerLink="/mediaManagement">
                 photo_library
-        </span>
+            </span>
         </div>
         <!-- Use username$ Observable with async pipe -->
         <div class="profile" routerLink="/profileManagment">
             <img *ngIf="(avatarUrl$ | async) as avatarUrl" [src]="avatarUrl" alt="Profile Picture">
 
-            <a class="profileName" *ngIf="isAuthenticated$ | async">{{username$ | async}}</a>
+            <a class="profileName" *ngIf="(isAuthenticated$ | async) && (username$ | async) as username">
+                {{ username.length > 6 ? (username.slice(0, 6) + '...') : username }}
+            </a>
         </div>
         <div class="logStatus">
             <!-- Use isAuthenticated$ Observable with async pipe -->
@@ -41,7 +43,7 @@
             <span *ngIf="isAuthenticated$ | async" class="material-symbols-outlined logSpan" (click)="logOut()">
                 logout
             </span>
-            
+
         </div>
     </div>
 </div>

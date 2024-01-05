@@ -10,36 +10,38 @@
                 <input type="password" class="newPassword" id="newPassword" placeholder="New password">
                 <!-- dropdown -->
                 <select name="newRole" id="newRole">
-                    <option value="ROLE_USER">User</option>
-                    <option value="ROLE_ADMIN">Admin</option>
+                    <option value="ROLE_ClIENT">CLIENT</option>
+                    <option value="ROLE_SELLER">SELLER</option>
                 </select>
                 <button (click)="editProfile()">Submit changes</button>
-            </form>  
+            </form>
         </div>
         <div class="editProfilePictureDiv">
             <!-- Prevent the default form submission with (submit)="$event.preventDefault()" -->
             <form (submit)="editProfilePicture(); $event.preventDefault()" class="editProfilePicture">
-              <h3>Edit profile picture</h3>
-              <p *ngIf="confirmedProfilePicChange">You updated the profile picture</p>
-          
-              <!-- Use [src] for property binding and provide a descriptive alt text -->
-              <label for="profilePic">Current profile picture:</label>
-              <img *ngIf="(avatarUrl$ | async) as avatarUrl" [src]="avatarUrl" alt="Profile Picture" class="profilePic">
-          
-              <!-- Display the error message only if there is one -->
-              <p *ngIf="errorMessage">{{ errorMessage }}</p>
-          
-              <input type="file" class="newProfilePicture" id="newProfilePicture">
-              
-              <!-- Specify the button type to "button" to prevent form submission -->
-              <button type="button" (click)="editProfilePicture()">Submit changes</button>
-            </form>  
-          </div>
-          
+                <h3>Edit profile picture</h3>
+                <p *ngIf="confirmedProfilePicChange">You updated the profile picture</p>
+
+                <!-- Use [src] for property binding and provide a descriptive alt text -->
+                <label for="profilePic">Current profile picture:</label>
+                <img *ngIf="(avatarUrl$ | async) as avatarUrl" [src]="avatarUrl" alt="Profile Picture"
+                    class="profilePic">
+
+                <!-- Display the error message only if there is one -->
+                <p *ngIf="errorMessage">{{ errorMessage }}</p>
+
+                <input type="file" class="newProfilePicture" id="newProfilePicture">
+
+                <!-- Specify the button type to "button" to prevent form submission -->
+                <button type="button" (click)="editProfilePicture()">Submit changes</button>
+            </form>
+        </div>
+
         <div class="deleteProfileDiv">
             <h3>Delete profile</h3>
             <button (click)="checkDelete()" *ngIf="!showDelete()" class="deleteProfileButton">Delete profile</button>
-            <button (click)="deleteProfile()" *ngIf="showDelete()" class="deleteProfileButtonConfirm">Confirm delete</button>
+            <button (click)="deleteProfile()" *ngIf="showDelete()" class="deleteProfileButtonConfirm">Confirm
+                delete</button>
             <button (click)="checkDelete() " *ngIf="showDelete()" class="deleteProfileButtonDont">Don't delete</button>
         </div>
     </div>
