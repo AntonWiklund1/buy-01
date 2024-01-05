@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   api-gateway:
-    build: 
+    build:
       context: ..
       dockerfile: ./backend/microservices/api-gateway/Dockerfile
     image: api-gateway:latest
@@ -10,7 +10,7 @@ services:
       - "8443:8443"
 
   user-ms:
-    build: 
+    build:
       context: ..
       dockerfile: ./backend/microservices/user-ms/Dockerfile
     image: user-ms:latest
@@ -28,7 +28,7 @@ services:
       - ./media:/app/media # Shared volume with media-ms
 
   product-ms:
-    build: 
+    build:
       context: ..
       dockerfile: ./backend/microservices/product-ms/Dockerfile
     image: product-ms:latest
@@ -43,7 +43,7 @@ services:
       - MONGO_HOST=mongodb
       - ENV_KAFKA_HOST=kafka
 
-  media-ms: 
+  media-ms:
     build:
       context: ..
       dockerfile: ./backend/microservices/media-ms/Dockerfile
@@ -62,13 +62,13 @@ services:
       - ./temp:/app/temp
       - ./media:/app/media
 
-  # frontend:
-  #   build:
-  #     context: ..
-  #     dockerfile: frontend/dockerfile
-  #   image: frontend:latest
-  #   ports:
-  #     - "4200:443"
+  frontend:
+    build:
+      context: ..
+      dockerfile: frontend/dockerfile
+    image: frontend:latest
+    ports:
+      - "4200:443"
 
   mongodb:
     image: mongo:latest

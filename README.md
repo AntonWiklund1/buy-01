@@ -28,38 +28,18 @@ Welcome to our e-commerce platform, an end-to-end solution built with Spring Boo
    https://01.gritlab.ax/git/AntonW/buy-01.git
    ```
 
-2. Navigate to the backend and install the backend dependencies with Maven:
+2. Navigate to the backend
 
    ```shell
    cd /backend
-   mvn install
    ```
 
-3. Start mongodb server
+3. Start the docker
 
    ```shell
-   mongod
+   docker-compose up --build
    ```
 
-   ```shell
-   mongod
-   ```
-
-4. Start the backend
-
-   ```shell
-    mvn spring-boot:run
-   ```
-
-5. Install the frontend dependencies with npm:
-
-   ```shell
-   cd /frontend
-   npm install
-   ```
-
-6. Start the angular frontend
-   ng serve
 
 7. Navigato to <https://localhost:4200>
 
