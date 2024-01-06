@@ -25,16 +25,16 @@ public class MediaSecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .exceptionHandling(
                         exceptionHandling -> exceptionHandling
-                                .authenticationEntryPoint((request, response, authException) ->
-                                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED)))
-                .authorizeRequests(authorizeRequests -> {
+                                .authenticationEntryPoint((request, response, authException) -> response
+                                        .sendError(HttpServletResponse.SC_UNAUTHORIZED)))
+                .authorizeHttpRequests(authorizeRequests -> {
                     try {
                         authorizeRequests
-                        .requestMatchers(HttpMethod.GET, "/media/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/media").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/media/upload").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/media/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/media").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/media/upload").permitAll()
                                 .requestMatchers(HttpMethod.DELETE, "/media/**").permitAll()
-                        .anyRequest().authenticated();
+                                .anyRequest().authenticated();
 
                     } catch (Exception e) {
                         throw new RuntimeException(e);
