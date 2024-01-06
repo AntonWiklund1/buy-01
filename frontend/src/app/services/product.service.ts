@@ -16,13 +16,20 @@ export class ProductService {
 
   constructor(private http: HttpClient) {}
 
-  getProducts(): Observable<any> {
-    return this.http.get<any>(this.apiUrlGetAllproducts);
+  getProducts( token: string): Observable<any> {
+    const headers = new HttpHeaders({ 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}` 
+    });
+    return this.http.get<any>(this.apiUrlGetAllproducts, { headers });
   }
 
-  getProductsByUserId(id: string): Observable<any> {
-    this.id = 'Anton';
-    return this.http.get<any>(this.apiUrlGetProductByUerId + id);
+  getProductsByUserId(id: string, token : string): Observable<any> {
+    const headers = new HttpHeaders({ 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}` 
+    });
+    return this.http.get<any>(this.apiUrlGetProductByUerId + id, { headers });
   }
 
   addProduct(product: any, token: string): Observable<any> {

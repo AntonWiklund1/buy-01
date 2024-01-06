@@ -39,7 +39,7 @@ public class MediaController {
 
 
     @PostMapping("/upload")
-    @PreAuthorize("hasAuthority('ROLE_SELLER')")
+    @PreAuthorize("hasAuthority('ROLE_SELLER') ")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,
                                         @RequestParam("productId") String productId) {
         // Object to hold response data
@@ -75,7 +75,6 @@ public class MediaController {
     // Other REST endpoints as needed
 
     // Inside MediaController.java
-    @PreAuthorize("hasAuthority('ROLE_CLIENT') or hasAuthority('ROLE_SELLER ')")
     @GetMapping("/product/{productId}")
     public ResponseEntity<List<Media>> getMediaForProduct(@PathVariable String productId) {
         List<Media> mediaFiles = mediaService.getMediaByProductId(productId);

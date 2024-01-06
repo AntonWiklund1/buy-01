@@ -36,7 +36,7 @@ export class ProfileManagementComponent implements OnInit {
   username: string | null | undefined;
 
   constructor(
-    private store: Store<{ auth: AuthState, avatar: any }>, // Ensure the avatar state is correctly defined
+    private store: Store<{ auth: AuthState, avatar: any }>,
     private userService: UserService,
     private router: Router,
     private mediaService: MediaService

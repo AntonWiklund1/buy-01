@@ -72,7 +72,7 @@ export class MediaManagementComponent implements OnInit {
   // Retrieves products associated with a user ID and fetches their media
   getProductsByUserId(userId: string) {
 
-    this.productService.getProductsByUserId(userId).subscribe((products) => {
+    this.productService.getProductsByUserId(userId, this.token || '').subscribe((products) => {
       products.forEach((product: { id: string; }) => {
         this.getMediaByProductId(product.id);
       });

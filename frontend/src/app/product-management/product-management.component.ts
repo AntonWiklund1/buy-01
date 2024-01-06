@@ -45,21 +45,7 @@ export class ProductManagementComponent {
   }
 
   ngOnInit(): void {
-    this.userId$.pipe(take(1)).subscribe((userId) => {
-      if (userId) {
-        this.productService.getProductsByUserId(userId).subscribe(
-          (data) => {
-            this.products = data;
-          },
-          (error) => {
-            console.error(error);
-          }
-        );
-        this.loadProducts(userId);
-      } else {
-        // Handle the case where there is no userId (e.g., user is not logged in)
-      }
-    });
+    
     this.userId$.pipe(take(1)).subscribe((id) => {
       this.userId = id;
     });
@@ -73,6 +59,23 @@ export class ProductManagementComponent {
     // Ensure they are called in the right context
     this.closeModal();
     localStorage.removeItem('productId');
+
+    this.userId$.pipe(take(1)).subscribe((userId) => {
+      if (userId) {
+        this.productService.getProductsByUserId(userId, this.token || '').subscribe(
+          (data) => {
+            this.products = data;
+          },
+          (error) => {
+            console.log(this.token)
+            console.error(error);
+          }
+        );
+        this.loadProducts(userId);
+      } else {
+        // Handle the case where there is no userId (e.g., user is not logged in)
+      }
+    });
   }
 
   toggleDescription(product: any) {
@@ -81,7 +84,7 @@ export class ProductManagementComponent {
   }
 
   loadProducts(userId: string): void {
-    this.productService.getProductsByUserId(userId).subscribe(
+    this.productService.getProductsByUserId(userId, this.token || '').subscribe(
       (products) => {
         this.products = products.map((product: any) => ({
           ...product,
@@ -309,6 +312,7 @@ export class ProductManagementComponent {
 
       this.MediaService.uploadMedia(file, productId, bearerToken).subscribe(
         (data) => {
+          
           console.log('Media upload successful');
           this.closeModal();
           this.ngOnInit(); // Refresh the component to reflect changes
