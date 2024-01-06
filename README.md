@@ -40,8 +40,7 @@ Welcome to our e-commerce platform, an end-to-end solution built with Spring Boo
    docker-compose up --build
    ```
 
-
-7. Navigato to <https://localhost:4200>
+4. Navigato to <https://localhost:4200>
 
 Done
 
