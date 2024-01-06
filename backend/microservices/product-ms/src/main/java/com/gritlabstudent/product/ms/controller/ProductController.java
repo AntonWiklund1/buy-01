@@ -105,7 +105,7 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping
+    @GetMapping()
     public ResponseEntity<?> getAllProducts() {
         try {
             Iterable<Product> products = productService.getAllProducts();

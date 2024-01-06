@@ -18,7 +18,6 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/api/users") // The base URL for this controller
 public class UserController {
@@ -86,6 +85,12 @@ public class UserController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_SELLER') or hasRole('ROLE_CLIENT')")
     public ResponseEntity<?> updateUserById(@PathVariable("id") String id, @RequestBody User user) {
+        if (user.getRole().equals("ROLE_CLIENT")) {
+            String userId = user.getId();
+            if (!userId.equals(id)) {
+                return new ResponseEntity<>("You can only update your own profile", HttpStatus.UNAUTHORIZED);
+            }
+        }
         try {
             userService.updateUser(id, user);
             return new ResponseEntity<>("Update User with id " + id, HttpStatus.OK);
@@ -100,6 +105,16 @@ public class UserController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_SELLER') or hasRole('ROLE_CLIENT')")
     public ResponseEntity<?> deleteUserById(@PathVariable("id") String id) {
+        UserDTO userDTO = userService.getUserById(id);
+        if (userDTO != null) {
+            String role = userDTO.getRole();
+            if (role.equals("ROLE_CLIENT")) {
+                String userId = userDTO.getId();
+                if (!userId.equals(id)) {
+                    return new ResponseEntity<>("You can only delete your own profile", HttpStatus.UNAUTHORIZED);
+                }
+            }
+        }
         try {
             userService.deleteUser(id);
             String topic = "user_deletion";
