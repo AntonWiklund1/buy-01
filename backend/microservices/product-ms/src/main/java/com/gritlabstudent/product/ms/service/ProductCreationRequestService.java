@@ -2,7 +2,6 @@ package com.gritlabstudent.product.ms.service;
 
 import com.gritlabstudent.product.ms.models.ProductCreationRequest;
 import com.gritlabstudent.product.ms.repositories.ProductCreationRequestRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,7 +11,6 @@ public class ProductCreationRequestService {
 
     private final ProductCreationRequestRepository repository;
 
-    @Autowired
     public ProductCreationRequestService(ProductCreationRequestRepository repository) {
         this.repository = repository;
     }
