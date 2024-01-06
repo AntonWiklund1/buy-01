@@ -71,7 +71,7 @@ export class MediaManagementComponent implements OnInit {
 
   // Retrieves products associated with a user ID and fetches their media
   getProductsByUserId(userId: string) {
-    console.log('getProductsByUserId:');
+
     this.productService.getProductsByUserId(userId).subscribe((products) => {
       products.forEach((product: { id: string; }) => {
         this.getMediaByProductId(product.id);
@@ -81,7 +81,7 @@ export class MediaManagementComponent implements OnInit {
 
   // Retrieves media by product ID and updates the media list
   getMediaByProductId(productId: string) {
-    console.log('Fetching media for product:', productId);
+
     this.allMedia = []; // Clear current media list
     this.mediaService.getMediaByProductId(productId, this.token || '').subscribe((mediaUrls) => {
       const mediaObjects = mediaUrls.map(url => ({ productId, mediaUrl: url }));
@@ -119,7 +119,7 @@ export class MediaManagementComponent implements OnInit {
         console.error('Error:', error);
       }
       );
-        
+
     }
   }
 

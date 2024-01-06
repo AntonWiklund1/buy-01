@@ -30,7 +30,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private store: Store<{ auth: AuthState; avatar: any; }>,
-    private mediaService: MediaService 
+    private mediaService: MediaService
   ) {
 
     this.isAuthenticated$ = this.store.select(selectIsAuthenticated);
@@ -40,7 +40,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
     this.username$ = this.store.select(selectUsername).pipe(
       map(username => username ?? '') // If username is null, use empty string as a default
     );
-    
+
     this.avatarUrl$ = this.store.select(AvatarSelectors.selectAvatarUrl);
   }
 
@@ -60,7 +60,6 @@ export class NavBarComponent implements OnInit, OnDestroy {
       take(1),
       switchMap(userId => {
         if (!userId) {
-          console.error('User ID is missing');
           // Return the path to the image in the assets folder
           return of('/assets/images/default-avatar.png');
         }
@@ -68,7 +67,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
           take(1),
           switchMap(token => {
             if (!token) {
-              console.error('Token is missing');
+              alert('Token is missing try to log in again');
               // Return the path to the image in the assets folder
               return of('/assets/images/default-avatar.png');
             }
@@ -90,13 +89,12 @@ export class NavBarComponent implements OnInit, OnDestroy {
       }
       // Dispatch the action with the correct URL
       this.store.dispatch(AvatarActions.updateProfilePicture({ url: avatarUrl }));
-      console.log('User avatar retrieved successfully', avatarUrl);
     });
   }
-  
-  
-  
-  
+
+
+
+
 
 
   ngOnDestroy(): void {

@@ -36,7 +36,7 @@ export class LogInComponent {
     private authService: AuthService,
     private mediaService: MediaService,
     private store: Store<{ auth: AuthState }>
-  ) {}
+  ) { }
 
   showEmail() {
     return this.signUp;
@@ -83,16 +83,13 @@ export class LogInComponent {
     // Check if the password validation is successful
     if (this.validatePassword()) {
       // Use the authService to get the JWT token
-      console.log('isSeller', this.isSeller);
       var role = 'admin';
       var jwtPassword = 'password';
 
       this.authService.getJwtToken(role, jwtPassword).subscribe({
         next: (jwtToken: any) => {
-          // jwtToken is now just a string, not an object
-          console.log('JWT Token:', jwtToken);
           const bearer = Object.values(jwtToken)[1] as string;
-          
+
           role = this.isSeller ? 'ROLE_SELLER' : 'ROLE_CLIENT';
           // Assuming you want to use the JWT token immediately to create a user
           const newUser = {
@@ -109,7 +106,7 @@ export class LogInComponent {
             .createUser(newUser, bearer || '')
             .subscribe({
               next: (response: any) => {
-                console.log('User created', response);
+
 
                 this.token = bearer;
                 this.userId = newUser.id;
@@ -123,7 +120,7 @@ export class LogInComponent {
                   fileInput.files.length > 0
                 ) {
                   const file = fileInput.files[0]; // Access the first file in the files list
-                  
+
 
                   this.mediaService
                     .uploadAvatar(file, this.userId, bearer)
@@ -132,7 +129,7 @@ export class LogInComponent {
                         console.log('Profile picture updated successfully');
                       },
                       (error: { status: number }) => {
-                        console.log(file, this.userId);
+
                         if (error.status === 413) {
                           this.errorMessage =
                             'The file is too large to upload.';
@@ -168,21 +165,21 @@ export class LogInComponent {
       username: this.username,
       password: this.password,
     };
-  
+
     // Dispatch a login action
     this.store.dispatch(login(user));
-  
+
     this.userService.logIn(user).subscribe({
       next: (response: any) => {
-        console.log('User logged in', response);
+        console.log('User logged in');
         this.token = response.token;
         this.userId = response.userId;
-        
+
         // Call getRole and pass a callback function for navigation
         this.getRole(response.userId, response.token, () => {
           this.router.navigate(['/productList']); // Navigate after role is set
         });
-        
+
       },
       error: (error: any) => {
         // Dispatch a loginFailure action
@@ -191,12 +188,12 @@ export class LogInComponent {
       },
     });
   }
-  
+
   getRole(userId: string, token: string, onRoleRetrieved: () => void) {
     this.userService.getUser(userId, token).subscribe({
       next: (userProfile: any) => {
         this.userRole = userProfile.role;
-        console.log('userRole', this.userRole);
+
         // Dispatch loginSuccess here, after the role has been retrieved
         this.store.dispatch(loginSuccess({
           userId: userId,
@@ -204,7 +201,7 @@ export class LogInComponent {
           token: token,
           role: this.userRole
         }));
-  
+
         onRoleRetrieved(); // Call the callback function to navigate
       },
       error: (userError: any) => {
@@ -213,7 +210,7 @@ export class LogInComponent {
       },
     });
   }
-  
+
 
   // File upload
   selectedFileName: string = '';
