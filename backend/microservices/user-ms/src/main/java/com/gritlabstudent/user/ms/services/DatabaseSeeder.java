@@ -36,6 +36,13 @@ public class DatabaseSeeder implements CommandLineRunner {
         user1.setPassword(passwordEncoder.encode("password"));
         user1.setRole("ROLE_CLIENT");
 
+        User user2 = new User();
+        user2.setId("2");
+        user2.setName("admin");
+        user2.setEmail("admin@example.com");
+        user2.setPassword(passwordEncoder.encode("password"));
+        user2.setRole("ROLE_SELLER");
+
         User usertodelete = new User();
         usertodelete.setId("3");
         usertodelete.setName("test");
@@ -50,17 +57,10 @@ public class DatabaseSeeder implements CommandLineRunner {
         userTangledInInfinity.setPassword(passwordEncoder.encode("pwd"));
         userTangledInInfinity.setRole("ROLE_CLIENT");
 
-        User user2 = new User();
-        user2.setId("2");
-        user2.setName("admin");
-        user2.setEmail("admin@example.com");
-        user2.setPassword(passwordEncoder.encode("password"));
-        user2.setRole("ROLE_SELLER");
-
         User backupAdmin = new User();
-        backupAdmin.setId("2");
-        backupAdmin.setName("admin");
-        backupAdmin.setEmail("admin@example.com");
+        backupAdmin.setId("5");
+        backupAdmin.setName("admin2");
+        backupAdmin.setEmail("admin2@example.com");
         backupAdmin.setPassword(passwordEncoder.encode("password"));
         backupAdmin.setRole("ROLE_SELLER");
 
