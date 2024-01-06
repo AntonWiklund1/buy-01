@@ -24,12 +24,8 @@ export class ProductService {
     return this.http.get<any>(this.apiUrlGetAllproducts, { headers });
   }
 
-  getProductsByUserId(id: string, token : string): Observable<any> {
-    const headers = new HttpHeaders({ 
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}` 
-    });
-    return this.http.get<any>(this.apiUrlGetProductByUerId + id, { headers });
+  getProductsByUserId(id: string): Observable<any> {
+    return this.http.get<any>(this.apiUrlGetProductByUerId + id);
   }
 
   addProduct(product: any, token: string): Observable<any> {

@@ -106,7 +106,6 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_SELLER') or hasRole('ROLE_CLIENT')")
     public ResponseEntity<?> getAllProducts() {
         try {
             Iterable<Product> products = productService.getAllProducts();
@@ -117,7 +116,6 @@ public class ProductController {
     }
 
     @GetMapping("/user/{userId}")
-    @PreAuthorize("hasRole('ROLE_SELLER') or hasRole('ROLE_CLIENT')")
     public ResponseEntity<?> getProductsByUser(@PathVariable String userId) {
         try {
             if (!isValidInput(userId)) {
@@ -155,7 +153,6 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_CLIENT') or hasRole('ROLE_SELLER')")
     public ResponseEntity<?> getProductById(@PathVariable("id") String id) {
         Product product = productService.getProductById(id);
         return new ResponseEntity<>(product, HttpStatus.OK);

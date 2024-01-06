@@ -62,7 +62,7 @@ export class ProductManagementComponent {
 
     this.userId$.pipe(take(1)).subscribe((userId) => {
       if (userId) {
-        this.productService.getProductsByUserId(userId, this.token || '').subscribe(
+        this.productService.getProductsByUserId(userId).subscribe(
           (data) => {
             this.products = data;
           },
@@ -84,7 +84,7 @@ export class ProductManagementComponent {
   }
 
   loadProducts(userId: string): void {
-    this.productService.getProductsByUserId(userId, this.token || '').subscribe(
+    this.productService.getProductsByUserId(userId).subscribe(
       (products) => {
         this.products = products.map((product: any) => ({
           ...product,
