@@ -2,31 +2,59 @@ package com.gritlabstudent.user.ms.config;
 
 import com.gritlabstudent.user.ms.exceptions.UserCollectionException;
 import com.gritlabstudent.user.ms.models.User;
+import com.gritlabstudent.user.ms.repositories.UserRepository;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 public class ValidateUser {
+
+    // autowire the UserRepository
+    @Autowired
+    private UserRepository userRepository;
+
+    private boolean isThisEmailPresentInDB(String email) {
+        var emails = userRepository.findAllEmails();
+        if (emails.contains(email)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean isEmailOfCurrentUser(String email, String id) {
+        var user = userRepository.findById(id);
+        if (user.isPresent()) {
+            if (user.get().getEmail().equals(email)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
     public static void validateUser(User user) throws UserCollectionException {
         if (user.getName() != null) {
-            user.setName(user.getName().trim());
         } else {
             throw new UserCollectionException("User name" + UserCollectionException.NullException());
         }
         // if product.getDescription() is not null, trim, else throw exception
         if (user.getEmail() != null) {
-            boolean isValid = isValidEmail(user.getEmail());
-            System.out.println(user.getEmail() + " is valid email: " + isValid);
-            if (!isValid) {
+            if (!isValidEmail(user.getEmail())) {
                 throw new UserCollectionException(UserCollectionException.InvalidEmailException());
             }
-            user.setEmail(user.getEmail().trim());
+            if (new ValidateUser().isThisEmailPresentInDB(user.getEmail())
+                    && !(new ValidateUser().isEmailOfCurrentUser(user.getEmail(), user.getId()))) {
+                throw new UserCollectionException(UserCollectionException.EmailAlreadyExists());
+            }
         } else {
             throw new UserCollectionException("User email" + UserCollectionException.NullException());
         }
-        if (user.getPassword() != null) {
-            user.setPassword(user.getPassword().trim()); // Trim the ID field as well
-        } else {
+        if (user.getPassword() == null) {
             throw new UserCollectionException("User password" + UserCollectionException.NullException());
         }
 
@@ -35,7 +63,6 @@ public class ValidateUser {
             if (!(user.getRole().equals("ROLE_SELLER") || user.getRole().equals("ROLE_CLIENT"))) {
                 throw new UserCollectionException("User role" + UserCollectionException.InvalidRoleException());
             }
-            user.setRole(user.getRole().trim());
         } else {
             throw new UserCollectionException("User role" + UserCollectionException.NullException());
         }

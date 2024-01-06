@@ -7,7 +7,6 @@ import com.gritlabstudent.product.ms.models.ProductCreationStatus;
 import com.gritlabstudent.product.ms.service.ProductCreationRequestService;
 import com.gritlabstudent.product.ms.service.ProductService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,6 @@ public class UserValidationResultConsumer {
     private final ProductService productService;
     private final ProductCreationRequestService productCreationRequestService;
 
-    @Autowired
     public UserValidationResultConsumer(ProductService productService,
                                         ProductCreationRequestService productCreationRequestService) {
         this.productService = productService;

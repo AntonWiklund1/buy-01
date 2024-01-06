@@ -8,7 +8,6 @@ import com.gritlabstudent.product.ms.producer.UserValidationProducer;
 import com.gritlabstudent.product.ms.service.ProductCreationRequestService;
 import com.gritlabstudent.product.ms.service.ProductService;
 import jakarta.validation.ConstraintViolationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -29,7 +28,6 @@ public class ProductController {
     private final UserValidationProducer userValidationProducer;
     private final ProductCreationRequestService productCreationRequestService;
 
-    @Autowired
     public ProductController(ProductService productService,
                              UserValidationProducer userValidationProducer,
                              ProductCreationRequestService productCreationRequestService) {
