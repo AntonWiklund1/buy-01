@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public interface UserRepository extends MongoRepository<User, String> {
@@ -15,5 +16,7 @@ public interface UserRepository extends MongoRepository<User, String> {
     Optional<User> findByEmail(String email);
 
     // get all emails from the database
-    List<String> findAllEmails();
+    default List<String> findAllEmails() {
+        return findAll().stream().map(User::getEmail).collect(Collectors.toList());
+    }
 }

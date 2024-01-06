@@ -38,6 +38,12 @@ public class ValidateUser {
     }
 
     public static void validateUser(User user) throws UserCollectionException {
+        // trim each field
+        user.setName(user.getName().trim());
+        user.setEmail(user.getEmail().trim());
+        user.setPassword(user.getPassword().trim());
+        user.setRole(user.getRole().trim());
+
         if (user.getName() != null) {
         } else {
             throw new UserCollectionException("User name" + UserCollectionException.NullException());

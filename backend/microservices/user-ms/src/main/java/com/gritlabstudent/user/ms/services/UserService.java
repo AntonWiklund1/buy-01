@@ -63,6 +63,13 @@ public class UserService {
         return optionalUser.map(this::convertToUserDTO).orElse(null);
     }
 
+    // Get all user emails in a list
+    public List<String> getAllUserEmails() {
+        return userRepository.findAll().stream()
+                .map(User::getEmail)
+                .collect(Collectors.toList());
+    }
+
     // Update User
     public User updateUser(String id, User updatedUser)
             throws ConstraintViolationException, UserCollectionException, NoSuchAlgorithmException {
