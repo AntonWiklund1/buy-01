@@ -24,9 +24,9 @@ public class ProductSecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .exceptionHandling(
                         exceptionHandling -> exceptionHandling
-                                .authenticationEntryPoint((request, response, authException) ->
-                                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED)))
-                .authorizeRequests(authorizeRequests -> {
+                                .authenticationEntryPoint((request, response, authException) -> response
+                                        .sendError(HttpServletResponse.SC_UNAUTHORIZED)))
+                .authorizeHttpRequests(authorizeRequests -> {
                     try {
                         authorizeRequests
                                 .requestMatchers("/api/products/**").permitAll()
@@ -42,6 +42,5 @@ public class ProductSecurityConfig {
         // Build and return the configured HttpSecurity object
         return http.build();
     }
-
 
 }
