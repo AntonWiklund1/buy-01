@@ -45,7 +45,6 @@ export class ProductManagementComponent {
   }
 
   ngOnInit(): void {
-    console.log('token', this.token$);
     this.userId$.pipe(take(1)).subscribe((userId) => {
       if (userId) {
         this.productService.getProductsByUserId(userId).subscribe(
@@ -135,7 +134,7 @@ export class ProductManagementComponent {
   }
 
   addproduct() {
-    console.log('addproduct');
+
 
     const bakground = this.el.nativeElement.querySelector('.bakground');
     this.renderer.addClass(bakground, 'darkBackground');
@@ -143,7 +142,7 @@ export class ProductManagementComponent {
   }
 
   createProduct() {
-    console.log('createProduct');
+
 
     const newProduct = {
       id: (<HTMLInputElement>document.getElementById('name')).value,
@@ -167,7 +166,7 @@ export class ProductManagementComponent {
           newFileInput.files.length > 0
         ) {
           const newFile = newFileInput.files[0];
-          console.log(data);
+
           const productId = data.productId;
           const bearerToken = this.token || '';
 
@@ -176,12 +175,11 @@ export class ProductManagementComponent {
             alert(this.errorMessage);
             return;
           }
-          console.log('productId', productId);
+
           this.MediaService.uploadMedia(newFile, productId, bearerToken).subscribe(
             (data) => {
               // Add timeout on 0.5 seconds to allow for media to be uploaded
               setTimeout(() => {
-                console.log("upload media response: ", data);
                 this.closeModal();
                 this.ngOnInit();
               }, 500);
@@ -222,8 +220,6 @@ export class ProductManagementComponent {
   }
 
   editProduct(id: string) {
-    console.log('editProduct');
-    console.log(id);
     const bakground = this.el.nativeElement.querySelector('.bakground');
     this.renderer.addClass(bakground, 'darkBackground');
     this.showEditProducts = !this.showEditProducts;
@@ -247,7 +243,6 @@ export class ProductManagementComponent {
     price: string,
     quantity: string
   ) {
-    console.log('updateProduct');
     const newProduct = {
       name: name,
       description: description,
@@ -256,10 +251,10 @@ export class ProductManagementComponent {
       userid: this.userId,
     };
 
-    console.log('newProduct', id, newProduct, this.token);
+
     this.productService.editProduct(id, newProduct, this.token || '').subscribe(
       (data) => {
-        console.log(data);
+
         this.ngOnInit();
       },
       (error) => {
@@ -274,12 +269,11 @@ export class ProductManagementComponent {
     return this.confirmDeleteProduct;
   }
   deleteProduct(id: string) {
-    console.log('deleteProduct');
+
 
     this.productService.deleteProduct(id, this.token || '').subscribe(
       (data) => {
         this.confirmDeleteProduct = false;
-        console.log(data);
         this.ngOnInit();
       },
       (error) => {
@@ -315,7 +309,7 @@ export class ProductManagementComponent {
 
       this.MediaService.uploadMedia(file, productId, bearerToken).subscribe(
         (data) => {
-          console.log('Media upload successful', data);
+          console.log('Media upload successful');
           this.closeModal();
           this.ngOnInit(); // Refresh the component to reflect changes
           this.errorMessage = '';
