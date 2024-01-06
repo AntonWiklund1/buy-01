@@ -152,7 +152,7 @@ export class ProductManagementComponent {
         .value,
       price: (<HTMLInputElement>document.getElementById('price')).value,
       quantity: (<HTMLInputElement>document.getElementById('quantity')).value,
-      userid: this.userId,
+      userId: this.userId,
     };
 
     this.productService.addProduct(newProduct, this.token || '').subscribe(

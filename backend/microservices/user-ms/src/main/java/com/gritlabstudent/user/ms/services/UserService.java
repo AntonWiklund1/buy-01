@@ -130,7 +130,6 @@ public class UserService {
         return relativeFilePath;
     }
 
-
     public boolean checkUserExistence(String userId) {
         System.out.println("Checking user existence for ID: " + userId);
         return userRepository.existsById(userId);

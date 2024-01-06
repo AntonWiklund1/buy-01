@@ -10,14 +10,15 @@
                 <p *ngIf="product.description.length > 50">
                     <span *ngIf="product.isReadMore">{{ product.description | slice:0:50 }}...</span>
                     <span *ngIf="!product.isReadMore">{{ product.description }}</span>
-                    <span *ngIf="product.isExpanded" class="material-symbols-outlined closeIcon" (click)="toggleDescription(product)">close</span>
+                    <span *ngIf="product.isExpanded" class="material-symbols-outlined closeIcon"
+                        (click)="toggleDescription(product)">close</span>
                     <a (click)="toggleDescription(product)">{{ product.isReadMore ? ' Read More' : ' Read Less' }}</a>
                 </p>
                 <p *ngIf="product.description.length <= 50">{{ product.description }}</p>
 
                 <p>{{product.price}}€</p>
                 <p>{{ product.quantity}} products left</p>
-                <p>From {{product.userid}}</p>
+                <p>From {{product.userId}}</p>
             </div>
         </div>
     </div>
