@@ -1,28 +1,25 @@
 package com.gritlabstudent.product.ms.controller;
 
+import com.gritlabstudent.product.ms.exceptions.ProductCollectionException;
+import com.gritlabstudent.product.ms.models.Product;
 import com.gritlabstudent.product.ms.models.ProductCreationRequest;
 import com.gritlabstudent.product.ms.models.ProductCreationStatus;
 import com.gritlabstudent.product.ms.producer.UserValidationProducer;
 import com.gritlabstudent.product.ms.service.ProductCreationRequestService;
 import com.gritlabstudent.product.ms.service.ProductService;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import com.gritlabstudent.product.ms.exceptions.ProductCollectionException;
-import com.gritlabstudent.product.ms.models.Product;
-
-import jakarta.validation.ConstraintViolationException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/products")
@@ -109,6 +106,7 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_SELLER') or hasRole('ROLE_CLIENT')")
     public ResponseEntity<?> getAllProducts() {
         try {
             Iterable<Product> products = productService.getAllProducts();
@@ -119,6 +117,7 @@ public class ProductController {
     }
 
     @GetMapping("/user/{userId}")
+    @PreAuthorize("hasRole('ROLE_SELLER') or hasRole('ROLE_CLIENT')")
     public ResponseEntity<?> getProductsByUser(@PathVariable String userId) {
         try {
             if (!isValidInput(userId)) {
@@ -156,6 +155,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_CLIENT') or hasRole('ROLE_SELLER')")
     public ResponseEntity<?> getProductById(@PathVariable("id") String id) {
         Product product = productService.getProductById(id);
         return new ResponseEntity<>(product, HttpStatus.OK);

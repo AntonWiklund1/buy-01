@@ -1,17 +1,16 @@
 package com.gritlabstudent.product.ms.service;
-import java.util.List;
-import java.util.Optional;
-
-import jakarta.validation.ConstraintViolationException;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.stereotype.Service;
 
 import com.gritlabstudent.product.ms.config.ValidateProduct;
 import com.gritlabstudent.product.ms.exceptions.ProductCollectionException;
 import com.gritlabstudent.product.ms.models.Product;
 import com.gritlabstudent.product.ms.repositories.ProductRepository;
+import jakarta.validation.ConstraintViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {

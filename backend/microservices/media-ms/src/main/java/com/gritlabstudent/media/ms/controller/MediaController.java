@@ -1,13 +1,11 @@
 package com.gritlabstudent.media.ms.controller;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
+import com.gritlabstudent.media.ms.models.Media;
+import com.gritlabstudent.media.ms.producer.ProductValidationProducer;
+import com.gritlabstudent.media.ms.service.FileStorageService;
+import com.gritlabstudent.media.ms.service.MediaService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -15,26 +13,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.gritlabstudent.media.ms.models.Media;
-import com.gritlabstudent.media.ms.service.MediaService;
-import com.gritlabstudent.media.ms.producer.ProductValidationProducer;
-
-import com.gritlabstudent.media.ms.service.FileStorageService;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/media")
@@ -88,6 +75,7 @@ public class MediaController {
     // Other REST endpoints as needed
 
     // Inside MediaController.java
+    @PreAuthorize("hasAuthority('ROLE_CLIENT') or hasAuthority('ROLE_SELLER ')")
     @GetMapping("/product/{productId}")
     public ResponseEntity<List<Media>> getMediaForProduct(@PathVariable String productId) {
         List<Media> mediaFiles = mediaService.getMediaByProductId(productId);
@@ -98,6 +86,7 @@ public class MediaController {
     }
 
     @DeleteMapping("/product/{productId}")
+    @PreAuthorize("hasAuthority('ROLE_SELLER ')")
     public ResponseEntity<?> deleteMediaForProduct(@PathVariable String productId) {
         try {
             mediaService.deleteMediaByProductId(productId);

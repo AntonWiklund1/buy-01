@@ -62,13 +62,13 @@ services:
       - ./temp:/app/temp
       - ./media:/app/media
 
-  frontend:
-    build:
-      context: ..
-      dockerfile: frontend/dockerfile
-    image: frontend:latest
-    ports:
-      - "4200:443"
+  # frontend:
+  #   build:
+  #     context: ..
+  #     dockerfile: frontend/dockerfile
+  #   image: frontend:latest
+  #   ports:
+  #     - "4200:443"
 
   mongodb:
     image: mongo:latest

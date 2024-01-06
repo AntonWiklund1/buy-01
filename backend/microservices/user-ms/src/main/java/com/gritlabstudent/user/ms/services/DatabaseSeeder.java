@@ -1,11 +1,10 @@
 package com.gritlabstudent.user.ms.services;
 
+import com.gritlabstudent.user.ms.models.User;
+import com.gritlabstudent.user.ms.repositories.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import com.gritlabstudent.user.ms.models.User;
-import com.gritlabstudent.user.ms.repositories.UserRepository;
 
 @Component
 public class DatabaseSeeder implements CommandLineRunner {

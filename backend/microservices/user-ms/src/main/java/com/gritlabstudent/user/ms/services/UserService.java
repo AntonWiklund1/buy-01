@@ -1,5 +1,16 @@
 package com.gritlabstudent.user.ms.services;
 
+import com.gritlabstudent.user.ms.config.ValidateUser;
+import com.gritlabstudent.user.ms.exceptions.UserCollectionException;
+import com.gritlabstudent.user.ms.models.User;
+import com.gritlabstudent.user.ms.models.UserDTO;
+import com.gritlabstudent.user.ms.repositories.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.ConstraintViolationException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,20 +21,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import javax.validation.ConstraintViolationException;
-
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.gritlabstudent.user.ms.config.ValidateUser;
-import com.gritlabstudent.user.ms.exceptions.UserCollectionException;
-import com.gritlabstudent.user.ms.models.User;
-import com.gritlabstudent.user.ms.models.UserDTO;
-import com.gritlabstudent.user.ms.repositories.UserRepository;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Service
 public class UserService {

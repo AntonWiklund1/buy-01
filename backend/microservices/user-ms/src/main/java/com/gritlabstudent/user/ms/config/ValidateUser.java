@@ -1,10 +1,10 @@
 package com.gritlabstudent.user.ms.config;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.gritlabstudent.user.ms.exceptions.UserCollectionException;
 import com.gritlabstudent.user.ms.models.User;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ValidateUser {
     public static void validateUser(User user) throws UserCollectionException {
