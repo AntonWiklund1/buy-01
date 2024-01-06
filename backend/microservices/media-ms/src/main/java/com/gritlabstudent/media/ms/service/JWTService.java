@@ -94,7 +94,7 @@ public class JWTService {
         List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(role));
 
         // Create a new SimpleUserDetails with the username and authorities
-        return new SimpleUserDetails(username, authorities); // Assuming you don't need the password here
+        return new SimpleUserDetails(username, authorities);
     }
 
 }

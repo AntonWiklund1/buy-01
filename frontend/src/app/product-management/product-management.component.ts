@@ -195,8 +195,10 @@ export class ProductManagementComponent {
             }
           );
         } else {
-          this.closeModal();
-          this.ngOnInit();
+          setTimeout(() => {
+            this.closeModal();
+            this.ngOnInit();
+          }, 500);
         }
       },
       (error) => {
@@ -304,19 +306,16 @@ export class ProductManagementComponent {
         return;
       }
 
-      const bearerToken = this.token || '';
-      if (!bearerToken) {
-        this.errorMessage = 'Authentication token is missing.';
-        return;
-      }
-
-      this.MediaService.uploadMedia(file, productId, bearerToken).subscribe(
+      this.MediaService.uploadMedia(file, productId, this.token || '').subscribe(
         (data) => {
-          
+          setTimeout(() => {
           console.log('Media upload successful');
           this.closeModal();
           this.ngOnInit(); // Refresh the component to reflect changes
           this.errorMessage = '';
+          }
+          , 500);
+
         },
         (error) => {
           console.error('Upload error:', error);
