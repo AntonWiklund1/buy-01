@@ -248,7 +248,7 @@ export class ProductManagementComponent {
       description: description,
       price: price,
       quantity: quantity,
-      userid: this.userId,
+      userId: this.userId,
     };
 
 
