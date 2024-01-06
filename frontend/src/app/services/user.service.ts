@@ -17,7 +17,7 @@ export class UserService {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     });
-    console.log("createUser", user, token) ;
+    
     return this.http.post(this.apiCreateUserUrl, user, { headers: headers });
   }
 
