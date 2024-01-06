@@ -52,7 +52,4 @@ public class Product {
         return id;
     }
 
-    public String getUserId() {
-        return userId;
-    }
 }

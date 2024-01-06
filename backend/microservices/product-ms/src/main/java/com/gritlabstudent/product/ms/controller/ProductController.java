@@ -8,7 +8,6 @@ import com.gritlabstudent.product.ms.producer.UserValidationProducer;
 import com.gritlabstudent.product.ms.service.ProductCreationRequestService;
 import com.gritlabstudent.product.ms.service.ProductService;
 import jakarta.validation.ConstraintViolationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -29,10 +28,9 @@ public class ProductController {
     private final UserValidationProducer userValidationProducer;
     private final ProductCreationRequestService productCreationRequestService;
 
-    @Autowired
     public ProductController(ProductService productService,
-                             UserValidationProducer userValidationProducer,
-                             ProductCreationRequestService productCreationRequestService) {
+            UserValidationProducer userValidationProducer,
+            ProductCreationRequestService productCreationRequestService) {
         this.productService = productService;
         this.userValidationProducer = userValidationProducer;
         this.productCreationRequestService = productCreationRequestService;
@@ -70,7 +68,8 @@ public class ProductController {
     @GetMapping("/status/{requestId}")
     public ResponseEntity<?> checkProductCreationStatus(@PathVariable String requestId) {
         // Fetch the product creation request status from your service layer
-        Optional<ProductCreationRequest> productCreationRequest = productCreationRequestService.getRequestById(requestId);
+        Optional<ProductCreationRequest> productCreationRequest = productCreationRequestService
+                .getRequestById(requestId);
 
         if (!productCreationRequest.isPresent()) {
             // If the request ID does not exist, return a Not Found response
@@ -105,6 +104,7 @@ public class ProductController {
 
         return ResponseEntity.ok(response);
     }
+
     @GetMapping
     public ResponseEntity<?> getAllProducts() {
         try {
@@ -159,7 +159,8 @@ public class ProductController {
     }
 
     private boolean isValidInput(String input) {
-        return input != null && !input.isEmpty() && !input.contains("$") && !input.contains("{") && !input.contains("}");
+        return input != null && !input.isEmpty() && !input.contains("$") && !input.contains("{")
+                && !input.contains("}");
     }
 
     @KafkaListener(topics = "user_deletion")
@@ -167,7 +168,7 @@ public class ProductController {
         try {
             productService.deleteProductsByUserId(userId);
         } catch (Exception e) {
-            //for errors
+            // for errors
         }
     }
 }

@@ -7,12 +7,10 @@ import com.gritlabstudent.product.ms.models.ProductCreationStatus;
 import com.gritlabstudent.product.ms.service.ProductCreationRequestService;
 import com.gritlabstudent.product.ms.service.ProductService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-
 
 //reads from the user-validation-result-topic topic
 @Service
@@ -21,9 +19,8 @@ public class UserValidationResultConsumer {
     private final ProductService productService;
     private final ProductCreationRequestService productCreationRequestService;
 
-    @Autowired
     public UserValidationResultConsumer(ProductService productService,
-                                        ProductCreationRequestService productCreationRequestService) {
+            ProductCreationRequestService productCreationRequestService) {
         this.productService = productService;
         this.productCreationRequestService = productCreationRequestService;
     }
@@ -35,13 +32,14 @@ public class UserValidationResultConsumer {
 
         System.out.println("Received validation result for request ID: " + requestId);
 
-        Optional<ProductCreationRequest> creationRequestOptional = productCreationRequestService.getRequestById(requestId);
+        Optional<ProductCreationRequest> creationRequestOptional = productCreationRequestService
+                .getRequestById(requestId);
         if (creationRequestOptional.isPresent()) {
             ProductCreationRequest creationRequest = creationRequestOptional.get();
             // Assuming validationResponse is "true" or "false" as a String
             boolean isValidUser = Boolean.parseBoolean(validationResponse);
 
-            if(isValidUser) {
+            if (isValidUser) {
                 // Validation successful, proceed with product creation
                 Product product = creationRequest.getProduct();
                 productService.createProduct(product);
@@ -60,6 +58,5 @@ public class UserValidationResultConsumer {
             System.out.println("Request ID not found: " + requestId);
         }
     }
-
 
 }

@@ -18,41 +18,41 @@ import java.util.Arrays;
 public class SecurityConfig {
 
     @Bean
-    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+    SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable and configure CORS
-            .csrf(ServerHttpSecurity.CsrfSpec::disable)
-            .authorizeExchange(authorize -> authorize
-                // Publicly accessible paths (no authentication required)
-                .pathMatchers("/api/auth/**").permitAll()
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable and configure CORS
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .authorizeExchange(authorize -> authorize
+                        // Publicly accessible paths (no authentication required)
+                        .pathMatchers("/api/auth/**").permitAll()
 
-                // User-specific endpoints
-                .pathMatchers(HttpMethod.POST, "/api/users/**").permitAll()
-                .pathMatchers(HttpMethod.GET, "/api/users","/api/users/**").permitAll()
-                .pathMatchers(HttpMethod.DELETE, "/api/users/**").permitAll()
-                .pathMatchers(HttpMethod.PUT, "/api/users/**").permitAll()
+                        // User-specific endpoints
+                        .pathMatchers(HttpMethod.POST, "/api/users/**").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/api/users", "/api/users/**").permitAll()
+                        .pathMatchers(HttpMethod.DELETE, "/api/users/**").permitAll()
+                        .pathMatchers(HttpMethod.PUT, "/api/users/**").permitAll()
 
-                // Product-specific endpoints
-                .pathMatchers(HttpMethod.POST, "/api/products").permitAll()
-                .pathMatchers(HttpMethod.GET, "/api/products", "/api/products/**").permitAll()
-                .pathMatchers(HttpMethod.DELETE, "/api/products/**").permitAll()
-                .pathMatchers(HttpMethod.PUT, "/api/products/**").permitAll()
+                        // Product-specific endpoints
+                        .pathMatchers(HttpMethod.POST, "/api/products").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/api/products", "/api/products/**").permitAll()
+                        .pathMatchers(HttpMethod.DELETE, "/api/products/**").permitAll()
+                        .pathMatchers(HttpMethod.PUT, "/api/products/**").permitAll()
 
-                // Media-specific endpoints
-                .pathMatchers(HttpMethod.GET, "/media", "/media/**").permitAll()
-                .pathMatchers(HttpMethod.POST, "/media/upload").permitAll()
-                .pathMatchers(HttpMethod.DELETE, "/media/**").permitAll()
+                        // Media-specific endpoints
+                        .pathMatchers(HttpMethod.GET, "/media", "/media/**").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/media/upload").permitAll()
+                        .pathMatchers(HttpMethod.DELETE, "/media/**").permitAll()
 
-                // kafka related endpoints
-                .pathMatchers(HttpMethod.GET, "/api/products/status/**").permitAll()
+                        // kafka related endpoints
+                        .pathMatchers(HttpMethod.GET, "/api/products/status/**").permitAll()
 
-                // All other requests require authentication
-                .anyExchange().authenticated()
-            );
+                        // All other requests require authentication
+                        .anyExchange().authenticated());
         return http.build();
     }
+
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("https://localhost:4200"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
@@ -63,6 +63,6 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration); // Apply CORS to all paths
         return source;
     }
-    //cors
+    // cors
 
 }
