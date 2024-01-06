@@ -45,3 +45,6 @@ Welcome to our e-commerce platform, an end-to-end solution built with Spring Boo
 Done
 
 ![data-flow](data-flow.png)
+
+
+https://documenter.getpostman.com/view/30164392/2s9YsJAXoQ
