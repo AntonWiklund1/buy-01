@@ -144,6 +144,7 @@ export class ProfileManagementComponent implements OnInit {
             username: newProfile.name,
             role: newProfile.role
           }));
+          this.store.dispatch(AuthActions.logout());
         },
         (error: any) => console.error('Update profile error:', error)
       );

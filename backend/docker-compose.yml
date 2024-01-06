@@ -68,7 +68,7 @@ services:
       dockerfile: frontend/dockerfile
     image: frontend:latest
     ports:
-      - "443:443"
+      - "4200:443"
 
   mongodb:
     image: mongo:latest
