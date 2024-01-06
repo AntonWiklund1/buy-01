@@ -41,7 +41,7 @@ public class UserController {
             String topic = "user_registration";
             String payload = convertUserToJson(user);
             KafkaService.sendToTopic(topic, payload);
-            return new ResponseEntity<User>(user, HttpStatus.CREATED); // Changed from OK to CREATED (201)
+            return new ResponseEntity<User>(user, HttpStatus.CREATED);
         } catch (ConstraintViolationException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
         } catch (UserCollectionException e) {
