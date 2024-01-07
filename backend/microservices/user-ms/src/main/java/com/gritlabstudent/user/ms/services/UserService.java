@@ -34,12 +34,10 @@ public class UserService {
 
     }
 
-    // Conversion Method
     public UserDTO convertToUserDTO(User user) {
         return new UserDTO(user.getId(), user.getName(), user.getRole(), user.getAvatarImagePath());
     }
 
-    // Create User
     public User createUser(User user)
             throws ConstraintViolationException, UserCollectionException, NoSuchAlgorithmException {
         ValidateUser.validateUser(user);
@@ -55,13 +53,11 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    // Read All Users
     public List<UserDTO> getAllUsers() {
         List<User> users = (List<User>) userRepository.findAll();
         return users.stream().map(this::convertToUserDTO).collect(Collectors.toList());
     }
 
-    // Read User by Id
     public UserDTO getUserById(String id) {
         Optional<User> optionalUser = userRepository.findById(id);
         return optionalUser.map(this::convertToUserDTO).orElse(null);
