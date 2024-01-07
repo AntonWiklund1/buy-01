@@ -71,7 +71,7 @@ public class ProductController {
         Optional<ProductCreationRequest> productCreationRequest = productCreationRequestService
                 .getRequestById(requestId);
 
-        if (!productCreationRequest.isPresent()) {
+        if (productCreationRequest.isEmpty()) {
             // If the request ID does not exist, return a Not Found response
             return ResponseEntity.notFound().build();
         }

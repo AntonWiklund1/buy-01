@@ -36,6 +36,7 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_SELLER')")
     public ResponseEntity<?> createUser(@Valid @RequestBody User user) {
         try {
+            System.out.println("we are here User: " + user);
             userService.createUser(user);
             String topic = "user_registration";
             String payload = convertUserToJson(user);
