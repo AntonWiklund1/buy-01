@@ -31,7 +31,6 @@ public class UserController {
     @Autowired
     private KafkaService KafkaService;
 
-    // Create User
     @PostMapping
     @PreAuthorize("hasRole('ROLE_SELLER')")
     public ResponseEntity<?> createUser(@Valid @RequestBody User user) {
@@ -41,7 +40,8 @@ public class UserController {
             String topic = "user_registration";
             String payload = convertUserToJson(user);
             KafkaService.sendToTopic(topic, payload);
-            return new ResponseEntity<User>(user, HttpStatus.CREATED);
+            var userDTO = userService.getUserById(user.getId());
+            return new ResponseEntity<UserDTO>(userDTO, HttpStatus.CREATED);
         } catch (ConstraintViolationException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
         } catch (UserCollectionException e) {
