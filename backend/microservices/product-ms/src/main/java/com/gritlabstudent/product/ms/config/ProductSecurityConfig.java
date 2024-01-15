@@ -1,17 +1,15 @@
 package com.gritlabstudent.product.ms.config;
 
 import com.gritlabstudent.product.ms.filter.ProductJWTFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
@@ -26,9 +24,9 @@ public class ProductSecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .exceptionHandling(
                         exceptionHandling -> exceptionHandling
-                                .authenticationEntryPoint((request, response, authException) ->
-                                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED)))
-                .authorizeRequests(authorizeRequests -> {
+                                .authenticationEntryPoint((request, response, authException) -> response
+                                        .sendError(HttpServletResponse.SC_UNAUTHORIZED)))
+                .authorizeHttpRequests(authorizeRequests -> {
                     try {
                         authorizeRequests
                                 .requestMatchers("/api/products/**").permitAll()
@@ -44,6 +42,5 @@ public class ProductSecurityConfig {
         // Build and return the configured HttpSecurity object
         return http.build();
     }
-
 
 }

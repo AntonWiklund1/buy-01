@@ -40,9 +40,11 @@ Welcome to our e-commerce platform, an end-to-end solution built with Spring Boo
    docker-compose up --build
    ```
 
-
-7. Navigato to <https://localhost:4200>
+4. Navigato to <https://localhost:4200>
 
 Done
 
 ![data-flow](data-flow.png)
+
+
+https://documenter.getpostman.com/view/30164392/2s9YsJAXoQ

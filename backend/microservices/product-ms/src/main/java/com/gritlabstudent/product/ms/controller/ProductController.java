@@ -1,28 +1,24 @@
 package com.gritlabstudent.product.ms.controller;
 
+import com.gritlabstudent.product.ms.exceptions.ProductCollectionException;
+import com.gritlabstudent.product.ms.models.Product;
 import com.gritlabstudent.product.ms.models.ProductCreationRequest;
 import com.gritlabstudent.product.ms.models.ProductCreationStatus;
 import com.gritlabstudent.product.ms.producer.UserValidationProducer;
 import com.gritlabstudent.product.ms.service.ProductCreationRequestService;
 import com.gritlabstudent.product.ms.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import com.gritlabstudent.product.ms.exceptions.ProductCollectionException;
-import com.gritlabstudent.product.ms.models.Product;
-
-import jakarta.validation.ConstraintViolationException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/products")
@@ -32,10 +28,9 @@ public class ProductController {
     private final UserValidationProducer userValidationProducer;
     private final ProductCreationRequestService productCreationRequestService;
 
-    @Autowired
     public ProductController(ProductService productService,
-                             UserValidationProducer userValidationProducer,
-                             ProductCreationRequestService productCreationRequestService) {
+            UserValidationProducer userValidationProducer,
+            ProductCreationRequestService productCreationRequestService) {
         this.productService = productService;
         this.userValidationProducer = userValidationProducer;
         this.productCreationRequestService = productCreationRequestService;
@@ -73,9 +68,10 @@ public class ProductController {
     @GetMapping("/status/{requestId}")
     public ResponseEntity<?> checkProductCreationStatus(@PathVariable String requestId) {
         // Fetch the product creation request status from your service layer
-        Optional<ProductCreationRequest> productCreationRequest = productCreationRequestService.getRequestById(requestId);
+        Optional<ProductCreationRequest> productCreationRequest = productCreationRequestService
+                .getRequestById(requestId);
 
-        if (!productCreationRequest.isPresent()) {
+        if (productCreationRequest.isEmpty()) {
             // If the request ID does not exist, return a Not Found response
             return ResponseEntity.notFound().build();
         }
@@ -108,7 +104,8 @@ public class ProductController {
 
         return ResponseEntity.ok(response);
     }
-    @GetMapping
+
+    @GetMapping()
     public ResponseEntity<?> getAllProducts() {
         try {
             Iterable<Product> products = productService.getAllProducts();
@@ -162,7 +159,8 @@ public class ProductController {
     }
 
     private boolean isValidInput(String input) {
-        return input != null && !input.isEmpty() && !input.contains("$") && !input.contains("{") && !input.contains("}");
+        return input != null && !input.isEmpty() && !input.contains("$") && !input.contains("{")
+                && !input.contains("}");
     }
 
     @KafkaListener(topics = "user_deletion")
@@ -170,7 +168,7 @@ public class ProductController {
         try {
             productService.deleteProductsByUserId(userId);
         } catch (Exception e) {
-            //for errors
+            // for errors
         }
     }
 }

@@ -2,6 +2,12 @@ import { Component } from '@angular/core';
 import { ProductService } from '../services/product.service';
 import { MediaService } from '../services/media.service';
 
+import * as AuthActions from '../state/auth/auth.actions';
+import { Store } from '@ngrx/store';
+import { AuthState } from '../state/auth/auth.reducer';
+import * as AuthSelectors from '../state/auth/auth.selector';
+import { take } from 'rxjs/operators';
+
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list.component.html',
@@ -11,13 +17,18 @@ export class ProductListComponent {
   products: any[] | undefined;
   productMediaUrls: Map<string, string> = new Map(); // Map to store media URLs
 
+  token: string | null | undefined;
+
   constructor(
+    private store: Store<{ auth: AuthState, avatar: any }>,
     private productService: ProductService,
     private MediaService: MediaService
-  ) {}
+  ) {
+    this.store.select(AuthSelectors.selectToken).pipe(take(1)).subscribe(token => this.token = token);
+  }
 
   ngOnInit(): void {
-    this.productService.getProducts().subscribe(
+    this.productService.getProducts(this.token || '').subscribe(
       (data) => {
         this.products = data;
       },
@@ -25,6 +36,7 @@ export class ProductListComponent {
         console.error(error);
       }
     );
+    
     this.loadProducts();
   }
   toggleDescription(product: any) {
@@ -33,7 +45,7 @@ export class ProductListComponent {
   }
 
   loadProducts(): void {
-    this.productService.getProducts().subscribe(
+    this.productService.getProducts(this.token || '').subscribe(
       (products) => {
         this.products = products.map((product: any) => ({
           ...product,

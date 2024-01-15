@@ -3,9 +3,6 @@ package com.gritlabstudent.product.ms.exceptions;
 import java.io.Serial;
 
 public class ProductCollectionException extends Exception {
-    /**
-     *
-     */
     @Serial
     private static final long serialVersionUID = 1L;
 

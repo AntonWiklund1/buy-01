@@ -1,5 +1,16 @@
 package com.gritlabstudent.user.ms.services;
 
+import com.gritlabstudent.user.ms.config.ValidateUser;
+import com.gritlabstudent.user.ms.exceptions.UserCollectionException;
+import com.gritlabstudent.user.ms.models.User;
+import com.gritlabstudent.user.ms.models.UserDTO;
+import com.gritlabstudent.user.ms.repositories.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.ConstraintViolationException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,38 +22,22 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.validation.ConstraintViolationException;
-
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.gritlabstudent.user.ms.config.ValidateUser;
-import com.gritlabstudent.user.ms.exceptions.UserCollectionException;
-import com.gritlabstudent.user.ms.models.User;
-import com.gritlabstudent.user.ms.models.UserDTO;
-import com.gritlabstudent.user.ms.repositories.UserRepository;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder){
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
 
     }
 
-    // Conversion Method
     public UserDTO convertToUserDTO(User user) {
         return new UserDTO(user.getId(), user.getName(), user.getRole(), user.getAvatarImagePath());
     }
 
-    // Create User
     public User createUser(User user)
             throws ConstraintViolationException, UserCollectionException, NoSuchAlgorithmException {
         ValidateUser.validateUser(user);
@@ -50,20 +45,29 @@ public class UserService {
         if (userOptional.isPresent()) {
             throw new UserCollectionException(UserCollectionException.UserAlreadyExistException());
         }
+        Optional<User> userEmailOptional = userRepository.findByEmail(user.getEmail());
+        if (userEmailOptional.isPresent()) {
+            throw new UserCollectionException(UserCollectionException.UserAlreadyExistException());
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
-    // Read All Users
     public List<UserDTO> getAllUsers() {
         List<User> users = (List<User>) userRepository.findAll();
         return users.stream().map(this::convertToUserDTO).collect(Collectors.toList());
     }
 
-    // Read User by Id
     public UserDTO getUserById(String id) {
         Optional<User> optionalUser = userRepository.findById(id);
         return optionalUser.map(this::convertToUserDTO).orElse(null);
+    }
+
+    // Get all user emails in a list
+    public List<String> getAllUserEmails() {
+        return userRepository.findAll().stream()
+                .map(User::getEmail)
+                .collect(Collectors.toList());
     }
 
     // Update User

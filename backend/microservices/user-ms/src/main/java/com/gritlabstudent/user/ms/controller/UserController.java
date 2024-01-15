@@ -1,31 +1,22 @@
 package com.gritlabstudent.user.ms.controller;
 
-import java.io.IOException;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Valid;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.gritlabstudent.user.ms.exceptions.UserCollectionException;
 import com.gritlabstudent.user.ms.models.User;
 import com.gritlabstudent.user.ms.models.UserDTO;
 import com.gritlabstudent.user.ms.services.KafkaService;
 import com.gritlabstudent.user.ms.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
+import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/users") // The base URL for this controller
@@ -40,16 +31,17 @@ public class UserController {
     @Autowired
     private KafkaService KafkaService;
 
-    // Create User
     @PostMapping
     @PreAuthorize("hasRole('ROLE_SELLER')")
     public ResponseEntity<?> createUser(@Valid @RequestBody User user) {
         try {
+            System.out.println("we are here User: " + user);
             userService.createUser(user);
             String topic = "user_registration";
             String payload = convertUserToJson(user);
             KafkaService.sendToTopic(topic, payload);
-            return new ResponseEntity<User>(user, HttpStatus.CREATED); // Changed from OK to CREATED (201)
+            var userDTO = userService.getUserById(user.getId());
+            return new ResponseEntity<UserDTO>(userDTO, HttpStatus.CREATED);
         } catch (ConstraintViolationException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
         } catch (UserCollectionException e) {
@@ -72,6 +64,7 @@ public class UserController {
 
     // Read All Users
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_CLIENT') or hasRole('ROLE_SELLER')")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<UserDTO> users = userService.getAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
@@ -91,8 +84,14 @@ public class UserController {
 
     // Update User
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_SELLER')")
+    @PreAuthorize("hasRole('ROLE_SELLER') or hasRole('ROLE_CLIENT')")
     public ResponseEntity<?> updateUserById(@PathVariable("id") String id, @RequestBody User user) {
+        if (user.getRole().equals("ROLE_CLIENT")) {
+            String userId = user.getId();
+            if (!userId.equals(id)) {
+                return new ResponseEntity<>("You can only update your own profile", HttpStatus.UNAUTHORIZED);
+            }
+        }
         try {
             userService.updateUser(id, user);
             return new ResponseEntity<>("Update User with id " + id, HttpStatus.OK);
@@ -105,8 +104,18 @@ public class UserController {
 
     // Delete User
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_SELLER')")
+    @PreAuthorize("hasRole('ROLE_SELLER') or hasRole('ROLE_CLIENT')")
     public ResponseEntity<?> deleteUserById(@PathVariable("id") String id) {
+        UserDTO userDTO = userService.getUserById(id);
+        if (userDTO != null) {
+            String role = userDTO.getRole();
+            if (role.equals("ROLE_CLIENT")) {
+                String userId = userDTO.getId();
+                if (!userId.equals(id)) {
+                    return new ResponseEntity<>("You can only delete your own profile", HttpStatus.UNAUTHORIZED);
+                }
+            }
+        }
         try {
             userService.deleteUser(id);
             String topic = "user_deletion";

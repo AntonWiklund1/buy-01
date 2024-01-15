@@ -1,13 +1,19 @@
 package com.gritlabstudent.user.ms.config;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.gritlabstudent.user.ms.exceptions.UserCollectionException;
 import com.gritlabstudent.user.ms.models.User;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class ValidateUser {
     public static void validateUser(User user) throws UserCollectionException {
+        // trim each field
+        user.setName(user.getName().trim());
+        user.setEmail(user.getEmail().trim());
+        user.setPassword(user.getPassword().trim());
+        user.setRole(user.getRole().trim());
+
         if (user.getName() != null) {
             user.setName(user.getName().trim());
         } else {

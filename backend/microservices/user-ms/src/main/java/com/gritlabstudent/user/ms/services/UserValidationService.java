@@ -1,7 +1,6 @@
 package com.gritlabstudent.user.ms.services;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -12,7 +11,6 @@ public class UserValidationService {
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final UserService userService;
 
-    @Autowired
     public UserValidationService(KafkaTemplate<String, String> kafkaTemplate, UserService userService) {
         this.kafkaTemplate = kafkaTemplate;
         this.userService = userService;

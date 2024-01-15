@@ -1,6 +1,7 @@
 package com.gritlabstudent.media.ms.config;
 
 import com.gritlabstudent.media.ms.filter.MediaJWTFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +11,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
@@ -25,16 +25,16 @@ public class MediaSecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .exceptionHandling(
                         exceptionHandling -> exceptionHandling
-                                .authenticationEntryPoint((request, response, authException) ->
-                                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED)))
-                .authorizeRequests(authorizeRequests -> {
+                                .authenticationEntryPoint((request, response, authException) -> response
+                                        .sendError(HttpServletResponse.SC_UNAUTHORIZED)))
+                .authorizeHttpRequests(authorizeRequests -> {
                     try {
                         authorizeRequests
-                        .requestMatchers(HttpMethod.GET, "/media/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/media").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/media/upload").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/media/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/media").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/media/upload").permitAll()
                                 .requestMatchers(HttpMethod.DELETE, "/media/**").permitAll()
-                        .anyRequest().authenticated();
+                                .anyRequest().authenticated();
 
                     } catch (Exception e) {
                         throw new RuntimeException(e);

@@ -6,9 +6,10 @@ import { MediaService } from '../services/media.service';
 import * as AuthSelectors from '../state/auth/auth.selector';
 import * as AvatarSelectors from '../state/avatar/profile.selector';
 import * as AvatarActions from '../state/avatar/profile.actions';
-import { Observable, catchError, of, switchMap, take } from 'rxjs';
+import { Observable, catchError, map, of, switchMap, take } from 'rxjs';
 import { AuthState } from '../state/auth/auth.reducer';
 import * as AuthActions from '../state/auth/auth.actions';
+import { selectUserRole } from '../state/auth/auth.selector';
 
 interface Profile {
   name: string;
@@ -26,7 +27,7 @@ export class ProfileManagementComponent implements OnInit {
   confirmDeleteProfile: boolean = false;
   avatarUrl: string = 'assets/images/default-avatar.png';
   avatarUrl$: Observable<string>; // Observable for the avatar URL
-
+  isAdmin$: Observable<boolean>;
 
   confirmedProfilePicChange: boolean = false;
   errorMessage: string = '';
@@ -35,7 +36,7 @@ export class ProfileManagementComponent implements OnInit {
   username: string | null | undefined;
 
   constructor(
-    private store: Store<{ auth: AuthState, avatar: any }>, // Ensure the avatar state is correctly defined
+    private store: Store<{ auth: AuthState, avatar: any }>,
     private userService: UserService,
     private router: Router,
     private mediaService: MediaService
@@ -45,10 +46,16 @@ export class ProfileManagementComponent implements OnInit {
     this.store.select(AuthSelectors.selectUsername).pipe(take(1)).subscribe(username => this.username = username);
 
     this.avatarUrl$ = this.store.select(AvatarSelectors.selectAvatarUrl);
+
+    //return true if the user is a seller and false if not
+    this.isAdmin$ = this.store.select(selectUserRole).pipe(
+      map(role => role === 'ROLE_SELLER')
+    );
+    
   }
 
   ngOnInit(): void {
-    if (this.userId) {
+    if (this.userId && this.token && this.username && this.avatarUrl && this.isAdmin$) {
       this.loadUserAvatar();
     }
   }
@@ -137,6 +144,7 @@ export class ProfileManagementComponent implements OnInit {
             username: newProfile.name,
             role: newProfile.role
           }));
+          this.store.dispatch(AuthActions.logout());
         },
         (error: any) => console.error('Update profile error:', error)
       );

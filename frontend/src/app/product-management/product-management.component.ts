@@ -45,21 +45,7 @@ export class ProductManagementComponent {
   }
 
   ngOnInit(): void {
-    this.userId$.pipe(take(1)).subscribe((userId) => {
-      if (userId) {
-        this.productService.getProductsByUserId(userId).subscribe(
-          (data) => {
-            this.products = data;
-          },
-          (error) => {
-            console.error(error);
-          }
-        );
-        this.loadProducts(userId);
-      } else {
-        // Handle the case where there is no userId (e.g., user is not logged in)
-      }
-    });
+    
     this.userId$.pipe(take(1)).subscribe((id) => {
       this.userId = id;
     });
@@ -73,6 +59,23 @@ export class ProductManagementComponent {
     // Ensure they are called in the right context
     this.closeModal();
     localStorage.removeItem('productId');
+
+    this.userId$.pipe(take(1)).subscribe((userId) => {
+      if (userId) {
+        this.productService.getProductsByUserId(userId).subscribe(
+          (data) => {
+            this.products = data;
+          },
+          (error) => {
+            console.log(this.token)
+            console.error(error);
+          }
+        );
+        this.loadProducts(userId);
+      } else {
+        // Handle the case where there is no userId (e.g., user is not logged in)
+      }
+    });
   }
 
   toggleDescription(product: any) {
@@ -192,8 +195,10 @@ export class ProductManagementComponent {
             }
           );
         } else {
-          this.closeModal();
-          this.ngOnInit();
+          setTimeout(() => {
+            this.closeModal();
+            this.ngOnInit();
+          }, 500);
         }
       },
       (error) => {
@@ -301,18 +306,16 @@ export class ProductManagementComponent {
         return;
       }
 
-      const bearerToken = this.token || '';
-      if (!bearerToken) {
-        this.errorMessage = 'Authentication token is missing.';
-        return;
-      }
-
-      this.MediaService.uploadMedia(file, productId, bearerToken).subscribe(
+      this.MediaService.uploadMedia(file, productId, this.token || '').subscribe(
         (data) => {
+          setTimeout(() => {
           console.log('Media upload successful');
           this.closeModal();
           this.ngOnInit(); // Refresh the component to reflect changes
           this.errorMessage = '';
+          }
+          , 500);
+
         },
         (error) => {
           console.error('Upload error:', error);

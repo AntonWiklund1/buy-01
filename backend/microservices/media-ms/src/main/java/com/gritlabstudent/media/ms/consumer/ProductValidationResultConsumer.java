@@ -1,6 +1,5 @@
 package com.gritlabstudent.media.ms.consumer;
 
-import com.gritlabstudent.media.ms.models.Media;
 import com.gritlabstudent.media.ms.service.FileStorageService;
 import com.gritlabstudent.media.ms.service.MediaService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -41,7 +40,7 @@ public class ProductValidationResultConsumer {
                 Resource fileResource = fileStorageService.retrieveFile(productId);
                 MultipartFile multipartFile = convertToMultipartFile(fileResource, productId);
 
-                Media savedMedia = mediaService.storeFile(multipartFile, productId);
+                mediaService.storeFile(multipartFile, productId);
                 logger.info("Successfully stored media for Product ID: {}", productId);
 
                 // Optionally, clean up the temporary storage
@@ -60,4 +59,3 @@ public class ProductValidationResultConsumer {
         }
     }
 }
-
